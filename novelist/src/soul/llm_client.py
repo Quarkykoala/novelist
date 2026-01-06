@@ -1,88 +1,93 @@
-"""Unified LLM client abstraction for Gemini, Groq, and Cerebras with Rate Limiting."""
+"""Smart LLM client with provider failover and adaptive throttling."""
 
 import os
 import asyncio
 import re
 import time
+import random
 from typing import Any, Optional
 from dotenv import load_dotenv
 
 load_dotenv()
 
-class LLMClient:
-    """Unified client for multiple LLM providers with built-in Rate Limiting."""
+class ProviderStats:
+    """Track usage stats per provider."""
+    def __init__(self, name: str, interval: float):
+        self.name = name
+        self.interval = interval
+        self.last_request_time = 0.0
+        self.lock = asyncio.Lock()
 
-    # Class-level lock to ensure rate limits across all instances
-    _rate_limit_lock = asyncio.Lock()
-    _last_request_time = 0.0
+class LLMClient:
+    """Smart client that fails over between providers to maximize throughput."""
 
     def __init__(self, provider: Optional[str] = None, model: Optional[str] = None):
-        self.provider = provider or os.getenv("LLM_PROVIDER", "gemini").lower()
+        # Default provider preference order
+        self.providers = [
+            ProviderStats("cerebras", 2.0), # 30 RPM
+            ProviderStats("groq", 2.0),     # 30 RPM
+            ProviderStats("gemini", 12.0),  # 5 RPM
+        ]
+        
+        # Move requested provider to front if specified
+        requested = provider or os.getenv("LLM_PROVIDER", "cerebras").lower()
+        self.providers.sort(key=lambda p: p.name == requested, reverse=True)
+        
         self.model = model
         
-        self._gemini_client = None
-        self._groq_client = None
-        self._cerebras_client = None
+        self._clients = {}
 
-    async def _get_gemini_client(self):
-        if self._gemini_client is None:
-            import google.genai as genai
-            api_key = os.getenv("GEMINI_API_KEY")
-            if not api_key:
-                raise ValueError("GEMINI_API_KEY not set")
-            self._gemini_client = genai.Client(api_key=api_key)
-        return self._gemini_client
-
-    async def _get_groq_client(self):
-        if self._groq_client is None:
-            from groq import AsyncGroq
-            api_key = os.getenv("GROQ_API_KEY")
-            if not api_key:
-                raise ValueError("GROQ_API_KEY not set")
-            self._groq_client = AsyncGroq(api_key=api_key)
-        return self._groq_client
-
-    async def _get_cerebras_client(self):
-        if self._cerebras_client is None:
-            from cerebras.cloud.sdk import AsyncCerebras
-            api_key = os.getenv("CEREBRAS_API_KEY")
-            if not api_key:
-                raise ValueError("CEREBRAS_API_KEY not set")
-            self._cerebras_client = AsyncCerebras(api_key=api_key)
-        return self._cerebras_client
-
-    async def _throttle(self):
-        """Enforce rate limits based on provider."""
-        # Gemini free tier is ~5 RPM (12s interval)
-        # Groq/Cerebras free tier is ~30 RPM (2s interval)
-        if self.provider == "gemini":
-            interval = 12.0
-        else:
-            interval = 2.0
+    async def _get_client(self, provider: str):
+        if provider not in self._clients:
+            if provider == "gemini":
+                import google.genai as genai
+                api_key = os.getenv("GEMINI_API_KEY")
+                if api_key:
+                    self._clients[provider] = genai.Client(api_key=api_key)
+            elif provider == "groq":
+                from groq import AsyncGroq
+                api_key = os.getenv("GROQ_API_KEY")
+                if api_key:
+                    self._clients[provider] = AsyncGroq(api_key=api_key)
+            elif provider == "cerebras":
+                from cerebras.cloud.sdk import AsyncCerebras
+                api_key = os.getenv("CEREBRAS_API_KEY")
+                if api_key:
+                    self._clients[provider] = AsyncCerebras(api_key=api_key)
         
-        async with self._rate_limit_lock:
+        return self._clients.get(provider)
+
+    async def _throttle(self, provider_stats: ProviderStats):
+        """Enforce rate limits for a specific provider."""
+        async with provider_stats.lock:
             now = time.time()
-            elapsed = now - LLMClient._last_request_time
-            if elapsed < interval:
-                wait_time = interval - elapsed
+            elapsed = now - provider_stats.last_request_time
+            if elapsed < provider_stats.interval:
+                wait_time = provider_stats.interval - elapsed
+                # Add jitter to prevent thundering herd
+                wait_time += random.uniform(0.1, 0.5)
                 await asyncio.sleep(wait_time)
-            LLMClient._last_request_time = time.time()
+            provider_stats.last_request_time = time.time()
 
-    async def generate_content(self, prompt: str, model_override: Optional[str] = None, retries: int = 5) -> Optional[str]:
-        """Generate content with built-in retries and throttling."""
-        target_model = model_override or self.model
+    async def generate_content(self, prompt: str, model_override: Optional[str] = None) -> Optional[str]:
+        """Try to generate content using available providers in order."""
         
-        for attempt in range(retries):
+        last_error = None
+
+        for provider_stats in self.providers:
+            client = await self._get_client(provider_stats.name)
+            if not client:
+                continue
+
             try:
-                await self._throttle()
+                # Resolve model name for this provider
+                model_name = self._resolve_model(provider_stats.name, model_override)
                 
-                if self.provider == "gemini":
-                    client = await self._get_gemini_client()
-                    if not target_model or "llama" in target_model.lower() or "mixtral" in target_model.lower():
-                        model_name = "gemini-2.0-flash"
-                    else:
-                        model_name = target_model
-                    
+                # Throttle before request
+                await self._throttle(provider_stats)
+                
+                # Execute request
+                if provider_stats.name == "gemini":
                     response = await asyncio.to_thread(
                         lambda: client.models.generate_content(
                             model=model_name,
@@ -91,26 +96,7 @@ class LLMClient:
                     )
                     return response.text
 
-                elif self.provider == "groq":
-                    client = await self._get_groq_client()
-                    if not target_model or "gemini" in target_model.lower():
-                        model_name = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
-                    else:
-                        model_name = target_model
-                    
-                    response = await client.chat.completions.create(
-                        messages=[{"role": "user", "content": prompt}],
-                        model=model_name,
-                    )
-                    return response.choices[0].message.content
-
-                elif self.provider == "cerebras":
-                    client = await self._get_cerebras_client()
-                    if not target_model or "gemini" in target_model.lower():
-                        model_name = os.getenv("CEREBRAS_MODEL", "llama-3.3-70b")
-                    else:
-                        model_name = target_model
-                    
+                elif provider_stats.name in ["groq", "cerebras"]:
                     response = await client.chat.completions.create(
                         messages=[{"role": "user", "content": prompt}],
                         model=model_name,
@@ -119,15 +105,32 @@ class LLMClient:
 
             except Exception as e:
                 error_str = str(e)
-                if "429" in error_str or "RESOURCE_EXHAUSTED" in error_str:
-                    delay = 10.0 * (2 ** attempt)
-                    match = re.search(r"retry in (\d+(\.\d+)?)s", error_str)
-                    if match:
-                        delay = float(match.group(1)) + 1.0
-                    print(f"[WARN] Rate limit hit. Waiting {delay:.1f}s...")
-                    await asyncio.sleep(delay)
+                is_rate_limit = "429" in error_str or "RESOURCE_EXHAUSTED" in error_str
+                
+                if is_rate_limit:
+                    print(f"[WARN] Rate limit on {provider_stats.name}. Failing over...")
+                    # Temporarily back off this provider by updating its last request time to future
+                    provider_stats.last_request_time = time.time() + 10.0 
                 else:
-                    print(f"[ERROR] Generation failed: {e}")
-                    return None
-        
+                    print(f"[ERROR] Error on {provider_stats.name}: {e}")
+                
+                last_error = e
+                continue # Try next provider
+
+        print(f"[ERROR] All providers failed. Last error: {last_error}")
         return None
+
+    def _resolve_model(self, provider: str, override: Optional[str]) -> str:
+        """Get the correct model name for the provider."""
+        if override:
+            # If override looks like a specific provider model, try to map it
+            # But mostly we trust the override if it's generic
+            pass
+
+        if provider == "gemini":
+            return "gemini-2.0-flash"
+        elif provider == "groq":
+            return os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+        elif provider == "cerebras":
+            return os.getenv("CEREBRAS_MODEL", "llama-3.3-70b")
+        return "llama-3.3-70b"
