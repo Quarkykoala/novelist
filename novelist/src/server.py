@@ -10,14 +10,14 @@ import os
 import uuid
 from datetime import datetime
 from pathlib import Path
+import tempfile
 from typing import Any
 
 from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
-
-from src.contracts.schemas import Hypothesis, IterationTrace, RalphConfig
+from src.contracts.schemas import Hypothesis, IterationTrace, RalphConfig, SimulationResult
 from src.ralph.orchestrator import RalphOrchestrator
 
 app = FastAPI(
@@ -98,6 +98,7 @@ def _serialize_hypothesis(h: Hypothesis | dict[str, Any]) -> dict[str, Any]:
             "scores": h.scores.model_dump(),
             "evidence": h.evidence.model_dump(),
             "source_soul": h.source_soul.value if h.source_soul else None,
+            "simulation_result": h.simulation_result.model_dump() if h.simulation_result else None,
             "iteration": h.iteration,
         }
 
@@ -336,6 +337,11 @@ async def get_knowledge_stats():
 # Serve frontend static files
 if WEB_DIR.exists():
     app.mount("/", StaticFiles(directory=str(WEB_DIR), html=True), name="static")
+
+# Mount plots directory
+temp_plots_dir = Path(tempfile.gettempdir()) / "novelist_sims"
+temp_plots_dir.mkdir(parents=True, exist_ok=True)
+app.mount("/plots", StaticFiles(directory=temp_plots_dir), name="plots")
 
 
 # ═══════════════════════════════════════════════════════════════

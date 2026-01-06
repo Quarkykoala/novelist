@@ -206,10 +206,38 @@ class App {
         ? '<div style="margin-top:8px;padding:8px;background:rgba(139,92,246,0.1);border-radius:6px;font-size:12px;color:var(--text-dim);"><span style="color:var(--accent);font-weight:600;">⛓️</span> ' + h.rationale.split('.')[0] + '</div>'
         : '';
 
+      let simHtml = '';
+      if (h.simulation_result) {
+        const isSuccess = h.simulation_result.success && h.simulation_result.supports_hypothesis;
+        const badgeColor = isSuccess ? 'var(--success)' : 'var(--error)';
+        const badgeIcon = isSuccess ? 'check_circle' : 'cancel';
+        const badgeText = isSuccess ? 'Verified In-Silico' : 'Simulation Failed';
+
+        let plotHtml = '';
+        if (h.simulation_result.plot_path) {
+          // Extract filename from path (handle both slash types just in case)
+          const filename = h.simulation_result.plot_path.split(/[/\\]/).pop();
+          plotHtml = `<div style="margin-top:8px;"><img src="/plots/${filename}" style="width:100%;border-radius:4px;border:1px solid var(--border);" /></div>`;
+        }
+
+        simHtml = `
+            <div style="margin-top:12px;padding:12px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                    <span style="font-size:11px;text-transform:uppercase;color:var(--text-dim);font-weight:600;letter-spacing:1px;">Lab Report</span>
+                    <span style="display:flex;align-items:center;gap:4px;font-size:12px;color:${badgeColor};font-weight:600;">
+                        <span class="material-symbols-outlined" style="font-size:16px;">${badgeIcon}</span> ${badgeText}
+                    </span>
+                </div>
+                <div style="font-family:monospace;font-size:11px;color:var(--text-dim);white-space:pre-wrap;max-height:100px;overflow-y:auto;background:var(--bg-main);padding:8px;border-radius:4px;">${h.simulation_result.code}</div>
+                ${plotHtml}
+            </div>
+        `;
+      }
+
       const text = h.hypothesis || h.statement || h.text || h;
 
       card.innerHTML = '<div class="hypothesis-card__number" style="opacity:' + (1 - i * 0.1) + '">' + (i + 1) + '</div>' +
-        '<div style="flex:1;"><p class="hypothesis-card__text">' + text + '</p>' + mechanismHtml + '</div>';
+        '<div style="flex:1;"><p class="hypothesis-card__text">' + text + '</p>' + mechanismHtml + simHtml + '</div>';
       container.appendChild(card);
     });
   }
