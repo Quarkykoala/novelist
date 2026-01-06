@@ -1,0 +1,28 @@
+{
+  "name": "polymer-x",
+  "version": "0.1.0",
+  "description": "Zero-Cost Bioremediation Command Center - Enzyme design simulation using Wizard of Oz pattern",
+  "type": "module",
+  "main": "scripts/test-logic.ts",
+  "scripts": {
+    "test": "npx ts-node scripts/test-logic.ts",
+    "test:pet-high-salt": "npx ts-node scripts/test-logic.ts --salinity=38 --plastic=PET",
+    "test:hdpe-stress": "npx ts-node scripts/test-logic.ts --salinity=25 --plastic=HDPE --stress",
+    "test:pvc-fresh": "npx ts-node scripts/test-logic.ts --salinity=5 --plastic=PVC",
+    "test:live": "npx ts-node scripts/test-logic.ts --live"
+  },
+  "keywords": [
+    "bioremediation",
+    "enzyme-design",
+    "synthetic-biology",
+    "plastic-degradation",
+    "gemini-api"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.0"
+  }
+}

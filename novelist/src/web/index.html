@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scientific Hypothesis Synthesizer</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta name="description" content="AI-powered generation and evaluation of scientific hypotheses">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+
+  <!-- Material Symbols -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+
+<body>
+  <div class="app" id="app">
+
+    <!-- ═══════════════════════════════════════
+         SIDEBAR
+         ═══════════════════════════════════════ -->
+    <aside class="sidebar">
+      <div class="sidebar__logo">
+        <span class="material-symbols-outlined">hexagon</span>
+      </div>
+
+      <nav class="sidebar__nav">
+        <a href="#" class="sidebar__link active" data-page="dashboard">
+          <span class="material-symbols-outlined">dashboard</span>
+          <span class="sidebar__link-label">Dashboard</span>
+        </a>
+        <a href="#" class="sidebar__link" data-page="lab">
+          <span class="material-symbols-outlined">science</span>
+          <span class="sidebar__link-label">Hypothesis Lab</span>
+        </a>
+        <a href="#" class="sidebar__link" data-page="knowledge">
+          <span class="material-symbols-outlined">folder_open</span>
+          <span class="sidebar__link-label">Knowledge</span>
+        </a>
+        <a href="#" class="sidebar__link" data-page="history">
+          <span class="material-symbols-outlined">history</span>
+          <span class="sidebar__link-label">History</span>
+        </a>
+        <a href="#" class="sidebar__link" data-page="settings">
+          <span class="material-symbols-outlined">settings</span>
+          <span class="sidebar__link-label">Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar__footer">
+        <div class="sidebar__status">
+          <span class="sidebar__status-dot"></span>
+          API Connected
+        </div>
+      </div>
+    </aside>
+
+    <!-- ═══════════════════════════════════════
+         MAIN CONTENT
+         ═══════════════════════════════════════ -->
+    <main class="main">
+
+      <!-- Header -->
+      <header class="header">
+        <div class="header__title">
+          <h1>Scientific Hypothesis Synthesizer</h1>
+          <p class="header__subtitle">Automated Generation and Evaluation of Scientific Hypotheses</p>
+        </div>
+
+        <div class="header__actions">
+          <div class="header__toggle">
+            <span>SuperPrompt Mode</span>
+            <div class="toggle active" id="superprompt-toggle">
+              <div class="toggle__knob"></div>
+            </div>
+          </div>
+          <button class="header__icon-btn" aria-label="Notifications">
+            <span class="material-symbols-outlined">notifications</span>
+          </button>
+          <button class="header__icon-btn" aria-label="Dark mode" id="theme-toggle">
+            <span class="material-symbols-outlined">dark_mode</span>
+          </button>
+          <div class="header__avatar"></div>
+        </div>
+      </header>
+
+      <!-- Content Grid -->
+      <div class="content">
+
+        <!-- Column 1: Input & Agent Panels -->
+        <div class="content__col">
+
+          <!-- Research Input Panel -->
+          <div class="panel">
+            <div class="panel__header">
+              <h2 class="panel__title">Research Topic Input</h2>
+              <span class="material-symbols-outlined">double_arrow</span>
+            </div>
+
+            <div class="input-group">
+              <label class="input-group__label">Enter your research focus:</label>
+              <input type="text" class="input" id="topic-input"
+                placeholder="e.g., CRISPR delivery mechanisms for neural tissue"
+                value="The effects of intermittent fasting on aging">
+            </div>
+
+            <div class="input-group" style="margin-top: var(--space-4);">
+              <label class="input-group__label">Literature Sources</label>
+              <div style="display: flex; gap: var(--space-2);">
+                <button class="btn btn--secondary" style="flex:1;">arXiv</button>
+                <button class="btn btn--secondary" style="flex:1; opacity: 0.6;">PubMed</button>
+              </div>
+            </div>
+
+            <div class="input-group" style="margin-top: var(--space-4);">
+              <label class="input-group__label">Analytical Framework</label>
+              <input type="text" class="input" value="BDI Model (Belief-Desire-Intention)" readonly>
+            </div>
+
+            <button class="btn btn--primary" id="generate-btn" style="width: 100%; margin-top: var(--space-5);">
+              <span class="material-symbols-outlined">play_arrow</span>
+              Generate Hypotheses
+            </button>
+          </div>
+
+          <!-- Activity Log -->
+          <div class="panel" style="flex: 1; margin-top: var(--space-6);">
+            <div class="panel__header">
+              <h2 class="panel__title">
+                <span style="width:8px;height:8px;background:var(--accent);border-radius:50%;"></span>
+                Activity Log
+              </h2>
+            </div>
+            <div id="activity-log" style="background: var(--bg-secondary); border-radius: var(--radius-lg); padding: var(--space-4); min-height: 140px; display:flex; flex-direction:column; gap: var(--space-2);">
+              <div class="skeleton skeleton--text"></div>
+              <div class="skeleton skeleton--text"></div>
+              <div class="skeleton skeleton--text"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 2: Reactor & Hypotheses -->
+        <div class="content__col">
+
+          <!-- Synthesis Reactor -->
+          <div class="panel" style="padding: var(--space-2);">
+            <div class="panel__header" style="padding: var(--space-3) var(--space-3) 0;">
+              <h2 class="panel__title">
+                <span class="material-symbols-outlined">emergency</span>
+                Hypothesis Generation
+              </h2>
+            </div>
+
+            <div class="reactor" id="reactor">
+              <div class="reactor__glow"></div>
+              <div class="reactor__ring reactor__ring--outer"></div>
+              <div class="reactor__ring reactor__ring--inner"></div>
+              <div class="reactor__core">
+                <div class="reactor__core-dot"></div>
+              </div>
+              <div class="reactor__particle" style="top: 30%; left: 20%;"></div>
+              <div class="reactor__particle" style="top: 60%; right: 25%; animation-delay: -2s;"></div>
+              <div class="reactor__particle" style="bottom: 20%; left: 40%; animation-delay: -4s;"></div>
+              <div class="reactor__label" id="reactor-status">Idle</div>
+            </div>
+          </div>
+
+          <!-- Hypothesis List -->
+          <div class="panel" style="margin-top: var(--space-6);">
+            <div class="panel__header">
+              <h2 class="panel__title">
+                <span class="material-symbols-outlined">lightbulb</span>
+                Generated Hypotheses
+              </h2>
+            </div>
+
+            <div id="hypothesis-list" style="display: flex; flex-direction: column; gap: var(--space-3);">
+              <div class="hypothesis-card">
+                <div class="hypothesis-card__number">1</div>
+                <p class="hypothesis-card__text">Intermittent fasting reduces oxidative stress and slows cellular aging.
+                </p>
+              </div>
+              <div class="hypothesis-card">
+                <div class="hypothesis-card__number" style="opacity: 0.8;">2</div>
+                <p class="hypothesis-card__text">IF enhances autophagy and promotes longevity through cellular repair
+                  mechanisms.</p>
+              </div>
+              <div class="hypothesis-card">
+                <div class="hypothesis-card__number" style="opacity: 0.6;">3</div>
+                <p class="hypothesis-card__text">Periodic fasting improves metabolic health markers in older adults
+                  significantly.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Research Analysis Gauge -->
+          <div class="panel" style="margin-top: var(--space-6);">
+            <div class="panel__header">
+              <h2 class="panel__title">
+                <span class="material-symbols-outlined">analytics</span>
+                Research Analysis
+              </h2>
+            </div>
+
+            <div class="gauge">
+              <div class="gauge__ring">
+                <svg viewBox="0 0 120 120">
+                  <circle class="gauge__track" cx="60" cy="60" r="50" />
+                  <circle class="gauge__progress" cx="60" cy="60" r="50" id="gauge-progress" />
+                </svg>
+                <div class="gauge__value" id="gauge-value">8.7</div>
+              </div>
+              <div class="gauge__label">Relevance Score</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 3: Soul Feed -->
+        <div class="content__col" style="max-height: calc(100vh - 160px); overflow-y: auto;">
+          <div id="soul-feed" style="display: flex; flex-direction: column; gap: var(--space-4);">
+
+            <div class="soul-card soul-card--creative">
+              <div class="soul-card__avatar">
+                <div class="soul-card__avatar-img" style="background: linear-gradient(135deg, #fef3c7, #fcd34d);">🎨
+                </div>
+                <div class="soul-card__avatar-status"></div>
+              </div>
+              <div class="soul-card__content">
+                <div class="soul-card__header">
+                  <span class="soul-card__name">The Creative</span>
+                  <span class="soul-card__time">2:09 PM</span>
+                </div>
+                <p class="soul-card__message">What if there's a crossover between intermittent fasting mechanisms and
+                  anti-aging compounds? Perhaps NAD+ pathway?</p>
+              </div>
+            </div>
+
+            <div class="soul-card soul-card--skeptic">
+              <div class="soul-card__avatar">
+                <div class="soul-card__avatar-img" style="background: linear-gradient(135deg, #f3f4f6, #d1d5db);">🔍
+                </div>
+              </div>
+              <div class="soul-card__content">
+                <div class="soul-card__header">
+                  <span class="soul-card__name">The Skeptic</span>
+                  <span class="soul-card__time">3:07 PM</span>
+                </div>
+                <p class="soul-card__message">Let's not get too wild. We need evidence that links IF mechanisms to
+                  actual aging biomarkers directly.</p>
+              </div>
+            </div>
+
+            <div class="soul-card soul-card--methodical">
+              <div class="soul-card__avatar">
+                <div class="soul-card__avatar-img" style="background: linear-gradient(135deg, #dbeafe, #93c5fd);">📐
+                </div>
+              </div>
+              <div class="soul-card__content">
+                <div class="soul-card__header">
+                  <span class="soul-card__name">The Methodical</span>
+                  <span class="soul-card__time">2:10 PM</span>
+                </div>
+                <p class="soul-card__message">Step by step: NAD+ levels drop with age. IF boosts NAD+. Proposal: test
+                  for impact on sirtuin activity, a key longevity pathway.</p>
+              </div>
+            </div>
+
+            <div class="soul-card soul-card--risktaker">
+              <div class="soul-card__avatar">
+                <div class="soul-card__avatar-img" style="background: linear-gradient(135deg, #ede9fe, #c4b5fd);">🚀
+                </div>
+              </div>
+              <div class="soul-card__content">
+                <div class="soul-card__header">
+                  <span class="soul-card__name">The Risk Taker</span>
+                  <span class="soul-card__time">2:00 PM</span>
+                </div>
+                <p class="soul-card__message">Quantum annealing neural networks has almost no literature. That's...
+                  exciting. Worth exploring?</p>
+              </div>
+            </div>
+
+            <div class="soul-card soul-card--synthesizer soul-card--highlighted">
+              <div class="soul-card__avatar">
+                <div class="soul-card__avatar-img" style="background: linear-gradient(135deg, #fee2e2, #fca5a5);">⚗️
+                </div>
+              </div>
+              <div class="soul-card__content">
+                <div class="soul-card__header">
+                  <span class="soul-card__name">The Synthesizer</span>
+                  <span class="soul-card__time">2:12 PM</span>
+                </div>
+                <p class="soul-card__message">Combining the creative's NAD+ idea with the skeptic's caution, we should
+                  focus on NAD+/sirtuin connection with rigorous validation.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Progress Dock -->
+      <div class="dock glass" id="progress-dock">
+        <div class="dock__status">
+          <span class="dock__status-dot"></span>
+          <span id="dock-status-text">Loop 2 / 4 — Refining Hypotheses...</span>
+        </div>
+
+        <div class="dock__steps">
+          <span class="dock__step active">
+            <span class="material-symbols-outlined" style="font-size:12px;">sync</span>
+            Hypothesis Iteration
+          </span>
+          <span class="dock__arrow material-symbols-outlined">arrow_right_alt</span>
+          <span class="dock__step">Research Analysis</span>
+          <span class="dock__arrow material-symbols-outlined">arrow_right_alt</span>
+          <span class="dock__step">Results Validation</span>
+        </div>
+
+        <button class="dock__more" aria-label="More options">
+          <span class="material-symbols-outlined">more_horiz</span>
+        </button>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/app.js" type="module"></script>
+</body>
+
+</html>

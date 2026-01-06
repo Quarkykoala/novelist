@@ -1,0 +1,10 @@
+{
+  "session_id": "e1a6b727",
+  "topic": "CRISPR delivery mechanisms for neural tissue",
+  "started_at": "2026-01-05T22:09:00.813761",
+  "completed_at": "2026-01-05T22:11:03.911282",
+  "iterations": 2,
+  "stop_reason": "Convergence: all targets met",
+  "hypotheses_count": 15,
+  "papers_ingested": 30
+}

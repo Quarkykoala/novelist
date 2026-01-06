@@ -1,0 +1,2105 @@
+{
+  "nodes": [
+    {
+      "id": "neural_network",
+      "name": "Neural Network",
+      "type": "method",
+      "frequency": 2,
+      "source_papers": [
+        "1905.05918v1",
+        "1512.07839v4"
+      ]
+    },
+    {
+      "id": "evolutionary_algorithm",
+      "name": "Evolutionary Algorithm",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "1905.05918v1"
+      ]
+    },
+    {
+      "id": "multi-layer_perceptron",
+      "name": "Multi-Layer Perceptron",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1905.05918v1"
+      ]
+    },
+    {
+      "id": "c-mapss_dataset",
+      "name": "C-MAPSS dataset",
+      "type": "dataset",
+      "frequency": 1,
+      "source_papers": [
+        "1905.05918v1"
+      ]
+    },
+    {
+      "id": "strided_time_window",
+      "name": "Strided Time Window",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1905.05918v1"
+      ]
+    },
+    {
+      "id": "deep_artificial_neural_networks_(danns)",
+      "name": "Deep Artificial Neural Networks (DANNs)",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2306.14753v1"
+      ]
+    },
+    {
+      "id": "polynomial_chaos_expansion_(pce)",
+      "name": "Polynomial Chaos Expansion (PCE)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2306.14753v1"
+      ]
+    },
+    {
+      "id": "arbitrary_polynomial_chaos_(apc)",
+      "name": "arbitrary polynomial chaos (aPC)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2306.14753v1"
+      ]
+    },
+    {
+      "id": "deep_arbitrary_polynomial_chaos_neural_networks",
+      "name": "Deep arbitrary polynomial chaos neural networks",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2306.14753v1"
+      ]
+    },
+    {
+      "id": "biomaterials",
+      "name": "Biomaterials",
+      "type": "concept",
+      "frequency": 2,
+      "source_papers": [
+        "1610.02543v1",
+        "1504.00698v1"
+      ]
+    },
+    {
+      "id": "stem_cells",
+      "name": "Stem cells",
+      "type": "biological",
+      "frequency": 2,
+      "source_papers": [
+        "1610.02543v1",
+        "1504.00698v1"
+      ]
+    },
+    {
+      "id": "3d_culture",
+      "name": "3D culture",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1610.02543v1"
+      ]
+    },
+    {
+      "id": "neural_tissue_organoids",
+      "name": "Neural tissue organoids",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "1610.02543v1"
+      ]
+    },
+    {
+      "id": "molecular_factors",
+      "name": "Molecular factors",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1610.02543v1"
+      ]
+    },
+    {
+      "id": "concentration_gradients",
+      "name": "Concentration gradients",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1610.02543v1"
+      ]
+    },
+    {
+      "id": "central_nervous_system",
+      "name": "Central nervous system",
+      "type": "concept",
+      "frequency": 2,
+      "source_papers": [
+        "1610.02543v1",
+        "1504.00698v1"
+      ]
+    },
+    {
+      "id": "random_neural_networks_(rnns)",
+      "name": "Random Neural Networks (RNNs)",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "1609.04846v1"
+      ]
+    },
+    {
+      "id": "queuing_theory",
+      "name": "Queuing Theory",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1609.04846v1"
+      ]
+    },
+    {
+      "id": "neural_networks_(nns)",
+      "name": "Neural Networks (NNs)",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "1609.04846v1"
+      ]
+    },
+    {
+      "id": "first_order_derivatives",
+      "name": "first order derivatives",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1609.04846v1"
+      ]
+    },
+    {
+      "id": "second_order_derivatives",
+      "name": "second order derivatives",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1609.04846v1"
+      ]
+    },
+    {
+      "id": "2d_ultrasound",
+      "name": "2D Ultrasound",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2210.02210v1"
+      ]
+    },
+    {
+      "id": "3d_magnetic_resonance_imaging",
+      "name": "3D Magnetic Resonance Imaging",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2210.02210v1"
+      ]
+    },
+    {
+      "id": "mri",
+      "name": "MRI",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2210.02210v1"
+      ]
+    },
+    {
+      "id": "digital_volume_correlation",
+      "name": "Digital Volume Correlation",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2210.02210v1"
+      ]
+    },
+    {
+      "id": "us_transducer",
+      "name": "US transducer",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2210.02210v1"
+      ]
+    },
+    {
+      "id": "sacral_soft_tissues",
+      "name": "Sacral soft tissues",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2210.02210v1"
+      ]
+    },
+    {
+      "id": "convolutional_neural_networks",
+      "name": "convolutional neural networks",
+      "type": "method",
+      "frequency": 2,
+      "source_papers": [
+        "1901.06610v2",
+        "1512.00242v1"
+      ]
+    },
+    {
+      "id": "gated_recurrent_units",
+      "name": "gated recurrent units",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1901.06610v2"
+      ]
+    },
+    {
+      "id": "attention_mechanisms",
+      "name": "attention mechanisms",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1901.06610v2"
+      ]
+    },
+    {
+      "id": "hierarchical_attentional_hybrid_neural_network",
+      "name": "hierarchical attentional hybrid neural network",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "1901.06610v2"
+      ]
+    },
+    {
+      "id": "neural_network_models",
+      "name": "Neural Network Models",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "1906.10015v2"
+      ]
+    },
+    {
+      "id": "connectionist_models",
+      "name": "Connectionist Models",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "1906.10015v2"
+      ]
+    },
+    {
+      "id": "deep_network_architectures",
+      "name": "Deep Network Architectures",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "1906.10015v2"
+      ]
+    },
+    {
+      "id": "bayesian_approaches",
+      "name": "Bayesian Approaches",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1906.10015v2"
+      ]
+    },
+    {
+      "id": "free-energy_approaches",
+      "name": "Free-Energy Approaches",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1906.10015v2"
+      ]
+    },
+    {
+      "id": "schizophrenia",
+      "name": "Schizophrenia",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1906.10015v2"
+      ]
+    },
+    {
+      "id": "autism_spectrum_disorder",
+      "name": "Autism Spectrum Disorder",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1906.10015v2"
+      ]
+    },
+    {
+      "id": "quantitative_susceptibility_mapping_(qsm)",
+      "name": "Quantitative Susceptibility Mapping (QSM)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2307.02306v1"
+      ]
+    },
+    {
+      "id": "gre_sequence",
+      "name": "GRE sequence",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2307.02306v1"
+      ]
+    },
+    {
+      "id": "sharp",
+      "name": "SHARP",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2307.02306v1"
+      ]
+    },
+    {
+      "id": "pdf",
+      "name": "PDF",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2307.02306v1"
+      ]
+    },
+    {
+      "id": "dipole_inversion",
+      "name": "Dipole Inversion",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2307.02306v1"
+      ]
+    },
+    {
+      "id": "sparsity-based_regularization",
+      "name": "Sparsity-based regularization",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2307.02306v1"
+      ]
+    },
+    {
+      "id": "dicom_format",
+      "name": "DICOM format",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2307.02306v1"
+      ]
+    },
+    {
+      "id": "brain_extraction_tool",
+      "name": "Brain extraction tool",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2307.02306v1"
+      ]
+    },
+    {
+      "id": "coded_caching_scheme",
+      "name": "coded caching scheme",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1703.08900v1"
+      ]
+    },
+    {
+      "id": "placement_delivery_array_(pda)",
+      "name": "placement delivery array (PDA)",
+      "type": "concept",
+      "frequency": 2,
+      "source_papers": [
+        "1703.08900v1",
+        "1611.04213v2"
+      ]
+    },
+    {
+      "id": "gaussian_radial_basis_functions_neural_networks",
+      "name": "Gaussian Radial Basis Functions Neural Networks",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2307.05639v2"
+      ]
+    },
+    {
+      "id": "radial_basis_function_neural_network",
+      "name": "Radial Basis Function Neural Network",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2307.05639v2"
+      ]
+    },
+    {
+      "id": "gaussian_kernel",
+      "name": "Gaussian kernel",
+      "type": "concept",
+      "frequency": 2,
+      "source_papers": [
+        "2307.05639v2",
+        "1905.05095v3"
+      ]
+    },
+    {
+      "id": "precision_matrix",
+      "name": "Precision matrix",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2307.05639v2"
+      ]
+    },
+    {
+      "id": "transformer_model",
+      "name": "Transformer model",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2307.05639v2"
+      ]
+    },
+    {
+      "id": "pytorch",
+      "name": "PyTorch",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2307.05639v2"
+      ]
+    },
+    {
+      "id": "deep_reinforcement_learning",
+      "name": "Deep Reinforcement Learning",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2104.12000v2"
+      ]
+    },
+    {
+      "id": "markov_decision_process",
+      "name": "Markov Decision Process",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2104.12000v2"
+      ]
+    },
+    {
+      "id": "synthetic_datasets",
+      "name": "Synthetic datasets",
+      "type": "dataset",
+      "frequency": 1,
+      "source_papers": [
+        "2104.12000v2"
+      ]
+    },
+    {
+      "id": "real-world_datasets",
+      "name": "Real-world datasets",
+      "type": "dataset",
+      "frequency": 1,
+      "source_papers": [
+        "2104.12000v2"
+      ]
+    },
+    {
+      "id": "baseline_policies",
+      "name": "Baseline policies",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2104.12000v2"
+      ]
+    },
+    {
+      "id": "courier_utilization",
+      "name": "Courier utilization",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2104.12000v2"
+      ]
+    },
+    {
+      "id": "intelligent_order_rejection",
+      "name": "Intelligent order rejection",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2104.12000v2"
+      ]
+    },
+    {
+      "id": "re-positioning_of_couriers",
+      "name": "Re-positioning of couriers",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2104.12000v2"
+      ]
+    },
+    {
+      "id": "expected_total_reward",
+      "name": "Expected total reward",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2104.12000v2"
+      ]
+    },
+    {
+      "id": "delivery_times",
+      "name": "Delivery times",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2104.12000v2"
+      ]
+    },
+    {
+      "id": "sensory-neural_network",
+      "name": "sensory-neural network",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "1807.02477v1"
+      ]
+    },
+    {
+      "id": "synaptic_weights",
+      "name": "synaptic weights",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1807.02477v1"
+      ]
+    },
+    {
+      "id": "likelihood_ratio",
+      "name": "likelihood ratio",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1807.02477v1"
+      ]
+    },
+    {
+      "id": "crispr-cas9",
+      "name": "CRISPR-Cas9",
+      "type": "biological",
+      "frequency": 2,
+      "source_papers": [
+        "2004.09237v1",
+        "2202.07171v1"
+      ]
+    },
+    {
+      "id": "crispr-cas12a",
+      "name": "CRISPR-Cas12a",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": [
+        "2004.09237v1"
+      ]
+    },
+    {
+      "id": "spcas9",
+      "name": "SpCas9",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": [
+        "2004.09237v1"
+      ]
+    },
+    {
+      "id": "guide_rnas",
+      "name": "guide RNAs",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": [
+        "2004.09237v1"
+      ]
+    },
+    {
+      "id": "fret_microscopy",
+      "name": "FRET microscopy",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2004.09237v1"
+      ]
+    },
+    {
+      "id": "energy_landscape",
+      "name": "energy landscape",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2004.09237v1"
+      ]
+    },
+    {
+      "id": "kinetic_proofreading_mechanism",
+      "name": "kinetic proofreading mechanism",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2004.09237v1"
+      ]
+    },
+    {
+      "id": "linear_regression",
+      "name": "Linear Regression",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2503.15177v1"
+      ]
+    },
+    {
+      "id": "decision_trees",
+      "name": "Decision Trees",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2503.15177v1"
+      ]
+    },
+    {
+      "id": "bagging",
+      "name": "Bagging",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2503.15177v1"
+      ]
+    },
+    {
+      "id": "random_forest",
+      "name": "Random Forest",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2503.15177v1"
+      ]
+    },
+    {
+      "id": "xgboost",
+      "name": "XGBoost",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2503.15177v1"
+      ]
+    },
+    {
+      "id": "lightgbm",
+      "name": "LightGBM",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2503.15177v1"
+      ]
+    },
+    {
+      "id": "r2_score",
+      "name": "R2 score",
+      "type": "metric",
+      "frequency": 1,
+      "source_papers": [
+        "2503.15177v1"
+      ]
+    },
+    {
+      "id": "mean_squared_error_(mse)",
+      "name": "Mean Squared Error (MSE)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2503.15177v1"
+      ]
+    },
+    {
+      "id": "crispr-cas_systems",
+      "name": "CRISPR-Cas systems",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": [
+        "2202.07171v1"
+      ]
+    },
+    {
+      "id": "dna_repair_pathways",
+      "name": "DNA repair pathways",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": [
+        "2202.07171v1"
+      ]
+    },
+    {
+      "id": "antimicrobial_resistance_genes",
+      "name": "antimicrobial resistance genes",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": [
+        "2202.07171v1"
+      ]
+    },
+    {
+      "id": "prokaryotes",
+      "name": "prokaryotes",
+      "type": "concept",
+      "frequency": 2,
+      "source_papers": [
+        "2202.07171v1",
+        "1711.09113v1"
+      ]
+    },
+    {
+      "id": "cas_proteins",
+      "name": "Cas proteins",
+      "type": "biological",
+      "frequency": 2,
+      "source_papers": [
+        "2202.07171v1",
+        "1711.09113v1"
+      ]
+    },
+    {
+      "id": "crispr_arrays",
+      "name": "CRISPR arrays",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": [
+        "2202.07171v1"
+      ]
+    },
+    {
+      "id": "rna_structure",
+      "name": "RNA structure",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": [
+        "2202.07171v1"
+      ]
+    },
+    {
+      "id": "coded_caching",
+      "name": "coded caching",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1611.04213v2"
+      ]
+    },
+    {
+      "id": "maddah-ali_and_niesen_class_of_pdas",
+      "name": "Maddah-Ali and Niesen class of PDAs",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1611.04213v2"
+      ]
+    },
+    {
+      "id": "deep_neural_networks",
+      "name": "Deep neural networks",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "1411.1792v1"
+      ]
+    },
+    {
+      "id": "convolutional_neural_network",
+      "name": "Convolutional neural network",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "1411.1792v1"
+      ]
+    },
+    {
+      "id": "gabor_filters",
+      "name": "Gabor filters",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1411.1792v1"
+      ]
+    },
+    {
+      "id": "imagenet",
+      "name": "ImageNet",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "1411.1792v1"
+      ]
+    },
+    {
+      "id": "gradient_descent",
+      "name": "Gradient descent",
+      "type": "concept",
+      "frequency": 2,
+      "source_papers": [
+        "1411.1792v1",
+        "2006.02361v3"
+      ]
+    },
+    {
+      "id": "dropout",
+      "name": "dropout",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1512.00242v1"
+      ]
+    },
+    {
+      "id": "probabilistic_weighted_pooling",
+      "name": "probabilistic weighted pooling",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1512.00242v1"
+      ]
+    },
+    {
+      "id": "max-pooling",
+      "name": "max-pooling",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1512.00242v1"
+      ]
+    },
+    {
+      "id": "stochastic_pooling",
+      "name": "stochastic pooling",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1512.00242v1"
+      ]
+    },
+    {
+      "id": "mnist",
+      "name": "MNIST",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1512.00242v1"
+      ]
+    },
+    {
+      "id": "cifar-10",
+      "name": "CIFAR-10",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1512.00242v1"
+      ]
+    },
+    {
+      "id": "cifar-100",
+      "name": "CIFAR-100",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1512.00242v1"
+      ]
+    },
+    {
+      "id": "deep_neural_network",
+      "name": "Deep neural network",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2006.00248v2"
+      ]
+    },
+    {
+      "id": "femtosecond_laser_machining",
+      "name": "Femtosecond laser machining",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2006.00248v2"
+      ]
+    },
+    {
+      "id": "adult_human_bone_marrow_stromal_stem_cells",
+      "name": "Adult human bone marrow stromal stem cells",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": [
+        "2006.00248v2"
+      ]
+    },
+    {
+      "id": "p-value",
+      "name": "P-value",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2006.00248v2"
+      ]
+    },
+    {
+      "id": "tissue_engineering",
+      "name": "Tissue engineering",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2006.00248v2"
+      ]
+    },
+    {
+      "id": "cell_signaling",
+      "name": "Cell signaling",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": [
+        "2006.00248v2"
+      ]
+    },
+    {
+      "id": "hypercomplex-valued_convolutional_neural_networks_(hvcnns)",
+      "name": "Hypercomplex-Valued Convolutional Neural Networks (HvCNNs)",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2205.13273v1"
+      ]
+    },
+    {
+      "id": "clifford_algebras",
+      "name": "Clifford algebras",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2205.13273v1"
+      ]
+    },
+    {
+      "id": "convolutional_neural_networks_(cnns)",
+      "name": "Convolutional Neural Networks (CNNs)",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2205.13273v1"
+      ]
+    },
+    {
+      "id": "all-idb2_dataset",
+      "name": "ALL-IDB2 dataset",
+      "type": "dataset",
+      "frequency": 1,
+      "source_papers": [
+        "2205.13273v1"
+      ]
+    },
+    {
+      "id": "accuracy",
+      "name": "Accuracy",
+      "type": "metric",
+      "frequency": 1,
+      "source_papers": [
+        "2205.13273v1"
+      ]
+    },
+    {
+      "id": "spiking_neural_network_(snn)",
+      "name": "Spiking Neural Network (SNN)",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2001.10696v5"
+      ]
+    },
+    {
+      "id": "spike-timing-dependent_plasticity_(stdp)",
+      "name": "Spike-Timing-Dependent Plasticity (STDP)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2001.10696v5"
+      ]
+    },
+    {
+      "id": "inception_module",
+      "name": "Inception module",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2001.10696v5"
+      ]
+    },
+    {
+      "id": "artificial_neural_network_(ann)",
+      "name": "Artificial Neural Network (ANN)",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2001.10696v5"
+      ]
+    },
+    {
+      "id": "pooling-reshape-activate_(pra)_layer",
+      "name": "Pooling-Reshape-Activate (PRA) layer",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2001.10696v5"
+      ]
+    },
+    {
+      "id": "mnist_dataset",
+      "name": "MNIST dataset",
+      "type": "dataset",
+      "frequency": 1,
+      "source_papers": [
+        "2001.10696v5"
+      ]
+    },
+    {
+      "id": "neural_tissue_engineering",
+      "name": "Neural tissue engineering",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1504.00698v1"
+      ]
+    },
+    {
+      "id": "induced_pluripotent_stem_cells",
+      "name": "Induced pluripotent stem cells",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": [
+        "1504.00698v1"
+      ]
+    },
+    {
+      "id": "induced_neuronal_cells",
+      "name": "Induced neuronal cells",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": [
+        "1504.00698v1"
+      ]
+    },
+    {
+      "id": "3d_tissue_constructs",
+      "name": "3D tissue constructs",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1504.00698v1"
+      ]
+    },
+    {
+      "id": "autologous_grafts",
+      "name": "Autologous grafts",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1504.00698v1"
+      ]
+    },
+    {
+      "id": "bayes_filter",
+      "name": "Bayes filter",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1512.07839v4"
+      ]
+    },
+    {
+      "id": "bayes'_rule",
+      "name": "Bayes' rule",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1512.07839v4"
+      ]
+    },
+    {
+      "id": "probabilistic_population_codes",
+      "name": "probabilistic population codes",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1512.07839v4"
+      ]
+    },
+    {
+      "id": "stochastic_gradient_descent",
+      "name": "stochastic gradient descent",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1512.07839v4"
+      ]
+    },
+    {
+      "id": "maximum_likelihood",
+      "name": "maximum likelihood",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1512.07839v4"
+      ]
+    },
+    {
+      "id": "random_fourier_features",
+      "name": "random Fourier features",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1905.05095v3"
+      ]
+    },
+    {
+      "id": "neural_networks",
+      "name": "neural networks",
+      "type": "method",
+      "frequency": 2,
+      "source_papers": [
+        "1905.05095v3",
+        "2006.02361v3"
+      ]
+    },
+    {
+      "id": "gram_matrix",
+      "name": "Gram matrix",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1905.05095v3"
+      ]
+    },
+    {
+      "id": "eigenvectors",
+      "name": "eigenvectors",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1905.05095v3"
+      ]
+    },
+    {
+      "id": "in-situ_mechanisms",
+      "name": "in-situ mechanisms",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1801.05456v2"
+      ]
+    },
+    {
+      "id": "comets",
+      "name": "comets",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1801.05456v2"
+      ]
+    },
+    {
+      "id": "carbonaceous_chondrites",
+      "name": "carbonaceous chondrites",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1801.05456v2"
+      ]
+    },
+    {
+      "id": "classical_scenario",
+      "name": "classical scenario",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1801.05456v2"
+      ]
+    },
+    {
+      "id": "grand_tack_scenario",
+      "name": "Grand Tack scenario",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1801.05456v2"
+      ]
+    },
+    {
+      "id": "asteroid_belt",
+      "name": "asteroid belt",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1801.05456v2"
+      ]
+    },
+    {
+      "id": "planetesimals",
+      "name": "planetesimals",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "1801.05456v2"
+      ]
+    },
+    {
+      "id": "embryos",
+      "name": "embryos",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1801.05456v2"
+      ]
+    },
+    {
+      "id": "snow_line",
+      "name": "snow line",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1801.05456v2"
+      ]
+    },
+    {
+      "id": "cac-unet",
+      "name": "CAC-UNet",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2006.15954v2"
+      ]
+    },
+    {
+      "id": "miccai_digestpath2019",
+      "name": "MICCAI DigestPath2019",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2006.15954v2"
+      ]
+    },
+    {
+      "id": "wsis",
+      "name": "WSIs",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2006.15954v2"
+      ]
+    },
+    {
+      "id": "unet",
+      "name": "UNet",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2006.15954v2"
+      ]
+    },
+    {
+      "id": "cnn",
+      "name": "CNN",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2006.15954v2"
+      ]
+    },
+    {
+      "id": "protoad",
+      "name": "ProtoAD",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2310.02576v2"
+      ]
+    },
+    {
+      "id": "mvtec_ad",
+      "name": "MVTec AD",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2310.02576v2"
+      ]
+    },
+    {
+      "id": "btad",
+      "name": "BTAD",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2310.02576v2"
+      ]
+    },
+    {
+      "id": "l2_feature_normalization",
+      "name": "L2 feature normalization",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2310.02576v2"
+      ]
+    },
+    {
+      "id": "1x1_convolutional_layer",
+      "name": "1x1 convolutional layer",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2310.02576v2"
+      ]
+    },
+    {
+      "id": "channel_max-pooling",
+      "name": "channel max-pooling",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2310.02576v2"
+      ]
+    },
+    {
+      "id": "koopman_operator_theory",
+      "name": "Koopman operator theory",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2006.02361v3"
+      ]
+    },
+    {
+      "id": "adam",
+      "name": "Adam",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2006.02361v3"
+      ]
+    },
+    {
+      "id": "adadelta",
+      "name": "Adadelta",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2006.02361v3"
+      ]
+    },
+    {
+      "id": "adagrad",
+      "name": "Adagrad",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2006.02361v3"
+      ]
+    },
+    {
+      "id": "feedforward_networks",
+      "name": "Feedforward networks",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2006.02361v3"
+      ]
+    },
+    {
+      "id": "fully_connected_deep_networks",
+      "name": "Fully connected deep networks",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2006.02361v3"
+      ]
+    },
+    {
+      "id": "electroporation",
+      "name": "electroporation",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2208.01378v1"
+      ]
+    },
+    {
+      "id": "mathematical_modeling",
+      "name": "mathematical modeling",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2208.01378v1"
+      ]
+    },
+    {
+      "id": "differential_equations",
+      "name": "differential equations",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2208.01378v1"
+      ]
+    },
+    {
+      "id": "joule_heating",
+      "name": "Joule heating",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2208.01378v1"
+      ]
+    },
+    {
+      "id": "mass_transfer_coefficient",
+      "name": "mass transfer coefficient",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2208.01378v1"
+      ]
+    },
+    {
+      "id": "diffusion_coefficient",
+      "name": "diffusion coefficient",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2208.01378v1"
+      ]
+    },
+    {
+      "id": "drug_permeability",
+      "name": "drug permeability",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2208.01378v1"
+      ]
+    },
+    {
+      "id": "crispr-cas",
+      "name": "CRISPR-Cas",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": [
+        "1711.09113v1"
+      ]
+    },
+    {
+      "id": "crispr_locus",
+      "name": "CRISPR locus",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": [
+        "1711.09113v1"
+      ]
+    },
+    {
+      "id": "bacteriophages",
+      "name": "bacteriophages",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1711.09113v1"
+      ]
+    },
+    {
+      "id": "phages",
+      "name": "phages",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1711.09113v1"
+      ]
+    },
+    {
+      "id": "plasmids",
+      "name": "plasmids",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1711.09113v1"
+      ]
+    },
+    {
+      "id": "archaea",
+      "name": "archaea",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1711.09113v1"
+      ]
+    },
+    {
+      "id": "bacteria",
+      "name": "bacteria",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1711.09113v1"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "neural_network",
+      "target": "evolutionary_algorithm",
+      "relation": "combines",
+      "confidence": 0.7,
+      "source_papers": [
+        "1905.05918v1"
+      ]
+    },
+    {
+      "source": "multi-layer_perceptron",
+      "target": "evolutionary_algorithm",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "1905.05918v1"
+      ]
+    },
+    {
+      "source": "strided_time_window",
+      "target": "rul_estimation",
+      "relation": "enables",
+      "confidence": 0.7,
+      "source_papers": [
+        "1905.05918v1"
+      ]
+    },
+    {
+      "source": "proposed_method",
+      "target": "c-mapss_dataset",
+      "relation": "evaluates on",
+      "confidence": 0.7,
+      "source_papers": [
+        "1905.05918v1"
+      ]
+    },
+    {
+      "source": "proposed_method",
+      "target": "state-of-the-art_methods",
+      "relation": "outperforms",
+      "confidence": 0.7,
+      "source_papers": [
+        "1905.05918v1"
+      ]
+    },
+    {
+      "source": "arbitrary_polynomial_chaos_(apc)",
+      "target": "polynomial_chaos_expansion_(pce)",
+      "relation": "extends",
+      "confidence": 0.7,
+      "source_papers": [
+        "2306.14753v1"
+      ]
+    },
+    {
+      "source": "deep_arbitrary_polynomial_chaos_neural_networks",
+      "target": "deep_artificial_neural_networks_(danns)",
+      "relation": "improves",
+      "confidence": 0.7,
+      "source_papers": [
+        "2306.14753v1"
+      ]
+    },
+    {
+      "source": "arbitrary_polynomial_chaos_(apc)",
+      "target": "danns",
+      "relation": "addresses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2306.14753v1"
+      ]
+    },
+    {
+      "source": "deep_arbitrary_polynomial_chaos_neural_networks",
+      "target": "neural_signal_processing",
+      "relation": "enables",
+      "confidence": 0.7,
+      "source_papers": [
+        "2306.14753v1"
+      ]
+    },
+    {
+      "source": "polynomial_chaos_expansion_(pce)",
+      "target": "orthonormal_representations",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2306.14753v1"
+      ]
+    },
+    {
+      "source": "biomaterial_constructs",
+      "target": "molecular_factors",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "1610.02543v1"
+      ]
+    },
+    {
+      "source": "concentration_gradients",
+      "target": "neural_tissue_organoids",
+      "relation": "enables",
+      "confidence": 0.7,
+      "source_papers": [
+        "1610.02543v1"
+      ]
+    },
+    {
+      "source": "biomaterial_scaffolds",
+      "target": "neurodevelopment",
+      "relation": "addresses",
+      "confidence": 0.7,
+      "source_papers": [
+        "1610.02543v1"
+      ]
+    },
+    {
+      "source": "3d_culture",
+      "target": "neural_tissue_organoids",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "1610.02543v1"
+      ]
+    },
+    {
+      "source": "biomaterial_scaffolds",
+      "target": "stem_cells",
+      "relation": "combines",
+      "confidence": 0.7,
+      "source_papers": [
+        "1610.02543v1"
+      ]
+    },
+    {
+      "source": "random_neural_networks_(rnns)",
+      "target": "supervised_learning",
+      "relation": "addresses",
+      "confidence": 0.7,
+      "source_papers": [
+        "1609.04846v1"
+      ]
+    },
+    {
+      "source": "rnns",
+      "target": "neural_networks_(nns)",
+      "relation": "extends",
+      "confidence": 0.7,
+      "source_papers": [
+        "1609.04846v1"
+      ]
+    },
+    {
+      "source": "rnns",
+      "target": "queuing_theory",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "1609.04846v1"
+      ]
+    },
+    {
+      "source": "first_order_derivatives",
+      "target": "rnns",
+      "relation": "used by",
+      "confidence": 0.7,
+      "source_papers": [
+        "1609.04846v1"
+      ]
+    },
+    {
+      "source": "second_order_derivatives",
+      "target": "rnns",
+      "relation": "used by",
+      "confidence": 0.7,
+      "source_papers": [
+        "1609.04846v1"
+      ]
+    },
+    {
+      "source": "2d_ultrasound",
+      "target": "3d_magnetic_resonance_imaging_(mri)",
+      "relation": "compares",
+      "confidence": 0.7,
+      "source_papers": [
+        "2210.02210v1"
+      ]
+    },
+    {
+      "source": "digital_volume_correlation",
+      "target": "mr_images",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2210.02210v1"
+      ]
+    },
+    {
+      "source": "2d_us_imaging",
+      "target": "3d_displacement",
+      "relation": "evaluates",
+      "confidence": 0.7,
+      "source_papers": [
+        "2210.02210v1"
+      ]
+    },
+    {
+      "source": "us_transducer",
+      "target": "mri-compatible_setup",
+      "relation": "used with",
+      "confidence": 0.7,
+      "source_papers": [
+        "2210.02210v1"
+      ]
+    },
+    {
+      "source": "2d_ultrasound",
+      "target": "tissue_motion",
+      "relation": "addresses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2210.02210v1"
+      ]
+    },
+    {
+      "source": "convolutional_neural_networks",
+      "target": "gated_recurrent_units",
+      "relation": "combines",
+      "confidence": 0.7,
+      "source_papers": [
+        "1901.06610v2"
+      ]
+    },
+    {
+      "source": "hierarchical_attentional_hybrid_neural_network",
+      "target": "document_classification",
+      "relation": "addresses",
+      "confidence": 0.7,
+      "source_papers": [
+        "1901.06610v2"
+      ]
+    },
+    {
+      "source": "convolution_layers",
+      "target": "hierarchical_representation",
+      "relation": "enables",
+      "confidence": 0.7,
+      "source_papers": [
+        "1901.06610v2"
+      ]
+    },
+    {
+      "source": "attention_mechanisms",
+      "target": "document_classification",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "1901.06610v2"
+      ]
+    },
+    {
+      "source": "hierarchical_attentional_hybrid_neural_network",
+      "target": "existing_attention-based_approaches",
+      "relation": "outperforms",
+      "confidence": 0.7,
+      "source_papers": [
+        "1901.06610v2"
+      ]
+    },
+    {
+      "source": "neural_network_models",
+      "target": "schizophrenia",
+      "relation": "addresses",
+      "confidence": 0.7,
+      "source_papers": [
+        "1906.10015v2"
+      ]
+    },
+    {
+      "source": "neural_network_models",
+      "target": "autism_spectrum_disorder",
+      "relation": "addresses",
+      "confidence": 0.7,
+      "source_papers": [
+        "1906.10015v2"
+      ]
+    },
+    {
+      "source": "connectionist_models",
+      "target": "deep_network_architectures",
+      "relation": "compares",
+      "confidence": 0.7,
+      "source_papers": [
+        "1906.10015v2"
+      ]
+    },
+    {
+      "source": "bayesian_approaches",
+      "target": "free-energy_approaches",
+      "relation": "compares",
+      "confidence": 0.7,
+      "source_papers": [
+        "1906.10015v2"
+      ]
+    },
+    {
+      "source": "neural_network_models",
+      "target": "symptoms_of_schizophrenia",
+      "relation": "simulates",
+      "confidence": 0.7,
+      "source_papers": [
+        "1906.10015v2"
+      ]
+    },
+    {
+      "source": "quantitative_susceptibility_mapping_(qsm)",
+      "target": "clinical_brain_research",
+      "relation": "addresses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2307.02306v1"
+      ]
+    },
+    {
+      "source": "qsm",
+      "target": "monopolar_3d_multi-echo_gre_sequence",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2307.02306v1"
+      ]
+    },
+    {
+      "source": "sharp",
+      "target": "pdf",
+      "relation": "compares",
+      "confidence": 0.7,
+      "source_papers": [
+        "2307.02306v1"
+      ]
+    },
+    {
+      "source": "dipole_inversion",
+      "target": "sparsity-based_regularization",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2307.02306v1"
+      ]
+    },
+    {
+      "source": "qsm",
+      "target": "brain_extraction_tool",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2307.02306v1"
+      ]
+    },
+    {
+      "source": "coded_caching_scheme",
+      "target": "placement_delivery_array_(pda)",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "1703.08900v1"
+      ]
+    },
+    {
+      "source": "pda",
+      "target": "lower_bounds",
+      "relation": "establishes",
+      "confidence": 0.7,
+      "source_papers": [
+        "1703.08900v1"
+      ]
+    },
+    {
+      "source": "pda",
+      "target": "optimal_pdas",
+      "relation": "constructs",
+      "confidence": 0.7,
+      "source_papers": [
+        "1703.08900v1"
+      ]
+    },
+    {
+      "source": "coded_caching_scheme",
+      "target": "wireless_network_system",
+      "relation": "addresses",
+      "confidence": 0.7,
+      "source_papers": [
+        "1703.08900v1"
+      ]
+    },
+    {
+      "source": "pda",
+      "target": "mathematical_proofs",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "1703.08900v1"
+      ]
+    },
+    {
+      "source": "gaussian_radial_basis_functions_neural_networks",
+      "target": "radial_basis_function_neural_network",
+      "relation": "extends",
+      "confidence": 0.7,
+      "source_papers": [
+        "2307.05639v2"
+      ]
+    },
+    {
+      "source": "precision_matrix",
+      "target": "gaussian_kernel",
+      "relation": "modifies",
+      "confidence": 0.7,
+      "source_papers": [
+        "2307.05639v2"
+      ]
+    },
+    {
+      "source": "gaussian_radial_basis_functions_neural_networks",
+      "target": "prediction_performance",
+      "relation": "improves",
+      "confidence": 0.7,
+      "source_papers": [
+        "2307.05639v2"
+      ]
+    },
+    {
+      "source": "precision_matrix",
+      "target": "important_information",
+      "relation": "extracts",
+      "confidence": 0.7,
+      "source_papers": [
+        "2307.05639v2"
+      ]
+    },
+    {
+      "source": "gaussian_radial_basis_functions_neural_networks",
+      "target": "interpretability",
+      "relation": "enables",
+      "confidence": 0.7,
+      "source_papers": [
+        "2307.05639v2"
+      ]
+    }
+  ],
+  "gaps": [
+    {
+      "node1": "Biomaterials",
+      "node2": "Stem cells",
+      "shared_papers": [
+        "1504.00698v1",
+        "1610.02543v1"
+      ],
+      "potential": "high"
+    },
+    {
+      "node1": "Biomaterials",
+      "node2": "Central nervous system",
+      "shared_papers": [
+        "1504.00698v1",
+        "1610.02543v1"
+      ],
+      "potential": "high"
+    },
+    {
+      "node1": "Stem cells",
+      "node2": "Central nervous system",
+      "shared_papers": [
+        "1504.00698v1",
+        "1610.02543v1"
+      ],
+      "potential": "high"
+    },
+    {
+      "node1": "Gaussian kernel",
+      "node2": "neural networks",
+      "shared_papers": [
+        "1905.05095v3"
+      ],
+      "potential": "medium"
+    },
+    {
+      "node1": "CRISPR-Cas9",
+      "node2": "prokaryotes",
+      "shared_papers": [
+        "2202.07171v1"
+      ],
+      "potential": "medium"
+    },
+    {
+      "node1": "CRISPR-Cas9",
+      "node2": "Cas proteins",
+      "shared_papers": [
+        "2202.07171v1"
+      ],
+      "potential": "medium"
+    },
+    {
+      "node1": "prokaryotes",
+      "node2": "Cas proteins",
+      "shared_papers": [
+        "1711.09113v1",
+        "2202.07171v1"
+      ],
+      "potential": "high"
+    },
+    {
+      "node1": "Gradient descent",
+      "node2": "neural networks",
+      "shared_papers": [
+        "2006.02361v3"
+      ],
+      "potential": "medium"
+    }
+  ],
+  "contradictions": []
+}
