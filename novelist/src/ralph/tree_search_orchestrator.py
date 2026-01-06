@@ -14,6 +14,7 @@ from src.ralph.mcts import AgenticTreeSearch
 from src.ralph.tree import ResearchState, SearchNode
 from src.soul.collective import SoulCollective
 from src.kb.grounded_generator import GroundedHypothesisGenerator
+from src.soul.simulator import Simulator
 from src.verify.scoring import ScoringService
 
 
@@ -26,11 +27,15 @@ class TreeSearchOrchestrator:
         collective: SoulCollective,
         generator: GroundedHypothesisGenerator,
         scorer: ScoringService,
+        simulator: Simulator,
     ):
         self.config = config
         self.collective = collective
         self.generator = generator
         self.scorer = scorer
+        self.simulator = simulator
+        
+        # Initialize MCTS engine
         
         # Initialize MCTS engine
         self.mcts = AgenticTreeSearch(
@@ -120,6 +125,41 @@ class TreeSearchOrchestrator:
                 s2.feedback.append("Added experimental detail")
                 children.append(SearchNode(state=s2, parent=node, action_description="Deepen Experiments"))
 
+        # Strategy C: Computational Verification (Depth 2+)
+        if depth >= 1 and node.state.hypotheses:
+            hyp = node.state.hypotheses[0]
+            # If mechanism exists and NOT yet simulated
+            if hyp.mechanism and not hyp.simulation_result:
+                # This is a blocking call (or semi-blocking), MCTS usually fast but Sim is slow.
+                # In real world, we might want to do this only for high-promise nodes.
+                # For V1, we do it if depth is high enough to warrant checking.
+                
+                # Check if hypothesis is stable enough to test
+                if len(hyp.mechanism) >= 3 and hyp.prediction:
+                     try:
+                         # Run Simulation
+                         result = await self.simulator.verify_hypothesis(hyp)
+                         
+                         s3 = node.state.copy()
+                         simul_hyp = hyp.model_copy()
+                         simul_hyp.simulation_result = result
+                         
+                         # Update feedback
+                         outcome = "SUCCESS" if result.success and result.supports_hypothesis else "FAILURE"
+                         s3.feedback.append(f"Ran In-Silico Verification: {outcome}")
+                         s3.hypotheses = [simul_hyp]
+                         
+                         # Increase depth? Or same depth but "Verified" state?
+                         s3.depth = depth + 1 
+                         
+                         children.append(SearchNode(
+                             state=s3, 
+                             parent=node, 
+                             action_description=f"Simulate ({outcome})"
+                         ))
+                     except Exception as e:
+                         print(f"Simulation failed to run: {e}")
+
         return children
 
     async def _evaluate_state(self, node: SearchNode) -> float:
@@ -163,6 +203,15 @@ class TreeSearchOrchestrator:
             score += min(len(gh.mechanism) * 0.1, 0.3) # Reward detailed mechanism
         if gh.suggested_experiments:
             score += 0.1
+        
+        # Big reward for successful simulation
+        if gh.simulation_result:
+             if gh.simulation_result.success and gh.simulation_result.supports_hypothesis:
+                 score += 0.5  # Huge boost
+             elif gh.simulation_result.success:
+                 score += 0.1  # Small boost for running code even if result negative (scientific rigor)
+             else:
+                 score -= 0.1 # Penalty for broken code
             
         return min(score, 1.0)
         

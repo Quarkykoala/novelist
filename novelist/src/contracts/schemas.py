@@ -355,13 +355,22 @@ class PredictionBounds(BaseModel):
 class SuggestedExperiment(BaseModel):
     """A concrete experiment to test the hypothesis."""
 
-    description: str = Field(..., description="What experiment to run")
-    controls: list[str] = Field(default_factory=list, description="Control conditions")
-    measurements: list[str] = Field(default_factory=list, description="What to measure")
-    expected_timeline: str = Field(default="", description="Estimated time to complete")
-    required_resources: list[str] = Field(
-        default_factory=list, description="Equipment, materials, etc."
-    )
+    description: str = Field(..., description="Detailed description of the experiment")
+    controls: list[str] = Field(..., description="Necessary control groups")
+    measurements: list[str] = Field(..., description="Specific variables to measure")
+    expected_timeline: str = Field(..., description="Estimated time to complete")
+    required_resources: list[str] = Field(..., description="Equipment/reagents needed")
+
+
+class SimulationResult(BaseModel):
+    """Result of an in-silico verification simulation."""
+    
+    code: str = Field(..., description="The Python code generated for the simulation")
+    success: bool = Field(..., description="Whether the simulation ran without errors")
+    supports_hypothesis: bool = Field(..., description="Whether the simulation result supports the claim")
+    output_log: str = Field(default="", description="Stdout/Stderr from the execution")
+    plot_path: str | None = Field(default=None, description="Path to generated plot image")
+    metrics: dict[str, float] = Field(default_factory=dict, description="Key metrics from the simulation")
 
 
 class GroundedHypothesis(BaseModel):
@@ -402,11 +411,16 @@ class GroundedHypothesis(BaseModel):
     
     # Experiment
     suggested_experiments: list[SuggestedExperiment] = Field(
-        default_factory=list, description="How to test this hypothesis"
+        default_factory=list, description="Concrete experiments to test the hypothesis"
     )
     
+    # Validation & Simulation
+    simulation_result: SimulationResult | None = Field(
+        default=None, description="Result of in-silico verification"
+    )
+
     # Scores and metadata
-    scores: ScoreBlock = Field(default_factory=ScoreBlock)
+    scores: ScoreBlock | dict[str, Any] = Field(default_factory=dict, description="Scoring breakdown")
     source_soul: SoulRole | None = Field(default=None)
     iteration: int = Field(default=0, ge=0)
     created_at: datetime = Field(default_factory=datetime.now)

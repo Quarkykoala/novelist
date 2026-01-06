@@ -35,6 +35,7 @@ from src.kb.gap_analyzer import GapAnalyzer
 from src.kb.grounded_generator import GroundedHypothesisGenerator
 from src.ralph.tree import ResearchState
 from src.ralph.tree_search_orchestrator import TreeSearchOrchestrator
+from src.soul.simulator import Simulator
 from src.kb.paper_summarizer import PaperSummarizer
 from src.soul.bdi import BDIAgent
 from src.soul.collective import SoulCollective
@@ -64,13 +65,15 @@ class RalphOrchestrator:
         self.claim_extractor = ClaimExtractor(model=self.config.pro_model)
         self.gap_analyzer = GapAnalyzer(model=self.config.pro_model)
         self.grounded_generator = GroundedHypothesisGenerator(model=self.config.pro_model)
+        self.simulator = Simulator(model=self.config.pro_model)
         
         # MCTS Orchestrator
         self.tree_search = TreeSearchOrchestrator(
             config=self.config,
             collective=self.collective,
             generator=self.grounded_generator,
-            scorer=self.scorer
+            scorer=self.scorer,
+            simulator=self.simulator
         )
 
         # Session state
