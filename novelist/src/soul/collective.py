@@ -43,6 +43,7 @@ class SoulCollective:
         context: dict[str, Any],
         mode: GenerationMode,
         target_hypotheses: int = 10,
+        existing_hypotheses: list[Hypothesis] | None = None,
     ) -> tuple[list[Hypothesis], dict[str, Any]]:
         """Run a full debate round to generate and refine hypotheses.
 
@@ -51,6 +52,7 @@ class SoulCollective:
             context: Context from memory system
             mode: Generation mode
             target_hypotheses: Target number for final output
+            existing_hypotheses: Optional hypotheses to refine (recorded in trace)
 
         Returns:
             Tuple of (final hypotheses, debate trace)
@@ -61,6 +63,8 @@ class SoulCollective:
             "hypotheses_killed": 0,
             "hypotheses_final": 0,
         }
+        if existing_hypotheses:
+            trace["existing_hypotheses"] = len(existing_hypotheses)
 
         # Phase 1: Generate proposals (parallel)
         proposals = await self._phase_generate(topic, context, mode)

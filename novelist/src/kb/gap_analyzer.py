@@ -160,6 +160,9 @@ class GapAnalyzer:
         )
         
         response = await self.client.generate_content(prompt)
+        # Handle GenerationResponse
+        if hasattr(response, "content"):
+            response = response.content
         return self._parse_gaps(response)
 
     def _format_claims_for_prompt(self) -> str:

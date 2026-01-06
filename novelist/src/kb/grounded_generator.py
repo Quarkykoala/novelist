@@ -139,6 +139,14 @@ class GroundedHypothesisGenerator:
         )
         
         response = await self.client.generate_content(prompt)
+        if not response:
+            return None
+        # Handle GenerationResponse
+        if hasattr(response, "content"):
+            response = response.content
+        if not response:
+            return None
+            
         hypothesis = self._parse_hypothesis(response, gap, iteration)
         
         return hypothesis
@@ -170,6 +178,10 @@ class GroundedHypothesisGenerator:
             response = await self.client.generate_content(prompt)
             if not response:
                 return None
+            
+            # Handle GenerationResponse
+            if hasattr(response, "content"):
+                response = response.content
 
             # Extract JSON
             json_str = response
@@ -282,6 +294,8 @@ class GroundedHypothesisGenerator:
         iteration: int,
     ) -> GroundedHypothesis | None:
         """Parse LLM response into GroundedHypothesis."""
+        if not response or not isinstance(response, str):
+            return None
         
         json_match = re.search(r'\{[\s\S]*\}', response)
         if not json_match:

@@ -150,6 +150,11 @@ class App {
         this.updateGauge(status.relevanceScore);
       }
 
+      if (status.error || status.status === 'error') {
+        this.handleGenerationError(new Error(status.error || 'Generation failed'));
+        return;
+      }
+
       // Check if complete
       if (status.complete) {
         this.handleGenerationComplete(status);
@@ -189,6 +194,7 @@ class App {
     generateBtn.innerHTML = '<span class="material-symbols-outlined">play_arrow</span> Generate Hypotheses';
 
     this.updateDockStatus(`Error: ${error.message}`);
+    this.addLog({ label: 'error', text: error.message });
   }
 
   updateHypotheses(hypotheses) {

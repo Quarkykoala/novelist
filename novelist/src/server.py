@@ -7,11 +7,15 @@ Provides REST API endpoints for the frontend to communicate with the orchestrato
 import asyncio
 import json
 import os
+import traceback
 import uuid
 from datetime import datetime
 from pathlib import Path
 import tempfile
 from typing import Any
+
+from dotenv import load_dotenv
+load_dotenv()
 
 from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -78,6 +82,7 @@ class SessionStatusResponse(BaseModel):
     hypotheses: list[dict[str, Any]]
     soulMessages: list[dict[str, Any]]
     relevanceScore: float | None
+    error: str | None = None
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -203,7 +208,15 @@ async def run_session(session_id: str, topic: str, config: RalphConfig):
     except Exception as e:
         sessions[session_id]["status"] = "error"
         sessions[session_id]["error"] = str(e)
+        sessions[session_id]["phase"] = "Error"
         sessions[session_id]["complete"] = True
+        try:
+            session_dir = SESSIONS_DIR / session_id
+            session_dir.mkdir(parents=True, exist_ok=True)
+            with open(session_dir / "error.log", "w") as f:
+                f.write(traceback.format_exc())
+        except Exception as log_error:
+            print(f"[WARN] Failed to write error log: {log_error}")
     finally:
         running_tasks.pop(session_id, None)
 
@@ -244,6 +257,7 @@ async def create_session(
         "soulMessages": [],
         "gaps": [],
         "result": None,
+        "error": None,
     }
     
     # Validate API Key
@@ -302,6 +316,7 @@ async def get_session_status(session_id: str):
         "soulMessages": session.get("soulMessages", []),
         "gaps": session.get("gaps", []),
         "relevanceScore": session.get("relevanceScore"),
+        "error": session.get("error"),
     }
 
 

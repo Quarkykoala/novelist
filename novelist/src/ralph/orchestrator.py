@@ -27,6 +27,7 @@ from src.contracts.schemas import (
     RalphConfig,
     ScoreBlock,
     SessionResult,
+    SoulRole,
 )
 from src.kb.arxiv_client import ArxivClient, detect_categories_from_query
 from src.kb.claim_extractor import ClaimExtractor
@@ -235,7 +236,15 @@ class RalphOrchestrator:
             # Summarize papers
             await self._emit_status("Summarizing papers...")
             summarizer = PaperSummarizer(model=self.config.flash_model)
-            summaries = await summarizer.summarize_batch(papers, max_concurrent=5)
+            
+            async def _progress(completed: int, total: int):
+                await self._emit_status(f"Summarizing papers ({completed}/{total})...")
+                
+            summaries = await summarizer.summarize_batch(
+                papers, 
+                max_concurrent=5,
+                on_progress=_progress
+            )
 
             # Build concept map
             await self._emit_status("Building concept map...")
@@ -337,12 +346,16 @@ class RalphOrchestrator:
                          rationale_parts.append(f"Null Result: {gh.null_result}")
                      return ". ".join(rationale_parts)
 
+                 experiments = [e.description for e in gh.suggested_experiments if e.description]
+                 if not experiments:
+                     experiments = ["Design a controlled experiment to test the claim."]
+
                  h = Hypothesis(
                      id=gh.id or str(uuid.uuid4())[:8],
                      hypothesis=gh.claim,
                      rationale=_format_rationale(gh),
                      cross_disciplinary_connection=gh.gap_addressed or "Generated from gap",
-                     experimental_design=[e.description for e in gh.suggested_experiments],
+                     experimental_design=experiments,
                      expected_impact="High - grounded in literature gaps.",
                      novelty_keywords=["Grounded", "Gap-Driven"],
                      iteration=self.iteration, # Changed 'iteration' to 'self.iteration'
@@ -353,14 +366,31 @@ class RalphOrchestrator:
 
              observation += f"\n\nAnalyzed {len(self.gaps)} research gaps using Agentic Tree Search. Generated {len(self.hypotheses)} grounded hypotheses."
              await self._emit_status(f"Tree Search complete. Found {len(self.hypotheses)} hypotheses.")
+             debate_trace = {
+                 "hypotheses_generated": len(self.hypotheses),
+                 "hypotheses_killed": 0,
+                 "hypotheses_final": len(self.hypotheses),
+                 "gap_based": True,
+             }
+             if not self.hypotheses:
+                 await self._emit_status("Tree search returned no hypotheses; falling back to debate.")
+                 new_hypotheses, debate_trace = await self.collective.run_debate(
+                     topic=self.topic,
+                     context=self.memory.get_context_for_generation(),
+                     mode=GenerationMode.RANDOM_INJECTION,
+                     target_hypotheses=self.config.max_hypotheses,
+                 )
+                 observation += f"\n\nFallback debate generated {len(new_hypotheses)} hypotheses."
 
-        elif self.iteration == 1: # Changed 'iteration' to 'self.iteration'
+        elif self.iteration == 1: # Changed 'iteration' to 'self.iteration'     
              # Fallback if no gaps (should rare)
              await self._emit_status("Brainstorming (Fallback)...")
-             new_hypotheses = await self.collective.generate_hypotheses( # Assign to new_hypotheses
-                 mode=GenerationMode.RANDOM_INJECTION, n=3
+             new_hypotheses, debate_trace = await self.collective.run_debate(
+                 topic=self.topic,
+                 context=self.memory.get_context_for_generation(),
+                 mode=GenerationMode.RANDOM_INJECTION,
+                 target_hypotheses=self.config.max_hypotheses,
              )
-             self.hypotheses.extend(new_hypotheses) # Add to self.hypotheses
              observation += f"\n\nGenerated {len(new_hypotheses)} initial hypotheses via brainstorming."
         else:
              # Subsequent iterations: Refine existing standard hypotheses

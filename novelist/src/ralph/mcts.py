@@ -52,11 +52,14 @@ class AgenticTreeSearch:
         self.root = SearchNode(state=initial_state, action_description="Root")
         
         # Initial expansion of root
-        print(f"🌱 MCTS: Initializing search from root (Depth {initial_state.depth})")
+        print(f"MCTS: Initializing search from root (Depth {initial_state.depth})")
         await self._expand_node(self.root)
+        if not self.root.children:
+            print("[WARN] MCTS: No children generated at root expansion.")
+            return self.root
         
         for i in range(iterations):
-            print(f"🌳 MCTS Iteration {i+1}/{iterations}...")
+            print(f"MCTS Iteration {i+1}/{iterations}...")
             
             # 2. Select
             node = self._select(self.root)
@@ -90,6 +93,9 @@ class AgenticTreeSearch:
             self._backpropagate(node, reward)
 
         # Return best child of root (most visited or highest value)
+        if not self.root.children:
+            print("[WARN] MCTS: No children available after search.")
+            return self.root
         return self.root.best_child(exploration_weight=0.0)
 
     def _select(self, node: SearchNode) -> SearchNode:

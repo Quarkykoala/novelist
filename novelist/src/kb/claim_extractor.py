@@ -103,10 +103,11 @@ class ClaimExtractor:
         response_obj = await self.client.generate_content(prompt)
         
         response_text = ""
-        if hasattr(response_obj, 'usage'):
-            self.total_tokens += response_obj.usage.total_tokens
-            self.total_cost += response_obj.usage.cost_usd
+        if hasattr(response_obj, 'content'):
             response_text = response_obj.content
+            if hasattr(response_obj, 'usage'):
+                self.total_tokens += response_obj.usage.total_tokens or 0
+                self.total_cost += response_obj.usage.cost_usd or 0.0
         elif isinstance(response_obj, str):
             response_text = response_obj
 

@@ -78,10 +78,13 @@ class PaperSummarizer:
         )
 
         try:
-            response_text = await self.client.generate_content(prompt)
-            if not response_text:
+            response = await self.client.generate_content(prompt)
+            if not response:
                 return None
-
+            
+            # Handle GenerationResponse object or raw string (fallback)
+            response_text = response.content if hasattr(response, "content") else str(response)
+            
             json_str = extract_json_from_response(response_text)
             if not json_str:
                 return None
@@ -105,21 +108,36 @@ class PaperSummarizer:
         self,
         papers: list[ArxivPaper],
         max_concurrent: int = 5,
+        on_progress: Any = None, # Callable[[int, int], Awaitable[None]] or None
     ) -> list[PaperSummary]:
         """Summarize multiple papers with concurrency control.
-
+        
         Args:
             papers: List of papers to summarize
             max_concurrent: Maximum concurrent API calls
-
-        Returns:
-            List of successful summaries
+            on_progress: Async callback(completed, total)
         """
         semaphore = asyncio.Semaphore(max_concurrent)
+        total = len(papers)
+        completed = 0
+        
+        # Use a lock for the completed counter to be safe
+        counter_lock = asyncio.Lock()
 
         async def summarize_with_semaphore(paper: ArxivPaper) -> PaperSummary | None:
+            nonlocal completed
             async with semaphore:
-                return await self.summarize(paper)
+                result = await self.summarize(paper)
+                
+                async with counter_lock:
+                    completed += 1
+                    if on_progress:
+                        try:
+                            await on_progress(completed, total)
+                        except Exception:
+                            pass # Ignore callback errors
+                
+                return result
 
         tasks = [summarize_with_semaphore(paper) for paper in papers]
         results = await asyncio.gather(*tasks, return_exceptions=True)

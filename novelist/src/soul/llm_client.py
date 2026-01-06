@@ -75,16 +75,18 @@ class LLMClient:
         cache_key = f"{provider}_{provider_stats.current_key_index}"
         
         if cache_key not in self._clients:
-            if provider == "gemini":
-                import google.genai as genai
-                self._clients[cache_key] = genai.Client(api_key=key)
-            elif provider == "groq":
+            if provider == "groq":
                 from groq import AsyncGroq
                 self._clients[cache_key] = AsyncGroq(api_key=key)
             elif provider == "cerebras":
                 from cerebras.cloud.sdk import AsyncCerebras
                 self._clients[cache_key] = AsyncCerebras(api_key=key)
         
+        # For Gemini, we return None here and instantiate fresh in generate_content
+        # to ensure thread safety with asyncio.to_thread
+        if provider == "gemini":
+            return "GEMINI_MARKER"
+            
         return self._clients.get(cache_key)
 
     async def _throttle(self, provider_stats: ProviderStats):
@@ -113,8 +115,8 @@ class LLMClient:
             max_keys = len(provider_stats.keys) or 1
             
             while keys_tried < max_keys:
-                client = await self._get_client(provider_stats)
-                if not client:
+                client_or_marker = await self._get_client(provider_stats)
+                if not client_or_marker:
                     break # Next provider
 
                 try:
@@ -129,15 +131,21 @@ class LLMClient:
                     usage = TokenUsage()
 
                     if provider_stats.name == "gemini":
-                        coro = asyncio.to_thread(
-                            lambda: client.models.generate_content(
+                        # Instantiate fresh client for thread safety
+                        import google.genai as genai
+                        current_key = provider_stats.get_current_key()
+                        # Use a local function to capture client and run sync
+                        def _run_gemini_sync():
+                            local_client = genai.Client(api_key=current_key)
+                            return local_client.models.generate_content(
                                 model=model_name,
                                 contents=prompt,
                             )
-                        )
-                        # Add timeout to prevent hanging
-                        # If timeout occurs, it triggers the exception block which rotates key
-                        response = await asyncio.wait_for(coro, timeout=60.0)
+
+                        coro = asyncio.to_thread(_run_gemini_sync)
+                        
+                        # STRICT TIMEOUT: 30 seconds to fail fast
+                        response = await asyncio.wait_for(coro, timeout=30.0)
                         content = response.text
                         
                         # Estimate tokens for Gemini
@@ -151,6 +159,7 @@ class LLMClient:
                         )
 
                     elif provider_stats.name in ["groq", "cerebras"]:
+                        client = client_or_marker # It's a real client for these
                         response = await client.chat.completions.create(
                             messages=[{"role": "user", "content": prompt}],
                             model=model_name,
