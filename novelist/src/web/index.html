@@ -145,7 +145,8 @@
                 Activity Log
               </h2>
             </div>
-            <div id="activity-log" style="background: var(--bg-secondary); border-radius: var(--radius-lg); padding: var(--space-4); min-height: 140px; display:flex; flex-direction:column; gap: var(--space-2);">
+            <div id="activity-log"
+              style="background: var(--bg-secondary); border-radius: var(--radius-lg); padding: var(--space-4); min-height: 140px; display:flex; flex-direction:column; gap: var(--space-2);">
               <div class="skeleton skeleton--text"></div>
               <div class="skeleton skeleton--text"></div>
               <div class="skeleton skeleton--text"></div>
@@ -225,6 +226,26 @@
                 <div class="gauge__value" id="gauge-value">8.7</div>
               </div>
               <div class="gauge__label">Relevance Score</div>
+            </div>
+          </div>
+
+          <!-- Identified Gaps Panel -->
+          <div class="panel" style="margin-top: var(--space-6);">
+            <div class="panel__header">
+              <h2 class="panel__title">
+                <span class="material-symbols-outlined">search_insights</span>
+                Research Gaps
+              </h2>
+              <span class="badge" id="gaps-count"
+                style="background: var(--accent); color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px;">0</span>
+            </div>
+
+            <div id="gaps-list"
+              style="display: flex; flex-direction: column; gap: var(--space-3); max-height: 200px; overflow-y: auto;">
+              <div style="color: var(--text-muted); font-size: 13px; padding: var(--space-3);">
+                <span class="material-symbols-outlined" style="font-size: 14px; vertical-align: middle;">info</span>
+                Gaps will appear after analysis
+              </div>
             </div>
           </div>
         </div>

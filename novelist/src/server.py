@@ -154,6 +154,19 @@ async def run_session(session_id: str, topic: str, config: RalphConfig):
             result.concept_map and len(result.concept_map.nodes) / 10
         ) or None
 
+        # Store gaps if available from orchestrator
+        if hasattr(orchestrator, 'gaps') and orchestrator.gaps:
+            sessions[session_id]["gaps"] = [
+                {
+                    "type": g.gap_type.value,
+                    "description": g.description,
+                    "concept_a": g.concept_a,
+                    "concept_b": g.concept_b,
+                    "potential_value": g.potential_value,
+                }
+                for g in orchestrator.gaps
+            ]
+
         # Update knowledge stats from this run
         if result:
             knowledge_stats["papers_indexed"] = max(
@@ -209,6 +222,7 @@ async def create_session(
         "complete": False,
         "hypotheses": [],
         "soulMessages": [],
+        "gaps": [],
         "result": None,
     }
     
@@ -259,6 +273,7 @@ async def get_session_status(session_id: str):
         "complete": session.get("complete", False),
         "hypotheses": session.get("hypotheses", []),
         "soulMessages": session.get("soulMessages", []),
+        "gaps": session.get("gaps", []),
         "relevanceScore": session.get("relevanceScore"),
     }
 
