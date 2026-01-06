@@ -19,10 +19,26 @@ class BaseSoul(ABC):
         self.model = model
         from src.soul.llm_client import LLMClient
         self.client = LLMClient(model=model)
+        
+        # Usage tracking
+        self.total_tokens = 0
+        self.total_cost = 0.0
 
     async def _call_model_with_retry(self, prompt: str) -> str | None:
         """Call the model via the unified client."""
-        return await self.client.generate_content(prompt)
+        try:
+             response = await self.client.generate_content(prompt)
+             
+             if hasattr(response, 'usage'):
+                 self.total_tokens += response.usage.total_tokens
+                 self.total_cost += response.usage.cost_usd
+                 return response.content
+             elif isinstance(response, str):
+                 return response
+             
+             return None
+        except Exception:
+             return None
 
     @abstractmethod
     async def generate(

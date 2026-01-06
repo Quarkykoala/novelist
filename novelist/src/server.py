@@ -134,7 +134,26 @@ async def run_session(session_id: str, topic: str, config: RalphConfig):
         sessions[session_id]["status"] = "running"
         sessions[session_id]["phase"] = "Initializing"
 
-        orchestrator = RalphOrchestrator(config=config)
+        # Define callbacks for live updates
+        async def on_status_change(status: str):
+            if session_id in sessions:
+                sessions[session_id]["phase"] = status
+
+        async def on_trace(trace: IterationTrace):
+            if session_id in sessions:
+                sessions[session_id]["iteration"] = trace.iteration
+                sessions[session_id]["soulMessages"].append(_serialize_trace(trace))
+                # Also update currently surviving hypotheses count if available in trace
+                sessions[session_id]["hypotheses_count"] = trace.hypotheses_surviving
+                sessions[session_id]["total_cost"] = trace.cost_usd
+
+        orchestrator = RalphOrchestrator(
+            config=config,
+            callbacks={
+                "on_status_change": on_status_change,
+                "on_trace": on_trace,
+            }
+        )
 
         # Run the session (saves to sessions dir automatically)
         result = await orchestrator.run(topic, output_dir=SESSIONS_DIR)
@@ -227,6 +246,13 @@ async def create_session(
         "result": None,
     }
     
+    # Validate API Key
+    if not os.getenv("GEMINI_API_KEY"):
+         raise HTTPException(
+             status_code=400, 
+             detail="Missing GEMINI_API_KEY environment variable. Please configure it in .env"
+         )
+
     # Start background task
     task = asyncio.create_task(run_session(session_id, request.topic, config))
     running_tasks[session_id] = task

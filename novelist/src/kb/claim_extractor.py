@@ -79,6 +79,8 @@ class ClaimExtractor:
     def __init__(self, model: str = "gemini-2.0-flash"):
         self.client = LLMClient(model=model)
         self.extraction_cache: dict[str, list[ExtractedClaim]] = {}
+        self.total_tokens = 0
+        self.total_cost = 0.0
 
     async def extract_claims(
         self,
@@ -98,8 +100,17 @@ class ClaimExtractor:
             abstract=abstract,
         )
 
-        response = await self.client.generate_content(prompt)
-        claims = self._parse_claims(paper_id, response)
+        response_obj = await self.client.generate_content(prompt)
+        
+        response_text = ""
+        if hasattr(response_obj, 'usage'):
+            self.total_tokens += response_obj.usage.total_tokens
+            self.total_cost += response_obj.usage.cost_usd
+            response_text = response_obj.content
+        elif isinstance(response_obj, str):
+            response_text = response_obj
+
+        claims = self._parse_claims(paper_id, response_text)
         
         # Cache results
         self.extraction_cache[paper_id] = claims

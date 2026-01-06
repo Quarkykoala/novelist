@@ -71,6 +71,8 @@ class ConceptMapBuilder:
         from src.soul.llm_client import LLMClient
         self.client = LLMClient(model=model)
         self.concept_map = ConceptMap()
+        self.total_tokens = 0
+        self.total_cost = 0.0
 
     def add_entities_from_summaries(self, summaries: list[PaperSummary]) -> None:
         """Add entities from paper summaries to the concept map.
@@ -153,27 +155,53 @@ Paper [{summary.arxiv_id}]:
         prompt = RELATION_EXTRACTION_PROMPT.format(papers_text=papers_text)
 
         try:
-            response_text = await self.client.generate_content(prompt)
-            if not response_text:
-                return []
+            # Simple retry loop
+            max_retries = 3
+            for attempt in range(max_retries):
+                try:
+                    response_obj = await self.client.generate_content(prompt)
+                    # Check for GenerationResponse vs legacy string
+                    if hasattr(response_obj, 'content'):
+                        response_text = response_obj.content
+                        if hasattr(response_obj, 'usage'):
+                             self.total_tokens += response_obj.usage.total_tokens
+                             self.total_cost += response_obj.usage.cost_usd
+                    else:
+                        response_text = str(response_obj) # Fallback
 
-            json_str = extract_json_from_response(response_text)
-            if json_str:
-                data = json.loads(json_str)
-                relations = data.get("relations", [])
+                    if not response_text:
+                        if attempt < max_retries - 1:
+                            await asyncio.sleep(2 ** attempt)
+                            continue
+                        return []
 
-                edges: list[ConceptEdge] = []
-                for rel in relations:
-                    edge = ConceptEdge(
-                        source=rel.get("source", "").lower().replace(" ", "_"),
-                        target=rel.get("target", "").lower().replace(" ", "_"),
-                        relation=rel.get("relation", "related"),
-                        confidence=0.7,
-                        source_papers=[rel.get("paper_id", "")],
-                    )
-                    edges.append(edge)
-                    self.concept_map.edges.append(edge)
-                return edges
+                    json_str = extract_json_from_response(response_text)
+                    if json_str:
+                        data = json.loads(json_str)
+                        relations = data.get("relations", [])
+
+                        edges: list[ConceptEdge] = []
+                        for rel in relations:
+                            edge = ConceptEdge(
+                                source=rel.get("source", "").lower().replace(" ", "_"),
+                                target=rel.get("target", "").lower().replace(" ", "_"),
+                                relation=rel.get("relation", "related"),
+                                confidence=0.7,
+                                source_papers=[rel.get("paper_id", "")],
+                            )
+                            edges.append(edge)
+                            self.concept_map.edges.append(edge)
+                        return edges
+                    else:
+                         # JSON extraction failed
+                         print(f"[WARN] Failed to extract JSON from relation extraction (Attempt {attempt+1})")
+                
+                except Exception as e:
+                    print(f"[WARN] Error in relation extraction (Attempt {attempt+1}): {e}")
+                    if attempt < max_retries - 1:
+                        await asyncio.sleep(2 ** attempt)
+                    else:
+                        raise e
         except Exception:
             pass
 

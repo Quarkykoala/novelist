@@ -69,6 +69,8 @@ class ScoringService:
         self.model = model
         from src.soul.llm_client import LLMClient
         self.client = LLMClient(model=model)
+        self.total_tokens = 0
+        self.total_cost = 0.0
 
     async def score(self, hypothesis: Hypothesis) -> tuple[float, float, float]:
         """Score a hypothesis on feasibility, impact, and cross-domain synergy.
@@ -89,7 +91,16 @@ class ScoringService:
         )
 
         try:
-            response_text = await self.client.generate_content(prompt)
+            response_obj = await self.client.generate_content(prompt)
+            
+            response_text = ""
+            if hasattr(response_obj, 'usage'):
+                self.total_tokens += response_obj.usage.total_tokens
+                self.total_cost += response_obj.usage.cost_usd
+                response_text = response_obj.content
+            elif isinstance(response_obj, str):
+                response_text = response_obj
+
             if not response_text:
                 return 0.5, 0.5, 0.0
 

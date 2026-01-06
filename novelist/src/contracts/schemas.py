@@ -250,6 +250,29 @@ class PaperSummary(BaseModel):
 
 
 # =============================================================================
+# LLM & Generation
+# =============================================================================
+
+
+class TokenUsage(BaseModel):
+    """Token usage statistics."""
+    
+    prompt_tokens: int = Field(default=0, ge=0)
+    completion_tokens: int = Field(default=0, ge=0)
+    total_tokens: int = Field(default=0, ge=0)
+    cost_usd: float = Field(default=0.0, ge=0.0)
+
+
+class GenerationResponse(BaseModel):
+    """Standardized response from LLM providers."""
+    
+    content: str = Field(..., description="Generated text content")
+    usage: TokenUsage = Field(default_factory=TokenUsage, description="Usage statistics")
+    model_name: str = Field(default="", description="Model used for generation")
+    provider: str = Field(default="", description="Provider used")
+
+
+# =============================================================================
 # Literature-First Pipeline: Structured Claims
 # =============================================================================
 

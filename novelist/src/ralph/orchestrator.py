@@ -49,8 +49,13 @@ load_dotenv()
 class RalphOrchestrator:
     """Main orchestrator for hypothesis generation sessions."""
 
-    def __init__(self, config: RalphConfig | None = None):
+    def __init__(
+        self, 
+        config: RalphConfig | None = None,
+        callbacks: dict[str, Any] | None = None,
+    ):
         self.config = config or RalphConfig()
+        self.callbacks = callbacks or {}
 
         # Initialize components
         self.agent = BDIAgent()
@@ -88,6 +93,71 @@ class RalphOrchestrator:
         self.concept_map: ConceptMap | None = None
         self.claims: list[ExtractedClaim] = []
         self.gaps: list[IdentifiedGap] = []
+    
+    async def _emit_status(self, status_msg: str) -> None:
+        """Emit a status update via callback."""
+        if "on_status_change" in self.callbacks:
+            try:
+                if asyncio.iscoroutinefunction(self.callbacks["on_status_change"]):
+                    await self.callbacks["on_status_change"](status_msg)
+                else:
+                    self.callbacks["on_status_change"](status_msg)
+            except Exception as e:
+                print(f"[WARN] Error in status callback: {e}")
+
+    async def _emit_trace(self, trace: IterationTrace) -> None:
+        """Emit a trace update via callback."""
+        if "on_trace" in self.callbacks:
+            try:
+                if asyncio.iscoroutinefunction(self.callbacks["on_trace"]):
+                    await self.callbacks["on_trace"](trace)
+                else:
+                    self.callbacks["on_trace"](trace)
+            except Exception as e:
+                print(f"[WARN] Error in trace callback: {e}")
+    
+    def _add_trace(self, msg: str) -> None:
+        """Add a simple thought trace (internal helper)."""
+        # This is used by some components to log non-structured thoughts
+        # We can map this to a partial trace emission if needed, 
+        # but for now we rely on the main iteration trace loop.
+        pass
+
+    def _update_costs(self) -> None:
+        """Aggregate costs from all components."""
+        total_cost = 0.0
+        total_tokens = 0
+        
+        # Collect from Collective (Souls)
+        for soul in [self.collective.creative, self.collective.risk_taker, 
+                     self.collective.skeptic, self.collective.methodical, 
+                     self.collective.synthesizer]:
+            total_cost += soul.total_cost
+            total_tokens += soul.total_tokens
+
+        # Collect from other services
+        services = [
+            self.scorer, 
+            self.claim_extractor, 
+            # self.gap_analyzer, # Check if GapAnalyzer tracks usage
+            # self.grounded_generator, # Check if Grounded tracks usage
+        ]
+        
+        # For now, simplistic sum. 
+        # Ideally, components share a UsageTracker, but this works for disjoint components.
+        for svc in services:
+             if hasattr(svc, 'total_cost'):
+                 total_cost += svc.total_cost
+             if hasattr(svc, 'total_tokens'):
+                 total_tokens += svc.total_tokens
+        
+        # Concept map cost
+        # NOTE: ConceptMapBuilder is inside self.concept_map creation logic usually
+        # But we create it in _ingest_papers temporarily. We need to track it there.
+        # See usage in _ingest_papers
+        
+        self.total_cost = total_cost
+        self.total_tokens = total_tokens
 
     async def run(
         self,
@@ -163,14 +233,21 @@ class RalphOrchestrator:
                 return
 
             # Summarize papers
+            await self._emit_status("Summarizing papers...")
             summarizer = PaperSummarizer(model=self.config.flash_model)
             summaries = await summarizer.summarize_batch(papers, max_concurrent=5)
 
             # Build concept map
+            await self._emit_status("Building concept map...")
             builder = ConceptMapBuilder(model=self.config.pro_model)
             self.concept_map = await builder.build_from_summaries(summaries)
+            
+            # Track concept map builder usage manually since it's transient
+            self.total_tokens += builder.total_tokens
+            self.total_cost += builder.total_cost
 
             # === NEW: Extract structured claims from papers ===
+            await self._emit_status("Extracting claims...")
             for paper in papers[:10]:  # Limit to reduce API calls
                 claims = await self.claim_extractor.extract_claims(
                     paper_id=paper.arxiv_id,
@@ -178,10 +255,16 @@ class RalphOrchestrator:
                     abstract=paper.abstract,
                 )
                 self.claims.extend(claims)
+            
+            self._update_costs()
+            await self._emit_status(f"Ingested {len(papers)} papers. Extracted {len(self.claims)} claims.")
 
             # === NEW: Identify research gaps ===
+            await self._emit_status("Identifying research gaps...")
             self.gap_analyzer.add_claims(self.claims)
             self.gaps = await self.gap_analyzer.analyze(self.concept_map)
+            
+            self._update_costs()
 
             # Update beliefs
             self.agent.perceive({
@@ -203,6 +286,8 @@ class RalphOrchestrator:
         # Start iteration in memory
         mode = self.agent.state.current_mode
         self.memory.start_iteration(self.iteration, mode)
+        
+        await self._emit_status(f"Iteration {self.iteration}: Deliberating with mode {mode.value}...")
 
         # BDI deliberation
         current_scores = self._get_average_scores()
@@ -220,7 +305,7 @@ class RalphOrchestrator:
         # PHASE 1: GENERATION (MCTS or Linear)
         # ---------------------------------------------------------------------
         if self.iteration == 1 and self.gaps: # Changed 'iteration' to 'self.iteration'
-             self._emit_status("Running Agentic Tree Search...")
+             await self._emit_status("Running Agentic Tree Search...")
              
              # Create initial state for MCTS
              root_state = ResearchState(
@@ -267,10 +352,11 @@ class RalphOrchestrator:
                  self.hypotheses.append(h)
 
              observation += f"\n\nAnalyzed {len(self.gaps)} research gaps using Agentic Tree Search. Generated {len(self.hypotheses)} grounded hypotheses."
+             await self._emit_status(f"Tree Search complete. Found {len(self.hypotheses)} hypotheses.")
 
         elif self.iteration == 1: # Changed 'iteration' to 'self.iteration'
              # Fallback if no gaps (should rare)
-             self._emit_status("Brainstorming (Fallback)...")
+             await self._emit_status("Brainstorming (Fallback)...")
              new_hypotheses = await self.collective.generate_hypotheses( # Assign to new_hypotheses
                  mode=GenerationMode.RANDOM_INJECTION, n=3
              )
@@ -278,7 +364,7 @@ class RalphOrchestrator:
              observation += f"\n\nGenerated {len(new_hypotheses)} initial hypotheses via brainstorming."
         else:
              # Subsequent iterations: Refine existing standard hypotheses
-             self._emit_status("Refining hypotheses...")
+             await self._emit_status("Refining hypotheses via debate...")
              new_hypotheses, debate_trace = await self.collective.run_debate( # Capture debate_trace
                  topic=self.topic, # Added topic
                  context=self.memory.get_context_for_generation(), # Added context
@@ -287,6 +373,8 @@ class RalphOrchestrator:
                  existing_hypotheses=self.hypotheses, # Pass existing hypotheses for refinement
              )
              observation += "\n\nRefined hypotheses through debate."
+
+        self._update_costs()
 
         # Verify novelty
         if new_hypotheses:
@@ -331,9 +419,11 @@ class RalphOrchestrator:
             avg_novelty=new_scores.novelty,
             avg_feasibility=new_scores.feasibility,
             mode_used=new_mode,
-            tokens_used=0,  # TODO: track tokens
-            cost_usd=0.0,  # TODO: track cost
+            tokens_used=self.total_tokens,
+            cost_usd=self.total_cost,
         )
+
+        await self._emit_trace(trace)
 
         self.memory.end_iteration(trace)
 
