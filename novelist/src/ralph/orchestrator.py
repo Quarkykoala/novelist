@@ -18,15 +18,21 @@ from dotenv import load_dotenv
 from src.contracts.schemas import (
     BDIState,
     ConceptMap,
+    ExtractedClaim,
     GenerationMode,
+    GroundedHypothesis,
     Hypothesis,
+    IdentifiedGap,
     IterationTrace,
     RalphConfig,
     ScoreBlock,
     SessionResult,
 )
 from src.kb.arxiv_client import ArxivClient, detect_categories_from_query
+from src.kb.claim_extractor import ClaimExtractor
 from src.kb.concept_map import ConceptMapBuilder
+from src.kb.gap_analyzer import GapAnalyzer
+from src.kb.grounded_generator import GroundedHypothesisGenerator
 from src.kb.paper_summarizer import PaperSummarizer
 from src.soul.bdi import BDIAgent
 from src.soul.collective import SoulCollective
@@ -52,6 +58,11 @@ class RalphOrchestrator:
         )
         self.scorer = ScoringService(model=self.config.flash_model)
 
+        # New literature-first pipeline components
+        self.claim_extractor = ClaimExtractor(model=self.config.flash_model)
+        self.gap_analyzer = GapAnalyzer(model=self.config.flash_model)
+        self.grounded_generator = GroundedHypothesisGenerator(model=self.config.pro_model)
+
         # Session state
         self.session_id = ""
         self.topic = ""
@@ -60,7 +71,10 @@ class RalphOrchestrator:
         self.total_tokens = 0
         self.total_cost = 0.0
         self.hypotheses: list[Hypothesis] = []
+        self.grounded_hypotheses: list[GroundedHypothesis] = []
         self.concept_map: ConceptMap | None = None
+        self.claims: list[ExtractedClaim] = []
+        self.gaps: list[IdentifiedGap] = []
 
     async def run(
         self,
@@ -127,7 +141,7 @@ class RalphOrchestrator:
         return result
 
     async def _ingest_papers(self) -> None:
-        """Phase 1: Fetch papers from arXiv and build concept map."""
+        """Phase 1: Fetch papers from arXiv, extract claims, build concept map, identify gaps."""
         async with ArxivClient() as client:
             # Fetch papers
             papers = await client.search(self.topic, max_results=30)
@@ -143,10 +157,25 @@ class RalphOrchestrator:
             builder = ConceptMapBuilder(model=self.config.pro_model)
             self.concept_map = await builder.build_from_summaries(summaries)
 
+            # === NEW: Extract structured claims from papers ===
+            for paper in papers[:10]:  # Limit to reduce API calls
+                claims = await self.claim_extractor.extract_claims(
+                    paper_id=paper.arxiv_id,
+                    title=paper.title,
+                    abstract=paper.abstract,
+                )
+                self.claims.extend(claims)
+
+            # === NEW: Identify research gaps ===
+            self.gap_analyzer.add_claims(self.claims)
+            self.gaps = await self.gap_analyzer.analyze(self.concept_map)
+
             # Update beliefs
             self.agent.perceive({
                 "papers_ingested": len(papers),
                 "concept_map": self.concept_map,
+                "claims_extracted": len(self.claims),
+                "gaps_identified": len(self.gaps),
             })
 
             # Update semantic memory
@@ -170,16 +199,53 @@ class RalphOrchestrator:
         new_mode = self.agent.plan(current_scores, len(self.hypotheses))
         self.agent.commit_to_plan(new_mode)
 
-        # Get context for generation
-        context = self.memory.get_context_for_generation()
+        new_hypotheses: list[Hypothesis] = []
+        debate_trace: dict[str, Any] = {}
 
-        # Run multi-soul debate
-        new_hypotheses, debate_trace = await self.collective.run_debate(
-            topic=self.topic,
-            context=context,
-            mode=new_mode,
-            target_hypotheses=self.config.max_hypotheses,
-        )
+        # === NEW: First iteration uses grounded generation from gaps ===
+        if self.iteration == 1 and self.gaps:
+            # Generate grounded hypotheses from identified gaps
+            high_value_gaps = self.gap_analyzer.get_high_value_gaps(5)
+            grounded = await self.grounded_generator.generate_batch(
+                gaps=high_value_gaps,
+                claims=self.claims,
+                max_hypotheses=self.config.max_hypotheses,
+                iteration=self.iteration,
+            )
+            self.grounded_hypotheses = grounded
+
+            # Convert grounded hypotheses to standard Hypothesis format for compatibility
+            for gh in grounded:
+                if gh.is_well_formed():
+                    # Create standard hypothesis from grounded hypothesis
+                    h = Hypothesis(
+                        id=gh.id,
+                        hypothesis=gh.claim,
+                        rationale=f"Mechanism: {' → '.join(s.cause + ' causes ' + s.effect for s in gh.mechanism)}. {gh.null_result}",
+                        cross_disciplinary_connection=gh.gap_addressed[:200],
+                        experimental_design=[e.description for e in gh.suggested_experiments],
+                        expected_impact=gh.prediction,
+                        novelty_keywords=[gh.mechanism[0].cause if gh.mechanism else ""],
+                        scores=gh.scores,
+                        source_soul=gh.source_soul,
+                        iteration=gh.iteration,
+                    )
+                    new_hypotheses.append(h)
+
+            debate_trace = {
+                "hypotheses_generated": len(grounded),
+                "hypotheses_killed": len(grounded) - len(new_hypotheses),
+                "gap_based": True,
+            }
+        else:
+            # Traditional multi-soul debate for refinement
+            context = self.memory.get_context_for_generation()
+            new_hypotheses, debate_trace = await self.collective.run_debate(
+                topic=self.topic,
+                context=context,
+                mode=new_mode,
+                target_hypotheses=self.config.max_hypotheses,
+            )
 
         # Verify novelty
         if new_hypotheses:
@@ -204,8 +270,9 @@ class RalphOrchestrator:
         })
 
         # Build observation string
+        gap_info = f" (from {len(self.gaps)} gaps)" if debate_trace.get("gap_based") else ""
         observation = (
-            f"Generated {debate_trace.get('hypotheses_generated', 0)} hypotheses, "
+            f"Generated {debate_trace.get('hypotheses_generated', 0)} hypotheses{gap_info}, "
             f"{debate_trace.get('hypotheses_killed', 0)} killed by Skeptic, "
             f"{len(self.hypotheses)} total. "
             f"Avg novelty: {new_scores.novelty:.2f}, feasibility: {new_scores.feasibility:.2f}"
