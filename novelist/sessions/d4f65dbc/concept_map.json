@@ -1,0 +1,1682 @@
+{
+  "nodes": [
+    {
+      "id": "qiskit",
+      "name": "Qiskit",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2204.10786v1"
+      ]
+    },
+    {
+      "id": "pulse_access",
+      "name": "Pulse access",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2204.10786v1"
+      ]
+    },
+    {
+      "id": "ibm_quantum_processors",
+      "name": "IBM Quantum processors",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2204.10786v1"
+      ]
+    },
+    {
+      "id": "armonk_processor",
+      "name": "Armonk processor",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2204.10786v1"
+      ]
+    },
+    {
+      "id": "quantum_batteries",
+      "name": "quantum batteries",
+      "type": "concept",
+      "frequency": 5,
+      "source_papers": [
+        "2204.10786v1",
+        "2308.02277v1",
+        "2406.06383v2",
+        "1908.08064v6",
+        "2205.05018v3"
+      ]
+    },
+    {
+      "id": "quantum_many-body_battery_models",
+      "name": "quantum many-body battery models",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2308.02277v1"
+      ]
+    },
+    {
+      "id": "open_quantum_systems",
+      "name": "open quantum systems",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2308.02277v1"
+      ]
+    },
+    {
+      "id": "electrophoretic_deposition_(epd)",
+      "name": "Electrophoretic Deposition (EPD)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2004.12804v1"
+      ]
+    },
+    {
+      "id": "lithium_iron_phosphate_(lfp)",
+      "name": "Lithium Iron Phosphate (LFP)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2004.12804v1"
+      ]
+    },
+    {
+      "id": "lithium_titanate_oxide_(lto)",
+      "name": "Lithium Titanate Oxide (LTO)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2004.12804v1"
+      ]
+    },
+    {
+      "id": "celgard_2325",
+      "name": "Celgard 2325",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2004.12804v1"
+      ]
+    },
+    {
+      "id": "polyethyleneimine",
+      "name": "Polyethyleneimine",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2004.12804v1"
+      ]
+    },
+    {
+      "id": "polyacrylic_acid",
+      "name": "Polyacrylic Acid",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2004.12804v1"
+      ]
+    },
+    {
+      "id": "nanoporous_membrane",
+      "name": "Nanoporous membrane",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2004.12804v1"
+      ]
+    },
+    {
+      "id": "silicon_nanoparticles_(sinps)",
+      "name": "Silicon nanoparticles (SiNPs)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2212.11678v1"
+      ]
+    },
+    {
+      "id": "vertically_aligned_carbon_nanotubes_(vacnts)",
+      "name": "Vertically aligned carbon nanotubes (VACNTs)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2212.11678v1"
+      ]
+    },
+    {
+      "id": "lithium-ion_batteries",
+      "name": "Lithium-ion batteries",
+      "type": "concept",
+      "frequency": 4,
+      "source_papers": [
+        "2212.11678v1",
+        "2406.00468v1",
+        "2506.20189v1",
+        "2309.03607v1"
+      ]
+    },
+    {
+      "id": "solid_electrolyte_interphase_(sei)_layer",
+      "name": "Solid electrolyte interphase (SEI) layer",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2212.11678v1"
+      ]
+    },
+    {
+      "id": "gravimetric_capacity",
+      "name": "Gravimetric capacity",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2212.11678v1"
+      ]
+    },
+    {
+      "id": "areal_loading",
+      "name": "Areal loading",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2212.11678v1"
+      ]
+    },
+    {
+      "id": "cycling_stability",
+      "name": "Cycling stability",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2212.11678v1"
+      ]
+    },
+    {
+      "id": "dicke_quantum_battery",
+      "name": "Dicke quantum battery",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2302.13624v1"
+      ]
+    },
+    {
+      "id": "virtual_photons",
+      "name": "Virtual photons",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2302.13624v1"
+      ]
+    },
+    {
+      "id": "matter-radiation_coupling",
+      "name": "Matter-radiation coupling",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2302.13624v1"
+      ]
+    },
+    {
+      "id": "dispersive_regime",
+      "name": "Dispersive regime",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2302.13624v1"
+      ]
+    },
+    {
+      "id": "two-level_systems",
+      "name": "Two-level systems",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2302.13624v1"
+      ]
+    },
+    {
+      "id": "stored_energy",
+      "name": "Stored energy",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2302.13624v1"
+      ]
+    },
+    {
+      "id": "charging_time",
+      "name": "Charging time",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2302.13624v1"
+      ]
+    },
+    {
+      "id": "averaged_charging_power",
+      "name": "Averaged charging power",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2302.13624v1"
+      ]
+    },
+    {
+      "id": "photovoltaic_(pv)_system",
+      "name": "photovoltaic (PV) system",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2405.04225v2"
+      ]
+    },
+    {
+      "id": "lithium-ion_(li-ion)_battery_energy_storage_system_(ess)",
+      "name": "lithium-ion (Li-ion) battery energy storage system (ESS)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2405.04225v2"
+      ]
+    },
+    {
+      "id": "lead-acid_battery_energy_storage_system_(ess)",
+      "name": "lead-acid battery energy storage system (ESS)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2405.04225v2"
+      ]
+    },
+    {
+      "id": "c-rate",
+      "name": "C-rate",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2405.04225v2"
+      ]
+    },
+    {
+      "id": "temperature",
+      "name": "temperature",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2405.04225v2"
+      ]
+    },
+    {
+      "id": "accumulated_energy_distributions",
+      "name": "accumulated energy distributions",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2405.04225v2"
+      ]
+    },
+    {
+      "id": "homer_software",
+      "name": "HOMER software",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1904.01157v1"
+      ]
+    },
+    {
+      "id": "matlab/simulink",
+      "name": "MATLAB/Simulink",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1904.01157v1"
+      ]
+    },
+    {
+      "id": "dc/dc_boost_converter",
+      "name": "DC/DC Boost Converter",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1904.01157v1"
+      ]
+    },
+    {
+      "id": "lithium-ion_(li-ion)_batteries",
+      "name": "Lithium-ion (Li-ion) batteries",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1904.01157v1"
+      ]
+    },
+    {
+      "id": "fuel_cell",
+      "name": "Fuel cell",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": [
+        "1904.01157v1"
+      ]
+    },
+    {
+      "id": "vanadium_redox_flow_batteries_(vrfbs)",
+      "name": "Vanadium Redox Flow Batteries (VRFBs)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2107.03339v1"
+      ]
+    },
+    {
+      "id": "mixed_integer_linear_programming_(milp)",
+      "name": "Mixed Integer Linear Programming (MILP)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2107.03339v1"
+      ]
+    },
+    {
+      "id": "energy_arbitrage",
+      "name": "Energy Arbitrage",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2107.03339v1"
+      ]
+    },
+    {
+      "id": "new_york_iso",
+      "name": "New York ISO",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2107.03339v1"
+      ]
+    },
+    {
+      "id": "lattice_boltzmann_method",
+      "name": "Lattice Boltzmann Method",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2203.05218v1"
+      ]
+    },
+    {
+      "id": "homogenization_approach",
+      "name": "homogenization approach",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2203.05218v1"
+      ]
+    },
+    {
+      "id": "lithium-ion_battery_cathodes",
+      "name": "lithium-ion battery cathodes",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2203.05218v1"
+      ]
+    },
+    {
+      "id": "nanoporous_binder",
+      "name": "nanoporous binder",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2203.05218v1"
+      ]
+    },
+    {
+      "id": "capillary_pressure-saturation_relationships",
+      "name": "capillary pressure-saturation relationships",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2203.05218v1"
+      ]
+    },
+    {
+      "id": "bayesian_optimization_(bolfi)",
+      "name": "Bayesian Optimization (BOLFI)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2208.03289v2"
+      ]
+    },
+    {
+      "id": "expectation_propagation_(ep)",
+      "name": "Expectation Propagation (EP)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2208.03289v2"
+      ]
+    },
+    {
+      "id": "continuum_battery_models",
+      "name": "Continuum Battery Models",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2208.03289v2"
+      ]
+    },
+    {
+      "id": "gitt_measurements",
+      "name": "GITT measurements",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2208.03289v2"
+      ]
+    },
+    {
+      "id": "principal_component_analysis_(pca)",
+      "name": "Principal Component Analysis (PCA)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2210.15773v2"
+      ]
+    },
+    {
+      "id": "cumulative_sum_control_chart",
+      "name": "cumulative sum control chart",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2210.15773v2"
+      ]
+    },
+    {
+      "id": "li-ion_battery_cells",
+      "name": "Li-ion battery cells",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": [
+        "2210.15773v2"
+      ]
+    },
+    {
+      "id": "mean-based_residuals",
+      "name": "mean-based residuals",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2210.15773v2"
+      ]
+    },
+    {
+      "id": "false-positive_rate",
+      "name": "false-positive rate",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2210.15773v2"
+      ]
+    },
+    {
+      "id": "false_negatives",
+      "name": "false negatives",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2210.15773v2"
+      ]
+    },
+    {
+      "id": "detection_time",
+      "name": "detection time",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2210.15773v2"
+      ]
+    },
+    {
+      "id": "lithiation",
+      "name": "lithiation",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1907.09258v1"
+      ]
+    },
+    {
+      "id": "li-ion_battery_electrodes",
+      "name": "Li-ion battery electrodes",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1907.09258v1"
+      ]
+    },
+    {
+      "id": "external_mechanical_loading",
+      "name": "external mechanical loading",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": [
+        "1907.09258v1"
+      ]
+    },
+    {
+      "id": "diffusion-induced_stresses",
+      "name": "diffusion-induced stresses",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1907.09258v1"
+      ]
+    },
+    {
+      "id": "entanglement_battery",
+      "name": "entanglement battery",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2405.10599v2"
+      ]
+    },
+    {
+      "id": "local_operations",
+      "name": "local operations",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2405.10599v2"
+      ]
+    },
+    {
+      "id": "classical_communication",
+      "name": "classical communication",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2405.10599v2"
+      ]
+    },
+    {
+      "id": "entanglement_quantifiers",
+      "name": "entanglement quantifiers",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2405.10599v2"
+      ]
+    },
+    {
+      "id": "carnot_cycles",
+      "name": "Carnot cycles",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2405.10599v2"
+      ]
+    },
+    {
+      "id": "density_functional_theory-based_molecular_dynamics_simulation_(dftmd)",
+      "name": "Density Functional Theory-based Molecular Dynamics Simulation (DFTMD)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2406.00468v1"
+      ]
+    },
+    {
+      "id": "machine_learning_(ml)",
+      "name": "Machine Learning (ML)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2406.00468v1"
+      ]
+    },
+    {
+      "id": "generative_artificial_intelligence_(ai)",
+      "name": "Generative Artificial Intelligence (AI)",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": [
+        "2406.00468v1"
+      ]
+    },
+    {
+      "id": "aqueous_batteries",
+      "name": "Aqueous Batteries",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2406.00468v1"
+      ]
+    },
+    {
+      "id": "electrolyzer",
+      "name": "Electrolyzer",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2406.00468v1"
+      ]
+    },
+    {
+      "id": "pseudo-capacitor",
+      "name": "Pseudo-capacitor",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2406.00468v1"
+      ]
+    },
+    {
+      "id": "water-in-salt_electrolytes",
+      "name": "Water-in-salt electrolytes",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2406.00468v1"
+      ]
+    },
+    {
+      "id": "proton-coupled_cathode_materials",
+      "name": "Proton-coupled cathode materials",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2406.00468v1"
+      ]
+    },
+    {
+      "id": "zn-ion_batteries",
+      "name": "Zn-ion batteries",
+      "type": "concept",
+      "frequency": 2,
+      "source_papers": [
+        "2406.00468v1",
+        "2005.04963v1"
+      ]
+    },
+    {
+      "id": "organic_redox_flow_batteries",
+      "name": "Organic redox flow batteries",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2406.00468v1"
+      ]
+    },
+    {
+      "id": "dual-cavity_quantum_battery",
+      "name": "dual-cavity quantum battery",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2406.06383v2"
+      ]
+    },
+    {
+      "id": "atom_manipulation",
+      "name": "atom manipulation",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2406.06383v2"
+      ]
+    },
+    {
+      "id": "cosmic_battery",
+      "name": "Cosmic Battery",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1901.03228v1"
+      ]
+    },
+    {
+      "id": "aberrated_radiation_field",
+      "name": "aberrated radiation field",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1901.03228v1"
+      ]
+    },
+    {
+      "id": "azimuthal_induction_electric_field",
+      "name": "azimuthal induction electric field",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1901.03228v1"
+      ]
+    },
+    {
+      "id": "accretion_flows",
+      "name": "accretion flows",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1901.03228v1"
+      ]
+    },
+    {
+      "id": "astrophysical_black_holes",
+      "name": "astrophysical black holes",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1901.03228v1"
+      ]
+    },
+    {
+      "id": "stellar_mass_black_holes",
+      "name": "stellar mass black holes",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1901.03228v1"
+      ]
+    },
+    {
+      "id": "super-massive_black_holes",
+      "name": "super-massive black holes",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1901.03228v1"
+      ]
+    },
+    {
+      "id": "silicon_nanoparticles",
+      "name": "silicon nanoparticles",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2506.20189v1"
+      ]
+    },
+    {
+      "id": "expanded_graphite",
+      "name": "expanded graphite",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2506.20189v1"
+      ]
+    },
+    {
+      "id": "spark_plasma_sintering",
+      "name": "spark plasma sintering",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2506.20189v1"
+      ]
+    },
+    {
+      "id": "vickers_hardness",
+      "name": "Vickers hardness",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2506.20189v1"
+      ]
+    },
+    {
+      "id": "young's_modulus",
+      "name": "Young's modulus",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2506.20189v1"
+      ]
+    },
+    {
+      "id": "areal_capacity",
+      "name": "areal capacity",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2506.20189v1"
+      ]
+    },
+    {
+      "id": "cycle_life",
+      "name": "cycle life",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2506.20189v1"
+      ]
+    },
+    {
+      "id": "arima",
+      "name": "ARIMA",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2103.16280v1"
+      ]
+    },
+    {
+      "id": "bag",
+      "name": "BAG",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2103.16280v1"
+      ]
+    },
+    {
+      "id": "decision_tree",
+      "name": "Decision Tree",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2103.16280v1"
+      ]
+    },
+    {
+      "id": "li-ion_batteries",
+      "name": "Li-ion batteries",
+      "type": "concept",
+      "frequency": 3,
+      "source_papers": [
+        "2103.16280v1",
+        "1004.4480v1",
+        "2005.04963v1"
+      ]
+    },
+    {
+      "id": "supervised_learning",
+      "name": "Supervised Learning",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2103.16280v1"
+      ]
+    },
+    {
+      "id": "battery_graphnets",
+      "name": "Battery GraphNets",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2408.07624v1"
+      ]
+    },
+    {
+      "id": "lithium-ion_batteries_(libs)",
+      "name": "Lithium-ion Batteries (LiBs)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2408.07624v1"
+      ]
+    },
+    {
+      "id": "remaining_useful_life_(rul)",
+      "name": "Remaining Useful Life (RUL)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2408.07624v1"
+      ]
+    },
+    {
+      "id": "graph-learning_algorithm",
+      "name": "graph-learning algorithm",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2408.07624v1"
+      ]
+    },
+    {
+      "id": "mann-kendall_trend_test",
+      "name": "Mann-Kendall trend test",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2303.09456v2"
+      ]
+    },
+    {
+      "id": "nasa's_data_set",
+      "name": "NASA's data set",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2303.09456v2"
+      ]
+    },
+    {
+      "id": "state_of_efficiency_(soe)",
+      "name": "State of Efficiency (SOE)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2303.09456v2"
+      ]
+    },
+    {
+      "id": "nickel-cobalt-aluminum_(nca)_lithium-ion_batteries",
+      "name": "Nickel-Cobalt-Aluminum (NCA) lithium-ion batteries",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2303.09456v2"
+      ]
+    },
+    {
+      "id": "battery_management_systems_(bms)",
+      "name": "Battery Management Systems (BMS)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2303.09456v2"
+      ]
+    },
+    {
+      "id": "hems",
+      "name": "HEMS",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2411.00159v1"
+      ]
+    },
+    {
+      "id": "rtp",
+      "name": "RTP",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2411.00159v1"
+      ]
+    },
+    {
+      "id": "bess",
+      "name": "BESS",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2411.00159v1"
+      ]
+    },
+    {
+      "id": "real-time_pricing",
+      "name": "Real-Time Pricing",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2411.00159v1"
+      ]
+    },
+    {
+      "id": "home_energy_management_systems",
+      "name": "Home Energy Management Systems",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2411.00159v1"
+      ]
+    },
+    {
+      "id": "battery_energy_storage_systems",
+      "name": "Battery Energy Storage Systems",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2411.00159v1"
+      ]
+    },
+    {
+      "id": "artificial_neural_network_(ann)",
+      "name": "Artificial Neural Network (ANN)",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "1004.4480v1"
+      ]
+    },
+    {
+      "id": "low_earth_orbit_(leo)_spacecraft",
+      "name": "Low Earth Orbit (LEO) spacecraft",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1004.4480v1"
+      ]
+    },
+    {
+      "id": "depth_of_discharge_(dod)",
+      "name": "Depth Of Discharge (DOD)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1004.4480v1"
+      ]
+    },
+    {
+      "id": "end_of_discharge_voltage_(eodv)",
+      "name": "End of Discharge Voltage (EODV)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1004.4480v1"
+      ]
+    },
+    {
+      "id": "bland_altman_plots",
+      "name": "Bland Altman plots",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1004.4480v1"
+      ]
+    },
+    {
+      "id": "statistical_methods",
+      "name": "statistical methods",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1004.4480v1"
+      ]
+    },
+    {
+      "id": "divacancy_(dv)_defects",
+      "name": "Divacancy (DV) defects",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1309.4176v1"
+      ]
+    },
+    {
+      "id": "stone-wales_(sw)_defects",
+      "name": "Stone-Wales (SW) defects",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1309.4176v1"
+      ]
+    },
+    {
+      "id": "graphene",
+      "name": "Graphene",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1309.4176v1"
+      ]
+    },
+    {
+      "id": "na-ion_batteries_(nibs)",
+      "name": "Na-ion batteries (NIBs)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1309.4176v1"
+      ]
+    },
+    {
+      "id": "ca-ion_batteries_(cibs)",
+      "name": "Ca-ion batteries (CIBs)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1309.4176v1"
+      ]
+    },
+    {
+      "id": "charge_transfer",
+      "name": "Charge transfer",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1309.4176v1"
+      ]
+    },
+    {
+      "id": "mah/g_(milliampere-hour_per_gram)_metric",
+      "name": "mAh/g (milliampere-hour per gram) metric",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1309.4176v1"
+      ]
+    },
+    {
+      "id": "markov_decision_process_(mdp)",
+      "name": "Markov Decision Process (MDP)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2103.01883v1"
+      ]
+    },
+    {
+      "id": "monte_carlo_simulations",
+      "name": "Monte Carlo simulations",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2103.01883v1"
+      ]
+    },
+    {
+      "id": "lithium_polymer_(lipo)_battery",
+      "name": "Lithium polymer (Lipo) battery",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2103.01883v1"
+      ]
+    },
+    {
+      "id": "dcauth",
+      "name": "DCAuth",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2309.03607v1"
+      ]
+    },
+    {
+      "id": "eisthentication",
+      "name": "EISthentication",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2309.03607v1"
+      ]
+    },
+    {
+      "id": "machine_learning",
+      "name": "Machine Learning",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2309.03607v1"
+      ]
+    },
+    {
+      "id": "accuracy",
+      "name": "accuracy",
+      "type": "metric",
+      "frequency": 1,
+      "source_papers": [
+        "2309.03607v1"
+      ]
+    },
+    {
+      "id": "identification_performances",
+      "name": "identification performances",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2309.03607v1"
+      ]
+    },
+    {
+      "id": "jaynes-cummings_model",
+      "name": "Jaynes-Cummings model",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "1908.08064v6"
+      ]
+    },
+    {
+      "id": "perturbation_theory",
+      "name": "perturbation theory",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1908.08064v6"
+      ]
+    },
+    {
+      "id": "random_quantum_batteries",
+      "name": "random quantum batteries",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1908.08064v6"
+      ]
+    },
+    {
+      "id": "classical_random_batteries",
+      "name": "classical random batteries",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1908.08064v6"
+      ]
+    },
+    {
+      "id": "quantum_thermodynamics",
+      "name": "quantum thermodynamics",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1908.08064v6"
+      ]
+    },
+    {
+      "id": "radioisotope_thermal_generators",
+      "name": "radioisotope thermal generators",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": [
+        "1511.07427v2"
+      ]
+    },
+    {
+      "id": "indirect_conversion_batteries",
+      "name": "indirect conversion batteries",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1511.07427v2"
+      ]
+    },
+    {
+      "id": "direct_conversion_batteries",
+      "name": "direct conversion batteries",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1511.07427v2"
+      ]
+    },
+    {
+      "id": "direct_charge_batteries",
+      "name": "direct charge batteries",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1511.07427v2"
+      ]
+    },
+    {
+      "id": "nanomaterials",
+      "name": "nanomaterials",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1511.07427v2"
+      ]
+    },
+    {
+      "id": "photovoltaic_(pv)_systems",
+      "name": "Photovoltaic (PV) systems",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2003.00741v1"
+      ]
+    },
+    {
+      "id": "battery_systems",
+      "name": "Battery systems",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2003.00741v1"
+      ]
+    },
+    {
+      "id": "load_profiles",
+      "name": "Load profiles",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2003.00741v1"
+      ]
+    },
+    {
+      "id": "self-consumption_rates",
+      "name": "Self-consumption rates",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2003.00741v1"
+      ]
+    },
+    {
+      "id": "feed-in_tariffs",
+      "name": "Feed-in tariffs",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2003.00741v1"
+      ]
+    },
+    {
+      "id": "electricity_prices",
+      "name": "Electricity prices",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2003.00741v1"
+      ]
+    },
+    {
+      "id": "na-ion_batteries",
+      "name": "Na-ion batteries",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2005.04963v1"
+      ]
+    },
+    {
+      "id": "mg_batteries",
+      "name": "Mg batteries",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2005.04963v1"
+      ]
+    },
+    {
+      "id": "ca-ion_batteries",
+      "name": "Ca-ion batteries",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2005.04963v1"
+      ]
+    },
+    {
+      "id": "al-ion_batteries",
+      "name": "Al-ion batteries",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2005.04963v1"
+      ]
+    },
+    {
+      "id": "anionic_shuttle_batteries",
+      "name": "anionic shuttle batteries",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2005.04963v1"
+      ]
+    },
+    {
+      "id": "mh-based_batteries",
+      "name": "MH-based batteries",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2005.04963v1"
+      ]
+    },
+    {
+      "id": "nimh_batteries",
+      "name": "NiMH batteries",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2005.04963v1"
+      ]
+    },
+    {
+      "id": "aqueous_systems",
+      "name": "aqueous systems",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2005.04963v1"
+      ]
+    },
+    {
+      "id": "harmonic_oscillators",
+      "name": "harmonic oscillators",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2205.05018v3"
+      ]
+    },
+    {
+      "id": "qubits",
+      "name": "qubits",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2205.05018v3"
+      ]
+    },
+    {
+      "id": "laser_field",
+      "name": "laser field",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2205.05018v3"
+      ]
+    },
+    {
+      "id": "catalyst_systems",
+      "name": "catalyst systems",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2205.05018v3"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "qiskit",
+      "target": "ibm_quantum_processors",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2204.10786v1"
+      ]
+    },
+    {
+      "source": "pulse_access",
+      "target": "ibm_quantum_processors",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2204.10786v1"
+      ]
+    },
+    {
+      "source": "ibm_quantum_processors",
+      "target": "quantum_batteries",
+      "relation": "enables",
+      "confidence": 0.7,
+      "source_papers": [
+        "2204.10786v1"
+      ]
+    },
+    {
+      "source": "quantum_batteries",
+      "target": "classical_energy_storage_devices",
+      "relation": "compares",
+      "confidence": 0.7,
+      "source_papers": [
+        "2308.02277v1"
+      ]
+    },
+    {
+      "source": "quantum_many-body_battery_models",
+      "target": "quantum_batteries",
+      "relation": "extends",
+      "confidence": 0.7,
+      "source_papers": [
+        "2308.02277v1"
+      ]
+    },
+    {
+      "source": "electrophoretic_deposition_(epd)",
+      "target": "lithium_iron_phosphate_(lfp)",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2004.12804v1"
+      ]
+    },
+    {
+      "source": "electrophoretic_deposition_(epd)",
+      "target": "nanoporous_membrane",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2004.12804v1"
+      ]
+    },
+    {
+      "source": "silicon_nanoparticles_(sinps)",
+      "target": "vertically_aligned_carbon_nanotubes_(vacnts)",
+      "relation": "combines",
+      "confidence": 0.7,
+      "source_papers": [
+        "2212.11678v1"
+      ]
+    },
+    {
+      "source": "vertically_aligned_carbon_nanotubes_(vacnts)",
+      "target": "lithium-ion_batteries",
+      "relation": "improves",
+      "confidence": 0.7,
+      "source_papers": [
+        "2212.11678v1"
+      ]
+    },
+    {
+      "source": "dicke_quantum_battery",
+      "target": "virtual_photons",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2302.13624v1"
+      ]
+    },
+    {
+      "source": "matter-radiation_coupling",
+      "target": "dicke_quantum_battery",
+      "relation": "enables",
+      "confidence": 0.7,
+      "source_papers": [
+        "2302.13624v1"
+      ]
+    },
+    {
+      "source": "lithium-ion_battery_energy_storage_system_(ess)",
+      "target": "lead-acid_battery_energy_storage_system_(ess)",
+      "relation": "compares",
+      "confidence": 0.7,
+      "source_papers": [
+        "2405.04225v2"
+      ]
+    },
+    {
+      "source": "photovoltaic_(pv)_system",
+      "target": "lithium-ion_battery_energy_storage_system_(ess)",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2405.04225v2"
+      ]
+    },
+    {
+      "source": "fuel_cell",
+      "target": "lithium-ion_(li-ion)_batteries",
+      "relation": "combines",
+      "confidence": 0.7,
+      "source_papers": [
+        "1904.01157v1"
+      ]
+    },
+    {
+      "source": "homer_software",
+      "target": "matlab/simulink",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "1904.01157v1"
+      ]
+    },
+    {
+      "source": "mixed_integer_linear_programming_(milp)",
+      "target": "vanadium_redox_flow_batteries_(vrfbs)",
+      "relation": "improves",
+      "confidence": 0.7,
+      "source_papers": [
+        "2107.03339v1"
+      ]
+    },
+    {
+      "source": "lattice_boltzmann_method",
+      "target": "lithium-ion_battery_cathodes",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2203.05218v1"
+      ]
+    },
+    {
+      "source": "bayesian_optimization_(bolfi)",
+      "target": "expectation_propagation_(ep)",
+      "relation": "extends",
+      "confidence": 0.7,
+      "source_papers": [
+        "2208.03289v2"
+      ]
+    },
+    {
+      "source": "bayesian_optimization_(bolfi)",
+      "target": "continuum_battery_models",
+      "relation": "improves",
+      "confidence": 0.7,
+      "source_papers": [
+        "2208.03289v2"
+      ]
+    }
+  ],
+  "gaps": [
+    {
+      "node1": "Lithium-ion batteries",
+      "node2": "Zn-ion batteries",
+      "shared_papers": [
+        "2406.00468v1"
+      ],
+      "potential": "medium"
+    },
+    {
+      "node1": "Zn-ion batteries",
+      "node2": "Li-ion batteries",
+      "shared_papers": [
+        "2005.04963v1"
+      ],
+      "potential": "medium"
+    }
+  ],
+  "contradictions": []
+}

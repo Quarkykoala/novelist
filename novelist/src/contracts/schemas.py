@@ -249,6 +249,178 @@ class PaperSummary(BaseModel):
     )
 
 
+# =============================================================================
+# Literature-First Pipeline: Structured Claims
+# =============================================================================
+
+
+class ClaimType(str, Enum):
+    """Types of claims that can be extracted from papers."""
+
+    RESULT = "result"  # Empirical finding
+    METHOD = "method"  # Technique or approach used
+    LIMITATION = "limitation"  # Known constraints or failures
+    FUTURE_WORK = "future_work"  # Suggested next steps
+    BASELINE = "baseline"  # Current state-of-art numbers
+
+
+class QuantitativeData(BaseModel):
+    """Quantitative data from a paper claim."""
+
+    metric: str = Field(..., description="What is being measured (e.g., cycle_life, accuracy)")
+    value: float = Field(..., description="Numeric value")
+    unit: str = Field(default="", description="Unit of measurement")
+    conditions: str = Field(default="", description="Under what conditions")
+    is_sota: bool = Field(default=False, description="Is this state-of-the-art?")
+
+
+class ExtractedClaim(BaseModel):
+    """A structured claim extracted from a research paper."""
+
+    paper_id: str = Field(..., description="arXiv ID of source paper")
+    claim_type: ClaimType = Field(..., description="Type of claim")
+    statement: str = Field(..., min_length=10, description="The claim in plain language")
+    evidence: str = Field(default="", description="How the paper supports this claim")
+    quantitative_data: QuantitativeData | None = Field(
+        default=None, description="Numeric data if applicable"
+    )
+    entities_mentioned: list[str] = Field(
+        default_factory=list, description="Key entities (compounds, methods, etc.)"
+    )
+    confidence: float = Field(
+        default=0.7, ge=0.0, le=1.0, description="Extraction confidence"
+    )
+
+
+# =============================================================================
+# Literature-First Pipeline: Gap Identification
+# =============================================================================
+
+
+class GapType(str, Enum):
+    """Types of gaps that can be identified in the literature."""
+
+    MISSING_CONNECTION = "missing_connection"  # Concepts not yet linked
+    CONTRADICTION = "contradiction"  # Conflicting claims
+    UNEXPLORED_RANGE = "unexplored_range"  # Parameter tested in narrow range
+    CROSS_DOMAIN = "cross_domain"  # Method from field A, not tried in B
+    SCALE_GAP = "scale_gap"  # Works in lab, not tested at scale
+    MECHANISM_UNKNOWN = "mechanism_unknown"  # Effect observed, mechanism unclear
+
+
+class IdentifiedGap(BaseModel):
+    """A gap in the literature that could be addressed by research."""
+
+    gap_type: GapType = Field(..., description="Category of gap")
+    description: str = Field(..., min_length=20, description="Clear statement of the gap")
+    concept_a: str = Field(..., description="First concept involved")
+    concept_b: str = Field(default="", description="Second concept if applicable")
+    supporting_evidence: list[str] = Field(
+        default_factory=list, description="Paper IDs showing the gap exists"
+    )
+    potential_value: str = Field(..., description="Why filling this gap matters")
+    difficulty: str = Field(
+        default="medium", description="Estimated difficulty: low, medium, high"
+    )
+    related_claims: list[str] = Field(
+        default_factory=list, description="IDs of claims related to this gap"
+    )
+
+
+# =============================================================================
+# Literature-First Pipeline: Grounded Hypothesis
+# =============================================================================
+
+
+class MechanismStep(BaseModel):
+    """A single step in a causal mechanism chain."""
+
+    cause: str = Field(..., description="The cause in this step")
+    effect: str = Field(..., description="The effect in this step")
+    evidence_paper: str = Field(default="", description="Paper ID supporting this step")
+    confidence: float = Field(default=0.5, ge=0.0, le=1.0)
+
+
+class PredictionBounds(BaseModel):
+    """Quantitative bounds for a hypothesis prediction."""
+
+    metric: str = Field(..., description="What is being predicted")
+    lower_bound: float = Field(..., description="Minimum expected value")
+    upper_bound: float = Field(..., description="Maximum expected value")
+    unit: str = Field(default="", description="Unit of measurement")
+    baseline_value: float = Field(..., description="Current state-of-art value")
+    baseline_source: str = Field(default="", description="Paper ID for baseline")
+
+
+class SuggestedExperiment(BaseModel):
+    """A concrete experiment to test the hypothesis."""
+
+    description: str = Field(..., description="What experiment to run")
+    controls: list[str] = Field(default_factory=list, description="Control conditions")
+    measurements: list[str] = Field(default_factory=list, description="What to measure")
+    expected_timeline: str = Field(default="", description="Estimated time to complete")
+    required_resources: list[str] = Field(
+        default_factory=list, description="Equipment, materials, etc."
+    )
+
+
+class GroundedHypothesis(BaseModel):
+    """A hypothesis grounded in literature with full justification."""
+
+    id: str = Field(default="", description="Unique identifier")
+    
+    # Core claim (falsifiable)
+    claim: str = Field(
+        ..., min_length=20,
+        description="If X, then Y, because Z — one falsifiable sentence"
+    )
+    
+    # Mechanism chain (required)
+    mechanism: list[MechanismStep] = Field(
+        ..., min_length=1, description="Causal chain: A→B→C"
+    )
+    
+    # Quantitative prediction
+    prediction: str = Field(..., description="What we expect to observe")
+    prediction_bounds: PredictionBounds | None = Field(
+        default=None, description="Quantitative prediction if applicable"
+    )
+    
+    # Falsification
+    null_result: str = Field(
+        ..., description="What observation would reject this hypothesis"
+    )
+    
+    # Grounding
+    gap_addressed: str = Field(..., description="Which gap this hypothesis fills")
+    supporting_papers: list[str] = Field(
+        default_factory=list, description="Paper IDs supporting the mechanism"
+    )
+    contradicting_papers: list[str] = Field(
+        default_factory=list, description="Paper IDs that might challenge this"
+    )
+    
+    # Experiment
+    suggested_experiments: list[SuggestedExperiment] = Field(
+        default_factory=list, description="How to test this hypothesis"
+    )
+    
+    # Scores and metadata
+    scores: ScoreBlock = Field(default_factory=ScoreBlock)
+    source_soul: SoulRole | None = Field(default=None)
+    iteration: int = Field(default=0, ge=0)
+    created_at: datetime = Field(default_factory=datetime.now)
+
+    def is_well_formed(self) -> bool:
+        """Check if hypothesis has all required components."""
+        return (
+            len(self.claim) >= 20
+            and len(self.mechanism) >= 1
+            and len(self.null_result) >= 10
+            and len(self.gap_addressed) >= 5
+        )
+
+
 class ConceptNode(BaseModel):
     """A node in the concept map."""
 

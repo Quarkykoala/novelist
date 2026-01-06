@@ -1,0 +1,248 @@
+[
+  {
+    "paper_id": "2502.07070v1",
+    "type": "result",
+    "statement": "A 16-cell lithium-ion battery pack with trapezoidal configuration and 5-inlet, 1-outlet setup achieves balanced thermal performance under varying airflow speeds.",
+    "quantitative": {
+      "metric": "airflow_speed",
+      "value": 0.0,
+      "unit": "m/s",
+      "conditions": "lower bound of tested airflow speeds",
+      "is_sota": false
+    }
+  },
+  {
+    "paper_id": "2502.07070v1",
+    "type": "result",
+    "statement": "A 16-cell lithium-ion battery pack with trapezoidal configuration and 5-inlet, 1-outlet setup achieves balanced thermal performance under varying airflow speeds.",
+    "quantitative": {
+      "metric": "airflow_speed",
+      "value": 15.0,
+      "unit": "m/s",
+      "conditions": "upper bound of tested airflow speeds",
+      "is_sota": false
+    }
+  },
+  {
+    "paper_id": "2502.07070v1",
+    "type": "result",
+    "statement": "The integration of phase change materials (PCMs) in a 16-cell lithium-ion battery pack stabilizes thermal behavior.",
+    "quantitative": {
+      "metric": "phase_change_duration",
+      "value": 12.5,
+      "unit": "min",
+      "conditions": "tested conditions",
+      "is_sota": false
+    }
+  },
+  {
+    "paper_id": "2502.07070v1",
+    "type": "method",
+    "statement": "A comprehensive 3D simulation approach can be used to analyze thermal performance of lithium-ion battery packs.",
+    "quantitative": null
+  },
+  {
+    "paper_id": "2502.07070v1",
+    "type": "baseline",
+    "statement": "Compact designs and varying airflow conditions in drone applications present unique thermal management challenges for lithium-ion battery packs.",
+    "quantitative": null
+  },
+  {
+    "paper_id": "2502.07070v1",
+    "type": "future_work",
+    "statement": "Designing efficient cooling strategies tailored to lightweight applications such as drones and portable energy storage systems is an area for future research.",
+    "quantitative": null
+  },
+  {
+    "paper_id": "2208.12902v1",
+    "type": "method",
+    "statement": "The authors perform phase-field simulations of electrodeposition in metal-anode batteries with anisotropic representation",
+    "quantitative": null
+  },
+  {
+    "paper_id": "2208.12902v1",
+    "type": "method",
+    "statement": "A modified lithium crystal surface anisotropy representation is proposed for phase-field electrodeposition model",
+    "quantitative": null
+  },
+  {
+    "paper_id": "2208.12902v1",
+    "type": "result",
+    "statement": "The proposed formulation exhibits low sensitivity to numerical parameters",
+    "quantitative": null
+  },
+  {
+    "paper_id": "2208.12902v1",
+    "type": "result",
+    "statement": "Change of dendritic morphological behaviour is captured by simulating variations of the inter-electrode distance",
+    "quantitative": null
+  },
+  {
+    "paper_id": "2208.12902v1",
+    "type": "result",
+    "statement": "Simulations show agreement with experimentally-observed lithium dendrite growth rates and morphologies",
+    "quantitative": null
+  },
+  {
+    "paper_id": "2208.12902v1",
+    "type": "baseline",
+    "statement": "Lithium dendrite growth rates and morphologies are well-established in the literature",
+    "quantitative": null
+  },
+  {
+    "paper_id": "1901.04910v1",
+    "type": "result",
+    "statement": "Dendrite formation during electrodeposition compromises the safety of lithium metal batteries",
+    "quantitative": null
+  },
+  {
+    "paper_id": "1901.04910v1",
+    "type": "result",
+    "statement": "High shear modulus solid-ion conductors have been prioritized to resolve pressure-driven instabilities",
+    "quantitative": null
+  },
+  {
+    "paper_id": "1901.04910v1",
+    "type": "result",
+    "statement": "SICs can be designed within a universal chemomechanical paradigm to access either pressure-driven dendrite-blocking or density-driven dendrite-suppressing properties",
+    "quantitative": null
+  },
+  {
+    "paper_id": "1901.04910v1",
+    "type": "result",
+    "statement": "The universal chemomechanical paradigm reveals a dichotomy between pressure-driven and density-driven dendrite formation",
+    "quantitative": null
+  },
+  {
+    "paper_id": "1901.04910v1",
+    "type": "method",
+    "statement": "Synchrotron hard x-ray microtomography is used to reveal uniform Li plating mediated by SICs",
+    "quantitative": null
+  },
+  {
+    "paper_id": "1901.04910v1",
+    "type": "result",
+    "statement": "Li plating mediated by SICs with low Li+ partial molar volume is uniform",
+    "quantitative": null
+  },
+  {
+    "paper_id": "1901.04910v1",
+    "type": "result",
+    "statement": "SICs with atypically low Li+ partial molar volume can be designed to be concomitantly soft",
+    "quantitative": null
+  },
+  {
+    "paper_id": "1901.04910v1",
+    "type": "result",
+    "statement": "20 percent of the Li inventory is reversibly cycled",
+    "quantitative": {
+      "metric": "Li_inventory_reversibility",
+      "value": 20.0,
+      "unit": "%",
+      "conditions": "thin Li anodes, high-voltage NMC-622 cathodes",
+      "is_sota": false
+    }
+  },
+  {
+    "paper_id": "2201.02891v1",
+    "type": "result",
+    "statement": "Lithium-ion batteries can exhibit rapid, nonlinear degradation that severely limits battery lifetime",
+    "quantitative": null
+  },
+  {
+    "paper_id": "2201.02891v1",
+    "type": "method",
+    "statement": "Prior work on knees in lithium-ion battery aging trajectories is reviewed",
+    "quantitative": null
+  },
+  {
+    "paper_id": "2201.02891v1",
+    "type": "result",
+    "statement": "Three classes of internal state trajectories can cause a knee, including snowball, hidden, and threshold trajectories",
+    "quantitative": null
+  },
+  {
+    "paper_id": "2201.02891v1",
+    "type": "result",
+    "statement": "Six knee pathways are identified, including lithium plating, electrode saturation, resistance growth, electrolyte and additive depletion, percolation-limited connectivity, and mechanical deformation",
+    "quantitative": null
+  },
+  {
+    "paper_id": "2201.02891v1",
+    "type": "limitation",
+    "statement": "Some knee pathways have internal state trajectories with signals that are electrochemically undetectable",
+    "quantitative": null
+  },
+  {
+    "paper_id": "2201.02891v1",
+    "type": "result",
+    "statement": "Key design and usage sensitivities for knees are identified",
+    "quantitative": null
+  },
+  {
+    "paper_id": "2201.02891v1",
+    "type": "future_work",
+    "statement": "Challenges and opportunities for knee modeling and prediction are discussed",
+    "quantitative": null
+  },
+  {
+    "paper_id": "2201.02891v1",
+    "type": "result",
+    "statement": "Lithium-ion battery degradation is complex and subtle",
+    "quantitative": null
+  },
+  {
+    "paper_id": "2502.03841v1",
+    "type": "result",
+    "statement": "Atomic and molecular layered coatings can substantially reduce dendritic growth in aqueous zinc-ion batteries",
+    "quantitative": null
+  },
+  {
+    "paper_id": "2502.03841v1",
+    "type": "result",
+    "statement": "Hetero-epitaxial residual stresses due to layered coatings can provide shielding to suppress dendrite formation",
+    "quantitative": null
+  },
+  {
+    "paper_id": "2502.03841v1",
+    "type": "result",
+    "statement": "Residual stresses due to coatings can reduce chemical potential polarization around dendrite embryos",
+    "quantitative": null
+  },
+  {
+    "paper_id": "2502.03841v1",
+    "type": "result",
+    "statement": "The deposition of zinc is forced into regions adjacent to protuberances due to residual stresses",
+    "quantitative": null
+  },
+  {
+    "paper_id": "2502.03841v1",
+    "type": "result",
+    "statement": "The rate of dendritic growth is slower due to the effect of residual stresses",
+    "quantitative": null
+  },
+  {
+    "paper_id": "2502.03841v1",
+    "type": "result",
+    "statement": "Dendrite suppression is achieved through the effect of residual stresses due to coatings",
+    "quantitative": null
+  },
+  {
+    "paper_id": "2502.03841v1",
+    "type": "future_work",
+    "statement": "The fundamental understanding of residual stresses due to coatings can be extended to various metal anode batteries",
+    "quantitative": null
+  },
+  {
+    "paper_id": "2502.03841v1",
+    "type": "future_work",
+    "statement": "The approach can be applied to Li or Na batteries",
+    "quantitative": null
+  },
+  {
+    "paper_id": "2502.03841v1",
+    "type": "limitation",
+    "statement": "Dendrite formation is a long-standing problem for the commercial application of aqueous zinc-ion batteries",
+    "quantitative": null
+  }
+]

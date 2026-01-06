@@ -1,0 +1,10 @@
+{
+  "session_id": "b1ad72bd",
+  "topic": "better batteries",
+  "started_at": "2026-01-06T13:40:54.451988",
+  "completed_at": "2026-01-06T13:43:08.506126",
+  "iterations": 2,
+  "stop_reason": "Convergence: all targets met",
+  "hypotheses_count": 15,
+  "papers_ingested": 30
+}
