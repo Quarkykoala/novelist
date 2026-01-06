@@ -85,6 +85,32 @@ Generate a hypothesis in this EXACT JSON format:
 Generate a grounded hypothesis:"""
 
 
+HYPOTHESIS_REFINEMENT_PROMPT = """You are a scientific hypothesis refiner. Your task is to IMPROVE an existing hypothesis based on a specific instruction.
+
+THE ORIGINAL HYPOTHESIS:
+{original_hypothesis}
+
+INSTRUCTION FOR REFINEMENT:
+"{instruction}"
+
+RELEVANT CLAIMS FROM LITERATURE:
+{relevant_claims}
+
+CRITICAL RULES:
+1. Keep the core idea if it's sound, but enhance it as requested.
+2. Ensure the JSON structure remains valid.
+3. If asked to deepen mechanism, add specific steps.
+4. If asked to add experiments, provide concrete details.
+
+Generate the refined hypothesis in the EXACT same JSON format as the original:
+```json
+{{
+  ...
+}}
+```
+"""
+
+
 class GroundedHypothesisGenerator:
     """Generates hypotheses grounded in literature that address identified gaps."""
 
@@ -116,6 +142,66 @@ class GroundedHypothesisGenerator:
         hypothesis = self._parse_hypothesis(response, gap, iteration)
         
         return hypothesis
+
+    async def refine_hypothesis(
+        self,
+        hypothesis: GroundedHypothesis,
+        instruction: str,
+        claims: list[ExtractedClaim],
+    ) -> GroundedHypothesis | None:
+        """Refine an existing hypothesis based on an instruction."""
+        
+        # Format claims for context
+        claims_text = "\n".join(
+            [f"- {c.statement} (Source: {c.paper_id})" for c in claims[:5]]
+        )
+        
+        # Prepare hypothesis JSON string
+        # We model dump it to text for the prompt
+        hyp_json = json.dumps(hypothesis.model_dump(exclude={"scores", "source_soul", "iteration"}), indent=2)
+
+        prompt = HYPOTHESIS_REFINEMENT_PROMPT.format(
+            original_hypothesis=hyp_json,
+            instruction=instruction,
+            relevant_claims=claims_text,
+        )
+
+        try:
+            response = await self.client.generate_content(prompt)
+            if not response:
+                return None
+
+            # Extract JSON
+            json_str = response
+            if "```json" in response:
+                json_str = response.split("```json")[1].split("```")[0].strip()
+            elif "```" in response:
+                json_str = response.split("```")[1].split("```")[0].strip()
+            
+            data = json.loads(json_str)
+            
+            # Map back to GroundedHypothesis
+            refined = GroundedHypothesis(
+                id=str(uuid.uuid4())[:8], # Generate new ID for the refined node
+                claim=data.get("claim", hypothesis.claim),
+                mechanism=[MechanismStep(**m) for m in data.get("mechanism", [])],
+                prediction=data.get("prediction", ""),
+                prediction_bounds=PredictionBounds(**data.get("prediction_bounds", {})) if data.get("prediction_bounds") else None,
+                null_result=data.get("null_result", ""),
+                gap_addressed=hypothesis.gap_addressed, # Keep original gap addressed
+                supporting_papers=data.get("supporting_papers", []),
+                contradicting_papers=hypothesis.contradicting_papers, # Keep original contradicting papers
+                suggested_experiments=[SuggestedExperiment(**e) for e in data.get("suggested_experiments", [])],
+                scores=hypothesis.scores,  # Needs re-scoring later, keep original for now
+                source_soul=hypothesis.source_soul, # Keep original source soul
+                iteration=hypothesis.iteration + 1 # Increment iteration
+            )
+            
+            return refined
+
+        except Exception as e:
+            print(f"Error refining hypothesis: {e}")
+            return None
 
     async def generate_batch(
         self,

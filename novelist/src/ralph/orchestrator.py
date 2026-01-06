@@ -33,6 +33,8 @@ from src.kb.claim_extractor import ClaimExtractor
 from src.kb.concept_map import ConceptMapBuilder
 from src.kb.gap_analyzer import GapAnalyzer
 from src.kb.grounded_generator import GroundedHypothesisGenerator
+from src.ralph.tree import ResearchState
+from src.ralph.tree_search_orchestrator import TreeSearchOrchestrator
 from src.kb.paper_summarizer import PaperSummarizer
 from src.soul.bdi import BDIAgent
 from src.soul.collective import SoulCollective
@@ -59,9 +61,17 @@ class RalphOrchestrator:
         self.scorer = ScoringService(model=self.config.flash_model)
 
         # New literature-first pipeline components
-        self.claim_extractor = ClaimExtractor(model=self.config.flash_model)
-        self.gap_analyzer = GapAnalyzer(model=self.config.flash_model)
+        self.claim_extractor = ClaimExtractor(model=self.config.pro_model)
+        self.gap_analyzer = GapAnalyzer(model=self.config.pro_model)
         self.grounded_generator = GroundedHypothesisGenerator(model=self.config.pro_model)
+        
+        # MCTS Orchestrator
+        self.tree_search = TreeSearchOrchestrator(
+            config=self.config,
+            collective=self.collective,
+            generator=self.grounded_generator,
+            scorer=self.scorer
+        )
 
         # Session state
         self.session_id = ""
@@ -201,51 +211,79 @@ class RalphOrchestrator:
 
         new_hypotheses: list[Hypothesis] = []
         debate_trace: dict[str, Any] = {}
+        observation = "" # Initialize observation
 
-        # === NEW: First iteration uses grounded generation from gaps ===
-        if self.iteration == 1 and self.gaps:
-            # Generate grounded hypotheses from identified gaps
-            high_value_gaps = self.gap_analyzer.get_high_value_gaps(5)
-            grounded = await self.grounded_generator.generate_batch(
-                gaps=high_value_gaps,
-                claims=self.claims,
-                max_hypotheses=self.config.max_hypotheses,
-                iteration=self.iteration,
-            )
-            self.grounded_hypotheses = grounded
+        # ---------------------------------------------------------------------
+        # PHASE 1: GENERATION (MCTS or Linear)
+        # ---------------------------------------------------------------------
+        if self.iteration == 1 and self.gaps: # Changed 'iteration' to 'self.iteration'
+             self._emit_status("Running Agentic Tree Search...")
+             
+             # Create initial state for MCTS
+             root_state = ResearchState(
+                 gaps=self.gaps,
+                 claims=self.claims,
+                 concept_map=self.concept_map,
+                 depth=0
+             )
+             
+             # Run Tree Search
+             best_state = await self.tree_search.run_search(root_state)
+             
+             # Adopt hypotheses from best state
+             self.grounded_hypotheses = best_state.hypotheses
+             
+             # Trace actions
+             self._add_trace(f"Tree Search complete. Found {len(self.grounded_hypotheses)} hypotheses. Path depth: {best_state.depth}")
+             for note in best_state.feedback:
+                 self._add_trace(f"Tree Action: {note}")
 
-            # Convert grounded hypotheses to standard Hypothesis format for compatibility
-            for gh in grounded:
-                if gh.is_well_formed():
-                    # Create standard hypothesis from grounded hypothesis
-                    h = Hypothesis(
-                        id=gh.id,
-                        hypothesis=gh.claim,
-                        rationale=f"Mechanism: {' → '.join(s.cause + ' causes ' + s.effect for s in gh.mechanism)}. {gh.null_result}",
-                        cross_disciplinary_connection=gh.gap_addressed[:200],
-                        experimental_design=[e.description for e in gh.suggested_experiments],
-                        expected_impact=gh.prediction,
-                        novelty_keywords=[gh.mechanism[0].cause if gh.mechanism else ""],
-                        scores=gh.scores,
-                        source_soul=gh.source_soul,
-                        iteration=gh.iteration,
-                    )
-                    new_hypotheses.append(h)
+             # Convert schema for compatibility
+             self.hypotheses = []
+             for idx, gh in enumerate(self.grounded_hypotheses):
+                 # Helper function for rationale
+                 def _format_rationale(gh: GroundedHypothesis) -> str:
+                     mechanism_str = " → ".join(f"{s.cause} causes {s.effect}" for s in gh.mechanism)
+                     rationale_parts = [f"Mechanism: {mechanism_str}"]
+                     if gh.null_result:
+                         rationale_parts.append(f"Null Result: {gh.null_result}")
+                     return ". ".join(rationale_parts)
 
-            debate_trace = {
-                "hypotheses_generated": len(grounded),
-                "hypotheses_killed": len(grounded) - len(new_hypotheses),
-                "gap_based": True,
-            }
+                 h = Hypothesis(
+                     id=gh.id or str(uuid.uuid4())[:8],
+                     hypothesis=gh.claim,
+                     rationale=_format_rationale(gh),
+                     cross_disciplinary_connection=gh.gap_addressed or "Generated from gap",
+                     experimental_design=[e.description for e in gh.suggested_experiments],
+                     expected_impact="High - grounded in literature gaps.",
+                     novelty_keywords=["Grounded", "Gap-Driven"],
+                     iteration=self.iteration, # Changed 'iteration' to 'self.iteration'
+                     source_soul=SoulRole.SYNTHESIZER, # MCTS result is a synthesis
+                     scores=gh.scores, # Include scores from grounded hypothesis
+                 )
+                 self.hypotheses.append(h)
+
+             observation += f"\n\nAnalyzed {len(self.gaps)} research gaps using Agentic Tree Search. Generated {len(self.hypotheses)} grounded hypotheses."
+
+        elif self.iteration == 1: # Changed 'iteration' to 'self.iteration'
+             # Fallback if no gaps (should rare)
+             self._emit_status("Brainstorming (Fallback)...")
+             new_hypotheses = await self.collective.generate_hypotheses( # Assign to new_hypotheses
+                 mode=GenerationMode.RANDOM_INJECTION, n=3
+             )
+             self.hypotheses.extend(new_hypotheses) # Add to self.hypotheses
+             observation += f"\n\nGenerated {len(new_hypotheses)} initial hypotheses via brainstorming."
         else:
-            # Traditional multi-soul debate for refinement
-            context = self.memory.get_context_for_generation()
-            new_hypotheses, debate_trace = await self.collective.run_debate(
-                topic=self.topic,
-                context=context,
-                mode=new_mode,
-                target_hypotheses=self.config.max_hypotheses,
-            )
+             # Subsequent iterations: Refine existing standard hypotheses
+             self._emit_status("Refining hypotheses...")
+             new_hypotheses, debate_trace = await self.collective.run_debate( # Capture debate_trace
+                 topic=self.topic, # Added topic
+                 context=self.memory.get_context_for_generation(), # Added context
+                 mode=new_mode, # Added mode
+                 target_hypotheses=self.config.max_hypotheses, # Added target_hypotheses
+                 existing_hypotheses=self.hypotheses, # Pass existing hypotheses for refinement
+             )
+             observation += "\n\nRefined hypotheses through debate."
 
         # Verify novelty
         if new_hypotheses:
