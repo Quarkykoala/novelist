@@ -158,11 +158,15 @@ class GapAnalyzer:
             claims_text=claims_text,
             entities=", ".join(list(entities)[:50]),  # Limit entities
         )
-        
+
         response = await self.client.generate_content(prompt)
+        if not response:
+            return []
         # Handle GenerationResponse
         if hasattr(response, "content"):
             response = response.content
+        if not response:
+            return []
         return self._parse_gaps(response)
 
     def _format_claims_for_prompt(self) -> str:
@@ -195,7 +199,9 @@ class GapAnalyzer:
     def _parse_gaps(self, response: str) -> list[IdentifiedGap]:
         """Parse LLM response into IdentifiedGap objects."""
         gaps = []
-        
+        if not response or not isinstance(response, str):
+            return gaps
+
         json_match = re.search(r'\[[\s\S]*\]', response)
         if not json_match:
             return gaps

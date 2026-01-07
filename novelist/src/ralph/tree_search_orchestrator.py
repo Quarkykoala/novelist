@@ -177,21 +177,9 @@ class TreeSearchOrchestrator:
         # For now, let's just assume we can get a quality score from the GroundedHypothesis itself if available,
         # or use the Scorer.
         
-        # Use existing Scorer
-        # Convert first to check
-        from src.contracts.schemas import Hypothesis
-        
         gh = node.state.hypotheses[0]
-        h = Hypothesis(
-             id=gh.id,
-             hypothesis=gh.claim,
-             rationale=f"Mechanism: {len(gh.mechanism)} steps", 
-             cross_disciplinary_connection="",
-             experimental_design=[],
-             expected_impact="",
-             novelty_keywords=[],
-             iteration=0
-        )
+        # We score grounded hypotheses directly with a heuristic to avoid
+        # invalid intermediate Hypothesis objects.
         
         # Scorer requires Hypothesis object
         # Since we haven't updated Scorer to take GroundedHypothesis, we do a lightweight check here or mock it

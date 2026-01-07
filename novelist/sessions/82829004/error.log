@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "C:\Users\lenovo\projects\novelist\src\server.py", line 171, in run_session
+    result = await orchestrator.run(topic, output_dir=SESSIONS_DIR)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\projects\novelist\src\ralph\orchestrator.py", line 192, in run
+    await self._ingest_papers()
+  File "C:\Users\lenovo\projects\novelist\src\ralph\orchestrator.py", line 357, in _ingest_papers
+    self.gaps = await self.gap_analyzer.analyze(self.concept_map)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\projects\novelist\src\kb\gap_analyzer.py", line 90, in analyze
+    semantic_gaps = await self._find_semantic_gaps()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\projects\novelist\src\kb\gap_analyzer.py", line 166, in _find_semantic_gaps
+    return self._parse_gaps(response)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\lenovo\projects\novelist\src\kb\gap_analyzer.py", line 199, in _parse_gaps
+    json_match = re.search(r'\[[\s\S]*\]', response)
+  File "C:\Python314\Lib\re\__init__.py", line 177, in search
+    return _compile(pattern, flags).search(string)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+TypeError: expected string or bytes-like object, got 'NoneType'

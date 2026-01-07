@@ -89,8 +89,11 @@ class ArxivClient:
         await self._rate_limit_wait()
 
         # Build query parameters
+        query_text = query.strip()
+        needs_group = any(op in query_text.lower() for op in [" or ", " and ", " not "])
+        search_query = f"all:({query_text})" if needs_group else f"all:{query_text}"
         params = {
-            "search_query": f"all:{query}",
+            "search_query": search_query,
             "start": 0,
             "max_results": min(max_results, ARXIV_MAX_RESULTS),
             "sortBy": sort_by,
@@ -119,7 +122,10 @@ class ArxivClient:
             List of ArxivPaper objects
         """
         if query:
-            full_query = f"cat:{category} AND all:{query}"
+            query_text = query.strip()
+            needs_group = any(op in query_text.lower() for op in [" or ", " and ", " not "])
+            all_query = f"all:({query_text})" if needs_group else f"all:{query_text}"
+            full_query = f"cat:{category} AND {all_query}"
         else:
             full_query = f"cat:{category}"
 
@@ -296,8 +302,12 @@ def detect_categories_from_query(query: str) -> list[str]:
         categories.append("q-bio.NC")
 
     # Physics keywords
-    if any(kw in query_lower for kw in ["quantum", "physics", "particle"]):
+    if any(kw in query_lower for kw in ["quantum", "physics", "particle"]):     
         categories.append("physics.bio-ph" if "bio" in query_lower else "physics.gen-ph")
+
+    # Energy storage / batteries keywords
+    if any(kw in query_lower for kw in ["battery", "batteries", "lithium", "electrolyte", "anode", "cathode", "solid-state", "solid state", "energy storage"]):
+        categories.extend(["cond-mat.mtrl-sci", "cond-mat.mes-hall", "physics.chem-ph", "physics.app-ph"])
 
     # Remove duplicates while preserving order
     seen: set[str] = set()

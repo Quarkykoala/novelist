@@ -64,7 +64,6 @@ class SearchNode:
     id: str = field(default_factory=lambda: str(uuid.uuid4())[:8])
     action_description: str = "Root"  # Description of action that led here
     
-    @property
     def uct_score(self, exploration_weight: float = 1.414) -> float:
         """Calculate Upper Confidence Bound for Trees (UCT) score."""
         if self.visits == 0:

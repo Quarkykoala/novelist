@@ -7,6 +7,7 @@ Implements the Ralph loop pattern:
 """
 
 import asyncio
+import re
 import os
 import uuid
 from datetime import datetime
@@ -226,9 +227,90 @@ class RalphOrchestrator:
 
     async def _ingest_papers(self) -> None:
         """Phase 1: Fetch papers from arXiv, extract claims, build concept map, identify gaps."""
+        def _extract_keywords(topic: str) -> list[str]:
+            tokens = re.findall(r"[a-z0-9\\-]+", topic.lower())
+            stop = {
+                "how", "to", "build", "better", "best", "improve", "make", "create",
+                "what", "why", "when", "where", "which", "who", "is", "are", "the",
+                "a", "an", "of", "for", "in", "on", "with", "and", "or",
+            }
+            return [t for t in tokens if t not in stop]
+
+        def _build_query(topic: str, keywords: list[str]) -> str:
+            topic_lower = topic.lower()
+            if any(kw in topic_lower for kw in ["battery", "batteries", "lithium", "electrolyte", "anode", "cathode", "solid-state", "solid state", "energy storage"]):
+                return 'battery OR batteries OR lithium OR electrolyte OR anode OR cathode OR "solid state" OR "energy storage"'
+            return " ".join(keywords) if keywords else topic
+
         async with ArxivClient() as client:
             # Fetch papers
-            papers = await client.search(self.topic, max_results=30)
+            keywords = _extract_keywords(self.topic)
+            query = _build_query(self.topic, keywords)
+            categories = detect_categories_from_query(self.topic)
+            if self.config.max_runtime_seconds <= 300:
+                paper_limit = 12
+                claim_limit = 5
+            elif self.config.max_runtime_seconds <= 600:
+                paper_limit = 20
+                claim_limit = 8
+            else:
+                paper_limit = 30
+                claim_limit = 10
+
+            seed_limit = min(8, paper_limit)
+            seed_papers = await client.search(query, max_results=seed_limit)
+            if seed_papers:
+                category_counts: dict[str, int] = {}
+                for paper in seed_papers:
+                    for cat in paper.categories:
+                        category_counts[cat] = category_counts.get(cat, 0) + 1
+                top_categories = [
+                    cat for cat, _ in sorted(category_counts.items(), key=lambda item: item[1], reverse=True)[:3]
+                ]
+                for cat in top_categories:
+                    if cat not in categories:
+                        categories.append(cat)
+
+            papers: list[Any] = list(seed_papers)
+            remaining = max(0, paper_limit - len(papers))
+            if categories and remaining:
+                per_cat = max(4, remaining // len(categories))
+                for cat in categories:
+                    if len(papers) >= paper_limit:
+                        break
+                    papers.extend(
+                        await client.search_by_category(
+                            cat,
+                            query=query,
+                            max_results=min(per_cat, paper_limit - len(papers)),
+                        )
+                    )
+            if len(papers) < paper_limit:
+                papers.extend(await client.search(query, max_results=paper_limit - len(papers)))
+
+            deduped: dict[str, Any] = {}
+            for paper in papers:
+                if paper.arxiv_id not in deduped:
+                    deduped[paper.arxiv_id] = paper
+            papers = list(deduped.values())
+            if keywords:
+                def _score_paper(paper: Any) -> int:
+                    title = paper.title.lower()
+                    abstract = paper.abstract.lower()
+                    score = 0
+                    for token in keywords:
+                        if token in title:
+                            score += 3
+                        if token in abstract:
+                            score += 1
+                    return score
+
+                scored = sorted((( _score_paper(p), p) for p in papers), key=lambda pair: pair[0], reverse=True)
+                if scored and scored[0][0] == 0:
+                    await self._emit_status("No relevant papers found for query; skipping literature pipeline.")
+                    return
+                papers = [p for _, p in scored]
+            papers = papers[:paper_limit]
 
             if not papers:
                 return
@@ -256,14 +338,15 @@ class RalphOrchestrator:
             self.total_cost += builder.total_cost
 
             # === NEW: Extract structured claims from papers ===
-            await self._emit_status("Extracting claims...")
-            for paper in papers[:10]:  # Limit to reduce API calls
+            await self._emit_status("Extracting claims... (0/{})".format(claim_limit))
+            for idx, paper in enumerate(papers[:claim_limit], start=1):  # Limit to reduce API calls
                 claims = await self.claim_extractor.extract_claims(
                     paper_id=paper.arxiv_id,
                     title=paper.title,
                     abstract=paper.abstract,
                 )
                 self.claims.extend(claims)
+                await self._emit_status(f"Extracting claims... ({idx}/{claim_limit})")
             
             self._update_costs()
             await self._emit_status(f"Ingested {len(papers)} papers. Extracted {len(self.claims)} claims.")

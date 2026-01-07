@@ -1,0 +1,43 @@
+Traceback (most recent call last):
+  File "C:\Users\lenovo\projects\novelist\src\server.py", line 170, in run_session
+    result = await orchestrator.run(topic, output_dir=SESSIONS_DIR)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\projects\novelist\src\ralph\orchestrator.py", line 203, in run
+    await self._run_iteration()
+  File "C:\Users\lenovo\projects\novelist\src\ralph\orchestrator.py", line 328, in _run_iteration
+    best_state = await self.tree_search.run_search(root_state)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\projects\novelist\src\ralph\tree_search_orchestrator.py", line 49, in run_search
+    best_node = await self.mcts.search(
+                ^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )
+    ^
+  File "C:\Users\lenovo\projects\novelist\src\ralph\mcts.py", line 76, in search
+    await self._expand_node(node)
+  File "C:\Users\lenovo\projects\novelist\src\ralph\mcts.py", line 121, in _expand_node
+    new_nodes = await self._expand_fn(node)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\projects\novelist\src\ralph\tree_search_orchestrator.py", line 111, in _expand_state
+    refined_hyp = await self._refine_hypothesis(hyp, "Deepen Mechanism", node)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\projects\novelist\src\ralph\tree_search_orchestrator.py", line 208, in _refine_hypothesis
+    return await self.generator.refine_hypothesis(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\lenovo\projects\novelist\src\kb\grounded_generator.py", line 169, in refine_hypothesis
+    hyp_json = json.dumps(hypothesis.model_dump(exclude={"scores", "source_soul", "iteration"}), indent=2)
+  File "C:\Python314\Lib\json\__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ~~~~~~^^^^^
+  File "C:\Python314\Lib\json\encoder.py", line 200, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "C:\Python314\Lib\json\encoder.py", line 261, in iterencode
+    return _iterencode(o, 0)
+  File "C:\Python314\Lib\json\encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type datetime is not JSON serializable
+when serializing dict item 'created_at'

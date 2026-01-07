@@ -1,0 +1,1714 @@
+{
+  "nodes": [
+    {
+      "id": "quantum_harmonic_oscillator_(qho)",
+      "name": "Quantum Harmonic Oscillator (QHO)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2401.07238v1"
+      ]
+    },
+    {
+      "id": "qho_battery_models",
+      "name": "QHO battery models",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2401.07238v1"
+      ]
+    },
+    {
+      "id": "laser_field",
+      "name": "laser field",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2401.07238v1"
+      ]
+    },
+    {
+      "id": "catalyst_system",
+      "name": "catalyst system",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2401.07238v1"
+      ]
+    },
+    {
+      "id": "ergotropy",
+      "name": "ergotropy",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2401.07238v1"
+      ]
+    },
+    {
+      "id": "energy_harvesting_(eh)",
+      "name": "Energy Harvesting (EH)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1801.03813v3"
+      ]
+    },
+    {
+      "id": "dual_alternating_batteries",
+      "name": "Dual Alternating Batteries",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": [
+        "1801.03813v3"
+      ]
+    },
+    {
+      "id": "point-to-point_(p2p)_channels",
+      "name": "Point-to-Point (P2P) channels",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1801.03813v3"
+      ]
+    },
+    {
+      "id": "multiple_access_channels_(mac)",
+      "name": "Multiple Access Channels (MAC)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1801.03813v3"
+      ]
+    },
+    {
+      "id": "bernoulli_energy_arrivals",
+      "name": "Bernoulli energy arrivals",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1801.03813v3"
+      ]
+    },
+    {
+      "id": "half-duplex_constraint",
+      "name": "Half-duplex constraint",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1801.03813v3"
+      ]
+    },
+    {
+      "id": "power_allocation_policies",
+      "name": "Power allocation policies",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1801.03813v3"
+      ]
+    },
+    {
+      "id": "quantum_batteries",
+      "name": "quantum batteries",
+      "type": "concept",
+      "frequency": 2,
+      "source_papers": [
+        "2303.07841v3",
+        "2505.16851v1"
+      ]
+    },
+    {
+      "id": "entangled_quantum_states",
+      "name": "entangled quantum states",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2303.07841v3"
+      ]
+    },
+    {
+      "id": "global_quantum_speed_limit",
+      "name": "global quantum speed limit",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2303.07841v3"
+      ]
+    },
+    {
+      "id": "sachdev-ye-kitaev_battery_charger",
+      "name": "Sachdev-Ye-Kitaev battery charger",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2303.07841v3"
+      ]
+    },
+    {
+      "id": "w_states",
+      "name": "W states",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2303.07841v3"
+      ]
+    },
+    {
+      "id": "k-locally_entangled_states",
+      "name": "k-locally entangled states",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2303.07841v3"
+      ]
+    },
+    {
+      "id": "non-hermitian_hamiltonian",
+      "name": "non-Hermitian Hamiltonian",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2203.09497v2"
+      ]
+    },
+    {
+      "id": "parity-time_(pt)-symmetric_hamiltonian",
+      "name": "parity-time (PT)-symmetric Hamiltonian",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2203.09497v2"
+      ]
+    },
+    {
+      "id": "rotational-time_(rt)-symmetric_hamiltonian",
+      "name": "rotational-time (RT)-symmetric Hamiltonian",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2203.09497v2"
+      ]
+    },
+    {
+      "id": "xx_model",
+      "name": "XX model",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2203.09497v2"
+      ]
+    },
+    {
+      "id": "xxz_model",
+      "name": "XXZ model",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2203.09497v2"
+      ]
+    },
+    {
+      "id": "xy_model",
+      "name": "XY model",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2203.09497v2"
+      ]
+    },
+    {
+      "id": "density_functional_theory_(dft)",
+      "name": "density functional theory (DFT)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2408.09942v1"
+      ]
+    },
+    {
+      "id": "lithium-ion_battery",
+      "name": "lithium-ion battery",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2408.09942v1"
+      ]
+    },
+    {
+      "id": "sodium-ion_battery",
+      "name": "sodium-ion battery",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2408.09942v1"
+      ]
+    },
+    {
+      "id": "cathode_materials",
+      "name": "cathode materials",
+      "type": "concept",
+      "frequency": 2,
+      "source_papers": [
+        "2408.09942v1",
+        "2211.04977v2"
+      ]
+    },
+    {
+      "id": "anionic_redox",
+      "name": "anionic redox",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2408.09942v1"
+      ]
+    },
+    {
+      "id": "3d_simulation",
+      "name": "3D simulation",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2502.07070v1"
+      ]
+    },
+    {
+      "id": "phase_change_materials_(pcms)",
+      "name": "phase change materials (PCMs)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2502.07070v1"
+      ]
+    },
+    {
+      "id": "geometric_configurations",
+      "name": "geometric configurations",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2502.07070v1"
+      ]
+    },
+    {
+      "id": "airflow_dynamics",
+      "name": "airflow dynamics",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2502.07070v1"
+      ]
+    },
+    {
+      "id": "lithium-ion_battery_packs",
+      "name": "lithium-ion battery packs",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2502.07070v1"
+      ]
+    },
+    {
+      "id": "inlet_and_outlet_configurations",
+      "name": "inlet and outlet configurations",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2502.07070v1"
+      ]
+    },
+    {
+      "id": "droop_control",
+      "name": "droop control",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2208.12291v1"
+      ]
+    },
+    {
+      "id": "electromagnetic_transient_program_(emtp)",
+      "name": "electromagnetic transient program (EMTP)",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2208.12291v1"
+      ]
+    },
+    {
+      "id": "frequency_droop_damping",
+      "name": "frequency droop damping",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2208.12291v1"
+      ]
+    },
+    {
+      "id": "inverter-based_resources_(ibr)",
+      "name": "inverter-based resources (IBR)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2208.12291v1"
+      ]
+    },
+    {
+      "id": "defect_physics",
+      "name": "defect physics",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2211.04977v2"
+      ]
+    },
+    {
+      "id": "first-principles_studies",
+      "name": "first-principles studies",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2211.04977v2"
+      ]
+    },
+    {
+      "id": "transition-metal_oxides",
+      "name": "transition-metal oxides",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2211.04977v2"
+      ]
+    },
+    {
+      "id": "battery_materials",
+      "name": "battery materials",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2211.04977v2"
+      ]
+    },
+    {
+      "id": "doping",
+      "name": "doping",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2211.04977v2"
+      ]
+    },
+    {
+      "id": "convergent_iterative_method",
+      "name": "convergent iterative method",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2207.00094v3"
+      ]
+    },
+    {
+      "id": "qubit-qubit_system",
+      "name": "qubit-qubit system",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2207.00094v3"
+      ]
+    },
+    {
+      "id": "harmonic_oscillators",
+      "name": "harmonic oscillators",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2207.00094v3"
+      ]
+    },
+    {
+      "id": "gaussian_regime",
+      "name": "Gaussian regime",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2207.00094v3"
+      ]
+    },
+    {
+      "id": "quantum_control",
+      "name": "quantum control",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2207.00094v3"
+      ]
+    },
+    {
+      "id": "porous-electrode_model",
+      "name": "porous-electrode model",
+      "type": "method",
+      "frequency": 2,
+      "source_papers": [
+        "1902.01774v1",
+        "1902.01771v1"
+      ]
+    },
+    {
+      "id": "asymptotic_analysis",
+      "name": "asymptotic analysis",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1902.01774v1"
+      ]
+    },
+    {
+      "id": "lumped-parameter_model",
+      "name": "lumped-parameter model",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "1902.01774v1"
+      ]
+    },
+    {
+      "id": "equivalent-circuit_modelling",
+      "name": "equivalent-circuit modelling",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "1902.01774v1"
+      ]
+    },
+    {
+      "id": "electrochemical_modelling",
+      "name": "electrochemical modelling",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "1902.01774v1"
+      ]
+    },
+    {
+      "id": "lead-acid_battery",
+      "name": "lead-acid battery",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1902.01774v1"
+      ]
+    },
+    {
+      "id": "c-rates",
+      "name": "C-rates",
+      "type": "concept",
+      "frequency": 2,
+      "source_papers": [
+        "1902.01774v1",
+        "1902.01771v1"
+      ]
+    },
+    {
+      "id": "photovoltaic_(pv)_systems",
+      "name": "Photovoltaic (PV) systems",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2003.00741v1"
+      ]
+    },
+    {
+      "id": "battery_systems",
+      "name": "Battery systems",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2003.00741v1"
+      ]
+    },
+    {
+      "id": "load_profiles",
+      "name": "Load profiles",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2003.00741v1"
+      ]
+    },
+    {
+      "id": "self-consumption_rate",
+      "name": "Self-consumption rate",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2003.00741v1"
+      ]
+    },
+    {
+      "id": "simulations",
+      "name": "Simulations",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2003.00741v1"
+      ]
+    },
+    {
+      "id": "biermann_battery",
+      "name": "Biermann battery",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2109.01579v1"
+      ]
+    },
+    {
+      "id": "chiral_anomaly",
+      "name": "chiral anomaly",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2109.01579v1"
+      ]
+    },
+    {
+      "id": "chiral_plasma",
+      "name": "chiral plasma",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2109.01579v1"
+      ]
+    },
+    {
+      "id": "dynamos",
+      "name": "dynamos",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2109.01579v1"
+      ]
+    },
+    {
+      "id": "physics-informed_machine_learning_(piml)",
+      "name": "Physics-Informed Machine Learning (PIML)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2404.04429v1"
+      ]
+    },
+    {
+      "id": "lithium-ion_batteries",
+      "name": "Lithium-ion batteries",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2404.04429v1"
+      ]
+    },
+    {
+      "id": "implantable-grade_lithium-ion_cells",
+      "name": "Implantable-grade lithium-ion cells",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": [
+        "2404.04429v1"
+      ]
+    },
+    {
+      "id": "accuracy",
+      "name": "Accuracy",
+      "type": "metric",
+      "frequency": 1,
+      "source_papers": [
+        "2404.04429v1"
+      ]
+    },
+    {
+      "id": "complexity",
+      "name": "Complexity",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2404.04429v1"
+      ]
+    },
+    {
+      "id": "ease-of-implementation",
+      "name": "Ease-of-implementation",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2404.04429v1"
+      ]
+    },
+    {
+      "id": "generative_ai",
+      "name": "Generative AI",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": [
+        "2410.01098v2"
+      ]
+    },
+    {
+      "id": "gen-ai",
+      "name": "Gen-AI",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2410.01098v2"
+      ]
+    },
+    {
+      "id": "transformer",
+      "name": "Transformer",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2410.01098v2"
+      ]
+    },
+    {
+      "id": "diffusion_model",
+      "name": "Diffusion model",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2410.01098v2"
+      ]
+    },
+    {
+      "id": "computer-aided_design",
+      "name": "Computer-Aided Design",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2410.01098v2"
+      ]
+    },
+    {
+      "id": "hvac",
+      "name": "HVAC",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2510.02933v1"
+      ]
+    },
+    {
+      "id": "virtual_battery_models",
+      "name": "Virtual battery models",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2510.02933v1"
+      ]
+    },
+    {
+      "id": "analytical_building_model",
+      "name": "Analytical building model",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2510.02933v1"
+      ]
+    },
+    {
+      "id": "fan_power_measurements",
+      "name": "Fan power measurements",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2510.02933v1"
+      ]
+    },
+    {
+      "id": "roundtrip_efficiency",
+      "name": "Roundtrip efficiency",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2510.02933v1"
+      ]
+    },
+    {
+      "id": "ginzburg-landau_theory",
+      "name": "Ginzburg-Landau theory",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1901.11237v2"
+      ]
+    },
+    {
+      "id": "josephson_tunneling",
+      "name": "Josephson tunneling",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1901.11237v2"
+      ]
+    },
+    {
+      "id": "nematic_order_parameter",
+      "name": "nematic order parameter",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1901.11237v2"
+      ]
+    },
+    {
+      "id": "bi$_2$se$_3$",
+      "name": "Bi$_2$Se$_3$",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1901.11237v2"
+      ]
+    },
+    {
+      "id": "s-wave_superconductor",
+      "name": "s-wave superconductor",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1901.11237v2"
+      ]
+    },
+    {
+      "id": "upper_critical_field_$h_{c2}$",
+      "name": "upper critical field $H_{c2}$",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1901.11237v2"
+      ]
+    },
+    {
+      "id": "concentrated-solution_theory",
+      "name": "concentrated-solution theory",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1902.01771v1"
+      ]
+    },
+    {
+      "id": "excluded-volume_effects",
+      "name": "excluded-volume effects",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1902.01771v1"
+      ]
+    },
+    {
+      "id": "local_pressure_variation",
+      "name": "local pressure variation",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1902.01771v1"
+      ]
+    },
+    {
+      "id": "microscopic_water_balance",
+      "name": "microscopic water balance",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1902.01771v1"
+      ]
+    },
+    {
+      "id": "peukert's_power_law",
+      "name": "Peukert's power law",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1902.01771v1"
+      ]
+    },
+    {
+      "id": "ppo",
+      "name": "PPO",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2412.20946v2"
+      ]
+    },
+    {
+      "id": "trpo",
+      "name": "TRPO",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2412.20946v2"
+      ]
+    },
+    {
+      "id": "federated_rl",
+      "name": "Federated RL",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2412.20946v2"
+      ]
+    },
+    {
+      "id": "citylearn_environment",
+      "name": "CityLearn environment",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2412.20946v2"
+      ]
+    },
+    {
+      "id": "ders",
+      "name": "DERs",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2412.20946v2"
+      ]
+    },
+    {
+      "id": "two-particle-irreducible_(2pi)_effective_potential",
+      "name": "two-particle-irreducible (2PI) effective potential",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2401.12541v1"
+      ]
+    },
+    {
+      "id": "bose-einstein_condensate_(bec)",
+      "name": "Bose-Einstein condensate (BEC)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2401.12541v1"
+      ]
+    },
+    {
+      "id": "atomic_$^{7}$li",
+      "name": "atomic $^{7}$Li",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2401.12541v1"
+      ]
+    },
+    {
+      "id": "ferromagnetic_bose_gas",
+      "name": "ferromagnetic Bose gas",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2401.12541v1"
+      ]
+    },
+    {
+      "id": "x-ray_dark-field_imaging",
+      "name": "x-ray dark-field imaging",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2212.02253v1"
+      ]
+    },
+    {
+      "id": "single-exposure_grid-based_approach",
+      "name": "single-exposure grid-based approach",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2212.02253v1"
+      ]
+    },
+    {
+      "id": "diffusive_dark-field_signal",
+      "name": "diffusive dark-field signal",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2212.02253v1"
+      ]
+    },
+    {
+      "id": "ultra-small-angle_x-ray_scattering",
+      "name": "ultra-small-angle x-ray scattering",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2212.02253v1"
+      ]
+    },
+    {
+      "id": "polystyrene_microspheres",
+      "name": "polystyrene microspheres",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2212.02253v1"
+      ]
+    },
+    {
+      "id": "$f(q)$_gravity",
+      "name": "$f(Q)$ gravity",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2208.05779v2"
+      ]
+    },
+    {
+      "id": "friedmann-lema\u00eetre-robertson-walker_(flrw)_universe",
+      "name": "Friedmann-Lema\u00eetre-Robertson-Walker (FLRW) universe",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2208.05779v2"
+      ]
+    },
+    {
+      "id": "general_relativistic_methods",
+      "name": "general relativistic methods",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": [
+        "2208.05779v2"
+      ]
+    },
+    {
+      "id": "quantum_battery",
+      "name": "quantum battery",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2010.09970v1"
+      ]
+    },
+    {
+      "id": "thermal_bath",
+      "name": "thermal bath",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2010.09970v1"
+      ]
+    },
+    {
+      "id": "coherent_driving",
+      "name": "coherent driving",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2010.09970v1"
+      ]
+    },
+    {
+      "id": "decoherent_dissipation",
+      "name": "decoherent dissipation",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2010.09970v1"
+      ]
+    },
+    {
+      "id": "quantum_collective_effects",
+      "name": "quantum collective effects",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2010.09970v1"
+      ]
+    },
+    {
+      "id": "thermodynamic_efficiency",
+      "name": "thermodynamic efficiency",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2010.09970v1"
+      ]
+    },
+    {
+      "id": "battery_model",
+      "name": "battery model",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2210.03604v1"
+      ]
+    },
+    {
+      "id": "energym",
+      "name": "Energym",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2210.03604v1"
+      ]
+    },
+    {
+      "id": "risk_measures",
+      "name": "risk measures",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2210.03604v1"
+      ]
+    },
+    {
+      "id": "demand_response",
+      "name": "demand response",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2210.03604v1"
+      ]
+    },
+    {
+      "id": "unitary_operations",
+      "name": "unitary operations",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2505.16851v1"
+      ]
+    },
+    {
+      "id": "completely_positive_trace-preserving_(cptp)_maps",
+      "name": "completely positive trace-preserving (CPTP) maps",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2505.16851v1"
+      ]
+    },
+    {
+      "id": "arbitrary_quantum_maps",
+      "name": "arbitrary quantum maps",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2505.16851v1"
+      ]
+    },
+    {
+      "id": "model_predictive_control_(mpc)",
+      "name": "Model Predictive Control (MPC)",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2510.25373v1"
+      ]
+    },
+    {
+      "id": "rule-based_control_(rbc)",
+      "name": "Rule-Based Control (RBC)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2510.25373v1"
+      ]
+    },
+    {
+      "id": "net_billing",
+      "name": "Net Billing",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2510.25373v1"
+      ]
+    },
+    {
+      "id": "battery_degradation",
+      "name": "battery degradation",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2510.25373v1"
+      ]
+    },
+    {
+      "id": "time-averaged_evaluations",
+      "name": "time-averaged evaluations",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2510.25373v1"
+      ]
+    },
+    {
+      "id": "minute-level_ground-truth_assessments",
+      "name": "minute-level ground-truth assessments",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2510.25373v1"
+      ]
+    },
+    {
+      "id": "conditional_diffusion_model",
+      "name": "Conditional Diffusion Model",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2404.00525v1"
+      ]
+    },
+    {
+      "id": "conditional_generative_adversarial_networks_(cgan)",
+      "name": "Conditional Generative Adversarial Networks (CGAN)",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": [
+        "2404.00525v1"
+      ]
+    },
+    {
+      "id": "conditional_variational_auto-encoders_(cvae)",
+      "name": "Conditional Variational Auto-Encoders (CVAE)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2404.00525v1"
+      ]
+    },
+    {
+      "id": "frechet_inception_distance_(fid)",
+      "name": "Frechet Inception Distance (FID)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2404.00525v1"
+      ]
+    },
+    {
+      "id": "kullback-leibler_divergence_(kl_divergence)",
+      "name": "Kullback-Leibler divergence (KL divergence)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2404.00525v1"
+      ]
+    },
+    {
+      "id": "physics-informed_denoising_autoencoders_(pi-dae)",
+      "name": "Physics-informed Denoising Autoencoders (PI-DAE)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2311.16632v2"
+      ]
+    },
+    {
+      "id": "denoising_autoencoder_(dae)",
+      "name": "Denoising Autoencoder (DAE)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2311.16632v2"
+      ]
+    },
+    {
+      "id": "deep_learning",
+      "name": "Deep Learning",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2311.16632v2"
+      ]
+    },
+    {
+      "id": "building_thermal_balance_equation",
+      "name": "building thermal balance equation",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2311.16632v2"
+      ]
+    },
+    {
+      "id": "stochastic_programming",
+      "name": "stochastic programming",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1808.00095v2"
+      ]
+    },
+    {
+      "id": "load_predictions",
+      "name": "load predictions",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1808.00095v2"
+      ]
+    },
+    {
+      "id": "zn/mno2_battery",
+      "name": "Zn/MnO2 battery",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1808.00095v2"
+      ]
+    },
+    {
+      "id": "state-of-the-art_building_simulation_tool",
+      "name": "state-of-the-art building simulation tool",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1808.00095v2"
+      ]
+    },
+    {
+      "id": "demand_side_management",
+      "name": "demand side management",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "1808.00095v2"
+      ]
+    },
+    {
+      "id": "recommender_systems",
+      "name": "Recommender systems",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2411.08734v3"
+      ]
+    },
+    {
+      "id": "reinforcement_learning",
+      "name": "Reinforcement learning",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2411.08734v3"
+      ]
+    },
+    {
+      "id": "text_mining",
+      "name": "Text mining",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2411.08734v3"
+      ]
+    },
+    {
+      "id": "natural_language_processing_(nlp)",
+      "name": "Natural Language Processing (NLP)",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2411.08734v3"
+      ]
+    },
+    {
+      "id": "sciencedirect_database",
+      "name": "ScienceDirect database",
+      "type": "concept",
+      "frequency": 1,
+      "source_papers": [
+        "2411.08734v3"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "quantum_harmonic_oscillator_(qho)",
+      "target": "qho_battery_models",
+      "relation": "enables",
+      "confidence": 0.7,
+      "source_papers": [
+        "2401.07238v1"
+      ]
+    },
+    {
+      "source": "laser_field",
+      "target": "qho_battery_models",
+      "relation": "improves",
+      "confidence": 0.7,
+      "source_papers": [
+        "2401.07238v1"
+      ]
+    },
+    {
+      "source": "numerical_approaches",
+      "target": "analytical_approaches",
+      "relation": "combines",
+      "confidence": 0.7,
+      "source_papers": [
+        "2401.07238v1"
+      ]
+    },
+    {
+      "source": "catalyst_system",
+      "target": "energy_transfer",
+      "relation": "addresses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2401.07238v1"
+      ]
+    },
+    {
+      "source": "ergotropy",
+      "target": "qho_battery_models",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2401.07238v1"
+      ]
+    },
+    {
+      "source": "dual_alternating_batteries",
+      "target": "point-to-point_(p2p)_channels",
+      "relation": "compares",
+      "confidence": 0.7,
+      "source_papers": [
+        "1801.03813v3"
+      ]
+    },
+    {
+      "source": "energy_harvesting_(eh)",
+      "target": "power_allocation_policies",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "1801.03813v3"
+      ]
+    },
+    {
+      "source": "multiple_access_channels_(mac)",
+      "target": "dual_alternating_batteries",
+      "relation": "extends",
+      "confidence": 0.7,
+      "source_papers": [
+        "1801.03813v3"
+      ]
+    },
+    {
+      "source": "bernoulli_energy_arrivals",
+      "target": "half-duplex_constraint",
+      "relation": "addresses",
+      "confidence": 0.7,
+      "source_papers": [
+        "1801.03813v3"
+      ]
+    },
+    {
+      "source": "entangled_quantum_states",
+      "target": "quantum_batteries",
+      "relation": "improves",
+      "confidence": 0.7,
+      "source_papers": [
+        "2303.07841v3"
+      ]
+    },
+    {
+      "source": "global_quantum_speed_limit",
+      "target": "entangled_quantum_states",
+      "relation": "compares",
+      "confidence": 0.7,
+      "source_papers": [
+        "2303.07841v3"
+      ]
+    },
+    {
+      "source": "sachdev-ye-kitaev_battery_charger",
+      "target": "w_states",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2303.07841v3"
+      ]
+    },
+    {
+      "source": "k-locally_entangled_states",
+      "target": "quantum_batteries",
+      "relation": "extends",
+      "confidence": 0.7,
+      "source_papers": [
+        "2303.07841v3"
+      ]
+    },
+    {
+      "source": "non-hermitian_hamiltonian",
+      "target": "parity-time_(pt)-symmetric_hamiltonian",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2203.09497v2"
+      ]
+    },
+    {
+      "source": "rotational-time_(rt)-symmetric_hamiltonian",
+      "target": "xx_model",
+      "relation": "compares",
+      "confidence": 0.7,
+      "source_papers": [
+        "2203.09497v2"
+      ]
+    },
+    {
+      "source": "xxz_model",
+      "target": "non-hermitian_hamiltonian",
+      "relation": "extends",
+      "confidence": 0.7,
+      "source_papers": [
+        "2203.09497v2"
+      ]
+    },
+    {
+      "source": "xy_model",
+      "target": "non-hermitian_hamiltonian",
+      "relation": "addresses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2203.09497v2"
+      ]
+    },
+    {
+      "source": "density_functional_theory_(dft)",
+      "target": "lithium-ion_battery",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2408.09942v1"
+      ]
+    },
+    {
+      "source": "sodium-ion_battery",
+      "target": "cathode_materials",
+      "relation": "compares",
+      "confidence": 0.7,
+      "source_papers": [
+        "2408.09942v1"
+      ]
+    },
+    {
+      "source": "anionic_redox",
+      "target": "density_functional_theory_(dft)",
+      "relation": "enables",
+      "confidence": 0.7,
+      "source_papers": [
+        "2408.09942v1"
+      ]
+    },
+    {
+      "source": "cathode_materials",
+      "target": "anionic_redox",
+      "relation": "addresses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2408.09942v1"
+      ]
+    },
+    {
+      "source": "3d_simulation",
+      "target": "phase_change_materials_(pcms)",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2502.07070v1"
+      ]
+    },
+    {
+      "source": "geometric_configurations",
+      "target": "airflow_dynamics",
+      "relation": "compares",
+      "confidence": 0.7,
+      "source_papers": [
+        "2502.07070v1"
+      ]
+    },
+    {
+      "source": "inlet_and_outlet_configurations",
+      "target": "lithium-ion_battery_packs",
+      "relation": "extends",
+      "confidence": 0.7,
+      "source_papers": [
+        "2502.07070v1"
+      ]
+    },
+    {
+      "source": "airflow_dynamics",
+      "target": "phase_change_materials_(pcms)",
+      "relation": "addresses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2502.07070v1"
+      ]
+    },
+    {
+      "source": "droop_control",
+      "target": "electromagnetic_transient_program_(emtp)",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2208.12291v1"
+      ]
+    },
+    {
+      "source": "frequency_droop_damping",
+      "target": "inverter-based_resources_(ibr)",
+      "relation": "compares",
+      "confidence": 0.7,
+      "source_papers": [
+        "2208.12291v1"
+      ]
+    },
+    {
+      "source": "inverter-based_resources_(ibr)",
+      "target": "frequency_droop_damping",
+      "relation": "extends",
+      "confidence": 0.7,
+      "source_papers": [
+        "2208.12291v1"
+      ]
+    },
+    {
+      "source": "electromagnetic_transient_program_(emtp)",
+      "target": "frequency_droop_damping",
+      "relation": "enables",
+      "confidence": 0.7,
+      "source_papers": [
+        "2208.12291v1"
+      ]
+    },
+    {
+      "source": "defect_physics",
+      "target": "first-principles_studies",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2211.04977v2"
+      ]
+    },
+    {
+      "source": "transition-metal_oxides",
+      "target": "cathode_materials",
+      "relation": "compares",
+      "confidence": 0.7,
+      "source_papers": [
+        "2211.04977v2"
+      ]
+    },
+    {
+      "source": "battery_materials",
+      "target": "defect_physics",
+      "relation": "extends",
+      "confidence": 0.7,
+      "source_papers": [
+        "2211.04977v2"
+      ]
+    },
+    {
+      "source": "doping",
+      "target": "defect_physics",
+      "relation": "addresses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2211.04977v2"
+      ]
+    },
+    {
+      "source": "convergent_iterative_method",
+      "target": "qubit-qubit_system",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "2207.00094v3"
+      ]
+    },
+    {
+      "source": "harmonic_oscillators",
+      "target": "gaussian_regime",
+      "relation": "compares",
+      "confidence": 0.7,
+      "source_papers": [
+        "2207.00094v3"
+      ]
+    },
+    {
+      "source": "quantum_control",
+      "target": "convergent_iterative_method",
+      "relation": "enables",
+      "confidence": 0.7,
+      "source_papers": [
+        "2207.00094v3"
+      ]
+    },
+    {
+      "source": "gaussian_regime",
+      "target": "harmonic_oscillators",
+      "relation": "extends",
+      "confidence": 0.7,
+      "source_papers": [
+        "2207.00094v3"
+      ]
+    },
+    {
+      "source": "asymptotic_analysis",
+      "target": "porous-electrode_model",
+      "relation": "uses",
+      "confidence": 0.7,
+      "source_papers": [
+        "1902.01774v1"
+      ]
+    },
+    {
+      "source": "lumped-parameter_model",
+      "target": "equivalent-circuit_modelling",
+      "relation": "compares",
+      "confidence": 0.7,
+      "source_papers": [
+        "1902.01774v1"
+      ]
+    },
+    {
+      "source": "electrochemical_modelling",
+      "target": "lead-acid_battery",
+      "relation": "extends",
+      "confidence": 0.7,
+      "source_papers": [
+        "1902.01774v1"
+      ]
+    },
+    {
+      "source": "c-rates",
+      "target": "asymptotic_analysis",
+      "relation": "addresses",
+      "confidence": 0.7,
+      "source_papers": [
+        "1902.01774v1"
+      ]
+    }
+  ],
+  "gaps": [
+    {
+      "node1": "porous-electrode model",
+      "node2": "C-rates",
+      "shared_papers": [
+        "1902.01771v1",
+        "1902.01774v1"
+      ],
+      "potential": "high"
+    }
+  ],
+  "contradictions": []
+}

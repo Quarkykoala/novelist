@@ -7,6 +7,7 @@ Provides REST API endpoints for the frontend to communicate with the orchestrato
 import asyncio
 import json
 import os
+import sys
 import traceback
 import uuid
 from datetime import datetime
@@ -23,6 +24,11 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from src.contracts.schemas import Hypothesis, IterationTrace, RalphConfig, SimulationResult
 from src.ralph.orchestrator import RalphOrchestrator
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 app = FastAPI(
     title="Scientific Hypothesis Synthesizer API",
@@ -92,6 +98,7 @@ class SessionStatusResponse(BaseModel):
 def _serialize_hypothesis(h: Hypothesis | dict[str, Any]) -> dict[str, Any]:
     """Shape hypothesis data for the frontend."""
     if isinstance(h, Hypothesis):
+        sim_result = getattr(h, "simulation_result", None)
         return {
             "id": h.id,
             "statement": h.hypothesis,
@@ -103,7 +110,7 @@ def _serialize_hypothesis(h: Hypothesis | dict[str, Any]) -> dict[str, Any]:
             "scores": h.scores.model_dump(),
             "evidence": h.evidence.model_dump(),
             "source_soul": h.source_soul.value if h.source_soul else None,
-            "simulation_result": h.simulation_result.model_dump() if h.simulation_result else None,
+            "simulation_result": sim_result.model_dump() if sim_result else None,
             "iteration": h.iteration,
         }
 
@@ -213,7 +220,7 @@ async def run_session(session_id: str, topic: str, config: RalphConfig):
         try:
             session_dir = SESSIONS_DIR / session_id
             session_dir.mkdir(parents=True, exist_ok=True)
-            with open(session_dir / "error.log", "w") as f:
+            with open(session_dir / "error.log", "w", encoding="utf-8") as f:
                 f.write(traceback.format_exc())
         except Exception as log_error:
             print(f"[WARN] Failed to write error log: {log_error}")

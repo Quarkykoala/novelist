@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "C:\Users\lenovo\projects\novelist\src\server.py", line 179, in run_session
+    _serialize_hypothesis(h) for h in (result.final_hypotheses if result else [])
+    ~~~~~~~~~~~~~~~~~~~~~^^^
+  File "C:\Users\lenovo\projects\novelist\src\server.py", line 112, in _serialize_hypothesis
+    "simulation_result": h.simulation_result.model_dump() if h.simulation_result else None,
+                                                             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lenovo\AppData\Roaming\Python\Python314\site-packages\pydantic\main.py", line 1026, in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+AttributeError: 'Hypothesis' object has no attribute 'simulation_result'

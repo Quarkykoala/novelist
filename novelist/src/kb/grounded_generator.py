@@ -166,7 +166,13 @@ class GroundedHypothesisGenerator:
         
         # Prepare hypothesis JSON string
         # We model dump it to text for the prompt
-        hyp_json = json.dumps(hypothesis.model_dump(exclude={"scores", "source_soul", "iteration"}), indent=2)
+        hyp_json = json.dumps(
+            hypothesis.model_dump(
+                mode="json",
+                exclude={"scores", "source_soul", "iteration"},
+            ),
+            indent=2,
+        )
 
         prompt = HYPOTHESIS_REFINEMENT_PROMPT.format(
             original_hypothesis=hyp_json,

@@ -136,14 +136,26 @@ Bring in ideas from completely unrelated fields. Be wild!""",
             hypotheses = []
             for i, item in enumerate(data[:5]):  # Max 5 hypotheses
                 try:
+                    design = item.get("experimental_design", [])
+                    if not isinstance(design, list):
+                        design = []
+                    if not design:
+                        design = ["Design a controlled experiment to test the hypothesis."]
+
+                    keywords = item.get("novelty_keywords", [])
+                    if not isinstance(keywords, list):
+                        keywords = []
+                    if not keywords:
+                        keywords = ["novelty", "research"]
+
                     h = Hypothesis(
                         id=f"creative_{i}",
                         hypothesis=item.get("hypothesis", ""),
                         rationale=item.get("rationale", ""),
                         cross_disciplinary_connection=item.get("cross_disciplinary_connection", ""),
-                        experimental_design=item.get("experimental_design", []),
+                        experimental_design=design,
                         expected_impact=item.get("expected_impact", ""),
-                        novelty_keywords=item.get("novelty_keywords", []),
+                        novelty_keywords=keywords,
                         source_soul=self.role,
                     )
                     hypotheses.append(h)
