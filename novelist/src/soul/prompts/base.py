@@ -23,6 +23,15 @@ class BaseSoul(ABC):
         # Usage tracking
         self.total_tokens = 0
         self.total_cost = 0.0
+        
+        # Dynamic Persona
+        self.custom_name: str | None = None
+        self.custom_instruction: str | None = None
+
+    def set_persona(self, name: str, instruction: str) -> None:
+        """Dynamically update the soul's persona."""
+        self.custom_name = name
+        self.custom_instruction = instruction
 
     async def _call_model_with_retry(self, prompt: str) -> str | None:
         """Call the model via the unified client."""
@@ -61,6 +70,13 @@ class BaseSoul(ABC):
 
     def get_persona_prompt(self) -> str:
         """Get the persona description for this soul."""
+        if self.custom_instruction:
+            return f"""You are {self.custom_name or self.role.value.upper()}.
+{self.custom_instruction}
+
+Your role is to bring your unique, expert perspective to scientific hypothesis generation.
+"""
+        
         return f"""You are the {self.role.value.upper()} soul in a research collective.
 {self.description}
 
@@ -92,6 +108,16 @@ def format_context_for_prompt(context: dict[str, Any]) -> str:
         parts.append("Lessons from previous iterations:")
         for lesson in context["lessons"]:
             parts.append(f"  - {lesson}")
+
+    if context.get("graveyard"):
+        parts.append("GRAVEYARD OF BAD IDEAS (DO NOT REPEAT):")
+        for ghost in context["graveyard"]:
+            parts.append(f"  - {ghost}")
+
+    if context.get("user_guidance"):
+        parts.append("USER GUIDANCE (PRIORITY - ADJUST YOUR THINKING):")
+        for msg in context["user_guidance"]:
+            parts.append(f"  - {msg}")
 
     return "\n".join(parts) if parts else "No prior context available."
 

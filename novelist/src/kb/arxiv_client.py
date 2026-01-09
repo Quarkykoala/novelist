@@ -17,7 +17,7 @@ from src.contracts.schemas import ArxivPaper
 
 # arXiv API configuration
 ARXIV_API_BASE = "https://export.arxiv.org/api/query"
-ARXIV_RATE_LIMIT_SECONDS = 1.0  # Be conservative with rate limiting
+ARXIV_RATE_LIMIT_SECONDS = 3.0  # Respect standard 3s interval
 ARXIV_MAX_RESULTS = 100
 
 # XML namespaces used by arXiv Atom feed
@@ -40,16 +40,23 @@ CATEGORY_NEIGHBORS: dict[str, list[str]] = {
 }
 
 
+# Global rate limiter state
+_LAST_REQUEST_TIME = 0.0
+_GLOBAL_LOCK = asyncio.Lock()
+
+
 class ArxivClient:
     """Async client for the arXiv API."""
 
     def __init__(self, rate_limit: float = ARXIV_RATE_LIMIT_SECONDS):
         self.rate_limit = rate_limit
-        self._last_request_time: float = 0
         self._client: httpx.AsyncClient | None = None
 
     async def __aenter__(self) -> "ArxivClient":
-        self._client = httpx.AsyncClient(timeout=30.0)
+        self._client = httpx.AsyncClient(
+            timeout=30.0,
+            headers={"User-Agent": "Novelist/1.0 (research-bot; python)"}
+        )
         return self
 
     async def __aexit__(self, *args: Any) -> None:
@@ -58,12 +65,49 @@ class ArxivClient:
             self._client = None
 
     async def _rate_limit_wait(self) -> None:
-        """Wait if needed to respect rate limits."""
-        now = asyncio.get_event_loop().time()
-        elapsed = now - self._last_request_time
-        if elapsed < self.rate_limit:
-            await asyncio.sleep(self.rate_limit - elapsed)
-        self._last_request_time = asyncio.get_event_loop().time()
+        """Wait if needed to respect rate limits globally."""
+        global _LAST_REQUEST_TIME
+        
+        # Ensure lock is valid for current loop
+        # (Handling the case where loop might have restarted or lock created in different loop context)
+        # But for uvicorn single worker, global lock is usually fine if initialized in module?
+        # Actually, asyncio.Lock() creates a future attached to the loop. 
+        # If imported before loop start, it might be bound to a different loop (or none).
+        # Safe pattern: logic inside the method.
+        
+        async with _GLOBAL_LOCK:
+            now = asyncio.get_running_loop().time()
+            elapsed = now - _LAST_REQUEST_TIME
+            if elapsed < self.rate_limit:
+                wait_time = self.rate_limit - elapsed
+                await asyncio.sleep(wait_time)
+            _LAST_REQUEST_TIME = asyncio.get_running_loop().time()
+
+    async def _make_request(self, params: dict[str, Any]) -> httpx.Response:
+        """Make a request to the arXiv API with rate limiting and retries."""
+        if not self._client:
+            raise RuntimeError("Client not initialized. Use 'async with' context.")
+
+        retries = 4
+        backoff = 10.0  # Start with 10 seconds for 429
+
+        for attempt in range(retries + 1):
+            await self._rate_limit_wait()
+            try:
+                response = await self._client.get(ARXIV_API_BASE, params=params)
+                response.raise_for_status()
+                return response
+            except httpx.HTTPStatusError as e:
+                # Handle 429 (Too Many Requests) and 503 (Service Unavailable)
+                if e.response.status_code in (429, 503):
+                    if attempt < retries:
+                        wait_time = backoff * (2**attempt)
+                        print(
+                            f"[ArxivClient] Got {e.response.status_code}. Retrying in {wait_time}s..."
+                        )
+                        await asyncio.sleep(wait_time)
+                        continue
+                raise e
 
     async def search(
         self,
@@ -83,11 +127,6 @@ class ArxivClient:
         Returns:
             List of ArxivPaper objects
         """
-        if not self._client:
-            raise RuntimeError("Client not initialized. Use 'async with' context.")
-
-        await self._rate_limit_wait()
-
         # Build query parameters
         query_text = query.strip()
         needs_group = any(op in query_text.lower() for op in [" or ", " and ", " not "])
@@ -100,9 +139,7 @@ class ArxivClient:
             "sortOrder": sort_order,
         }
 
-        response = await self._client.get(ARXIV_API_BASE, params=params)
-        response.raise_for_status()
-
+        response = await self._make_request(params)
         return self._parse_atom_response(response.text)
 
     async def search_by_category(
@@ -129,11 +166,6 @@ class ArxivClient:
         else:
             full_query = f"cat:{category}"
 
-        if not self._client:
-            raise RuntimeError("Client not initialized. Use 'async with' context.")
-
-        await self._rate_limit_wait()
-
         params = {
             "search_query": full_query,
             "start": 0,
@@ -142,9 +174,7 @@ class ArxivClient:
             "sortOrder": "descending",
         }
 
-        response = await self._client.get(ARXIV_API_BASE, params=params)
-        response.raise_for_status()
-
+        response = await self._make_request(params)
         return self._parse_atom_response(response.text)
 
     async def get_novelty_hits(

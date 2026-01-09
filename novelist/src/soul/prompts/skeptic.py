@@ -11,6 +11,7 @@ from typing import Any
 from src.contracts.schemas import Critique, CritiqueVerdict, Hypothesis, SoulRole
 from src.contracts.validators import extract_json_from_response
 from src.soul.prompts.base import BaseSoul
+from src.kb.arxiv_client import ArxivClient
 
 
 class SkepticSoul(BaseSoul):
@@ -64,13 +65,44 @@ A PASS verdict should be rare - you have high standards."""
         Returns:
             List of Critique objects
         """
-        prompt = self._build_critique_prompt(hypotheses, topic)
+        # Phase 1: Real-world Verification (Deep Skeptic)
+        verification_context = await self._verify_claims(hypotheses)
+        
+        # Phase 2: LLM Critique
+        prompt = self._build_critique_prompt(hypotheses, topic, verification_context)
 
         response_text = await self._call_model_with_retry(prompt)
         if not response_text:
             return []
 
-        return self._parse_critiques(response_text, hypotheses)
+        critiques = self._parse_critiques(response_text, hypotheses)
+        
+        # Phase 3: Attach verification papers to hypotheses (traceability)
+        # We update the hypothesis objects in place
+        for h in hypotheses:
+            if h.id in verification_context:
+                # Add found papers to supporting_papers if not already there
+                found_papers = [p['id'] for p in verification_context[h.id]]
+                for pid in found_papers:
+                    if pid not in h.supporting_papers:
+                        h.supporting_papers.append(pid)
+
+        return critiques
+
+    async def _verify_claims(self, hypotheses: list[Hypothesis]) -> dict[str, list[dict[str, str]]]:
+        """Search arXiv to verify claims for each hypothesis."""
+        results = {}
+        async with ArxivClient() as client:
+            for h in hypotheses:
+                # Construct a targeted query from keywords
+                query = " AND ".join(f'"{k}"' for k in h.novelty_keywords[:3])
+                papers = await client.search(query, max_results=3)
+                
+                results[h.id] = [
+                    {"id": p.arxiv_id, "title": p.title, "summary": p.abstract[:200]} 
+                    for p in papers
+                ]
+        return results
 
     async def generate(
         self,
@@ -85,11 +117,15 @@ A PASS verdict should be rare - you have high standards."""
         self,
         hypotheses: list[Hypothesis],
         topic: str,
+        verification_context: dict[str, list[dict[str, str]]] = {},
     ) -> str:
         """Build the critique prompt."""
 
         hypotheses_text = ""
         for i, h in enumerate(hypotheses):
+            evidence = verification_context.get(h.id, [])
+            evidence_text = "\n".join([f"- [{p['id']}] {p['title']}" for p in evidence])
+            
             hypotheses_text += f"""
 ### Hypothesis {i + 1} (ID: {h.id})
 Statement: {h.hypothesis}
@@ -97,6 +133,8 @@ Rationale: {h.rationale}
 Cross-domain: {h.cross_disciplinary_connection}
 Experiment: {' → '.join(h.experimental_design[:3])}...
 Keywords: {', '.join(h.novelty_keywords)}
+FOUND LITERATURE (Real-time Search):
+{evidence_text or "No direct matches found."}
 """
 
         return f"""{self.get_persona_prompt()}
@@ -113,6 +151,9 @@ Keywords: {', '.join(h.novelty_keywords)}
 
 <task>
 Critique each hypothesis according to the Constitution principles above.
+USE THE "FOUND LITERATURE" to fact-check the claims.
+If the literature contradicts the hypothesis, mark it as FATAL.
+If the literature supports it but the hypothesis claims to be "novel", mark it as MODERATE (needs to distinguish itself).
 
 For each hypothesis, provide:
 1. Verdict: fatal / moderate / minor / pass

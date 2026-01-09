@@ -102,6 +102,10 @@ class Hypothesis(BaseModel):
     novelty_keywords: list[str] = Field(
         ..., min_length=1, description="Keywords for novelty search"
     )
+    supporting_papers: list[str] = Field(
+        default_factory=list, description="IDs of papers that support or inspired this hypothesis"
+    )
+    diagram: str = Field(default="", description="SVG code for mechanism visualization")
     evidence: EvidenceBlock = Field(default_factory=EvidenceBlock)
     scores: ScoreBlock = Field(default_factory=ScoreBlock)
 
@@ -198,6 +202,14 @@ class BDIState(BaseModel):
 # =============================================================================
 
 
+class DialogueEntry(BaseModel):
+    """A single message in the soul-to-soul debate."""
+    soul: str = Field(..., description="Name of the soul (e.g., 'Dr. Vance')")
+    role: SoulRole = Field(..., description="Role of the soul")
+    message: str = Field(..., description="The content of the message")
+    timestamp: datetime = Field(default_factory=datetime.now)
+
+
 class IterationTrace(BaseModel):
     """Trace of a single Ralph loop iteration for debugging and visualization."""
 
@@ -207,6 +219,7 @@ class IterationTrace(BaseModel):
     action: str = Field(..., description="What action was taken")
     observation: str = Field(..., description="What was observed after action")
     bdi_snapshot: BDIState = Field(..., description="BDI state at end of iteration")
+    dialogue: list[DialogueEntry] = Field(default_factory=list, description="Granular messages from souls")
     hypotheses_generated: int = Field(default=0, ge=0)
     hypotheses_surviving: int = Field(default=0, ge=0)
     avg_novelty: float = Field(default=0.0, ge=0.0, le=1.0)
@@ -508,8 +521,8 @@ class RalphConfig(BaseModel):
     target_feasibility: float = Field(default=0.6, ge=0.0, le=1.0)
     min_hypotheses: int = Field(default=10, ge=1)
     max_hypotheses: int = Field(default=15, ge=1)
-    flash_model: str = Field(default="gemini-2.0-flash")
-    pro_model: str = Field(default="gemini-2.0-flash")
+    flash_model: str = Field(default="groq/llama-3.3-70b-versatile")
+    pro_model: str = Field(default="gemini/gemini-3-flash")
 
 
 class SessionResult(BaseModel):
@@ -527,3 +540,4 @@ class SessionResult(BaseModel):
     total_cost_usd: float = Field(default=0.0, ge=0.0)
     papers_ingested: int = Field(default=0, ge=0)
     concept_map: ConceptMap | None = Field(default=None)
+    source_metadata: dict[str, ArxivPaper] = Field(default_factory=dict)

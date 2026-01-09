@@ -1,0 +1,432 @@
+{
+  "nodes": [
+    {
+      "id": "1",
+      "name": "Lithium-Ion Batteries",
+      "type": "technology",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "2",
+      "name": "Solid-State Electrolytes",
+      "type": "material",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "3",
+      "name": "Lithium Polyphosphazene",
+      "type": "chemical",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "4",
+      "name": "Atomic Layer Deposition",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "5",
+      "name": "Lithium-Metal Batteries",
+      "type": "technology",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "6",
+      "name": "Glyme-Based Electrolytes",
+      "type": "chemical",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "7",
+      "name": "Lithium Sulfur Batteries",
+      "type": "technology",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "8",
+      "name": "Polymer-Based Solid-State Electrolytes",
+      "type": "material",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "9",
+      "name": "Graphene",
+      "type": "material",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "10",
+      "name": "Lithium Iron Phosphate",
+      "type": "chemical",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "11",
+      "name": "Solid-State Batteries",
+      "type": "technology",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "12",
+      "name": "Machine Learning",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "13",
+      "name": "Moir\u00e9 Materials",
+      "type": "material",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "14",
+      "name": "Goldene Monolayer",
+      "type": "material",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "15",
+      "name": "Antiferroelectrics",
+      "type": "material",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "16",
+      "name": "La3NbO7",
+      "type": "chemical",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "17",
+      "name": "Weberite-Type Antiferroelectrics",
+      "type": "material",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "18",
+      "name": "Density Functional Theory",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "19",
+      "name": "Clifford Algebras",
+      "type": "mathematical concept",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "20",
+      "name": "Icosahedral Short-Range Order",
+      "type": "material property",
+      "frequency": 1,
+      "source_papers": []
+    }
+  ],
+  "edges": [
+    {
+      "source": "1",
+      "target": "2",
+      "relation": "uses",
+      "confidence": 0.8,
+      "source_papers": [
+        "1702.04009v1",
+        "2107.04446v1"
+      ]
+    },
+    {
+      "source": "3",
+      "target": "4",
+      "relation": "is prepared by",
+      "confidence": 0.8,
+      "source_papers": [
+        "1702.04009v1"
+      ]
+    },
+    {
+      "source": "5",
+      "target": "6",
+      "relation": "employs",
+      "confidence": 0.8,
+      "source_papers": [
+        "2107.04446v1"
+      ]
+    },
+    {
+      "source": "7",
+      "target": "8",
+      "relation": "uses",
+      "confidence": 0.8,
+      "source_papers": [
+        "2501.10567v1"
+      ]
+    },
+    {
+      "source": "9",
+      "target": "10",
+      "relation": "is paired with",
+      "confidence": 0.8,
+      "source_papers": [
+        "1403.2161v1"
+      ]
+    },
+    {
+      "source": "11",
+      "target": "2",
+      "relation": "is enabled by",
+      "confidence": 0.8,
+      "source_papers": [
+        "2307.03620v2"
+      ]
+    },
+    {
+      "source": "12",
+      "target": "13",
+      "relation": "is applied to",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04971v1"
+      ]
+    },
+    {
+      "source": "14",
+      "target": "7",
+      "relation": "is used in",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04952v1"
+      ]
+    },
+    {
+      "source": "15",
+      "target": "16",
+      "relation": "is exemplified by",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04916v1"
+      ]
+    },
+    {
+      "source": "17",
+      "target": "15",
+      "relation": "is a type of",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04916v1"
+      ]
+    },
+    {
+      "source": "18",
+      "target": "14",
+      "relation": "is used to study",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04952v1"
+      ]
+    },
+    {
+      "source": "19",
+      "target": "13",
+      "relation": "is used to construct",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04971v1"
+      ]
+    },
+    {
+      "source": "20",
+      "target": "13",
+      "relation": "is a property of",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04971v1"
+      ]
+    },
+    {
+      "source": "4",
+      "target": "3",
+      "relation": "produces",
+      "confidence": 0.8,
+      "source_papers": [
+        "1702.04009v1"
+      ]
+    },
+    {
+      "source": "6",
+      "target": "5",
+      "relation": "enables",
+      "confidence": 0.8,
+      "source_papers": [
+        "2107.04446v1"
+      ]
+    },
+    {
+      "source": "8",
+      "target": "7",
+      "relation": "enables",
+      "confidence": 0.8,
+      "source_papers": [
+        "2501.10567v1"
+      ]
+    },
+    {
+      "source": "10",
+      "target": "9",
+      "relation": "is paired with",
+      "confidence": 0.8,
+      "source_papers": [
+        "1403.2161v1"
+      ]
+    },
+    {
+      "source": "2",
+      "target": "11",
+      "relation": "enables",
+      "confidence": 0.8,
+      "source_papers": [
+        "2307.03620v2"
+      ]
+    },
+    {
+      "source": "13",
+      "target": "12",
+      "relation": "is studied using",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04971v1"
+      ]
+    },
+    {
+      "source": "16",
+      "target": "15",
+      "relation": "is an example of",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04916v1"
+      ]
+    },
+    {
+      "source": "15",
+      "target": "17",
+      "relation": "is a type of",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04916v1"
+      ]
+    },
+    {
+      "source": "14",
+      "target": "18",
+      "relation": "is studied using",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04952v1"
+      ]
+    },
+    {
+      "source": "13",
+      "target": "19",
+      "relation": "is constructed using",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04971v1"
+      ]
+    },
+    {
+      "source": "13",
+      "target": "20",
+      "relation": "has a property of",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04971v1"
+      ]
+    },
+    {
+      "source": "3",
+      "target": "4",
+      "relation": "is deposited using",
+      "confidence": 0.8,
+      "source_papers": [
+        "1702.04009v1"
+      ]
+    },
+    {
+      "source": "5",
+      "target": "6",
+      "relation": "uses",
+      "confidence": 0.8,
+      "source_papers": [
+        "2107.04446v1"
+      ]
+    },
+    {
+      "source": "7",
+      "target": "8",
+      "relation": "employs",
+      "confidence": 0.8,
+      "source_papers": [
+        "2501.10567v1"
+      ]
+    },
+    {
+      "source": "9",
+      "target": "10",
+      "relation": "is combined with",
+      "confidence": 0.8,
+      "source_papers": [
+        "1403.2161v1"
+      ]
+    }
+  ],
+  "gaps": [
+    {
+      "description": "Combining Goldene monolayer with solid-state electrolytes for improved lithium sulfur batteries",
+      "node_a": "14",
+      "node_b": "8",
+      "logic": "The Goldene monolayer has been shown to be effective in anchoring and mediating lithium polysulfide reactions, while solid-state electrolytes have been proposed as a solution to the safety concerns of liquid electrolytes in lithium sulfur batteries. Combining these two concepts could lead to improved performance and safety in lithium sulfur batteries."
+    },
+    {
+      "description": "Using machine learning to optimize the properties of Moir\u00e9 materials for energy storage applications",
+      "node_a": "12",
+      "node_b": "13",
+      "logic": "Machine learning has been used to study the properties of various materials, including Moir\u00e9 materials. Optimizing the properties of Moir\u00e9 materials using machine learning could lead to improved performance in energy storage applications."
+    },
+    {
+      "description": "Investigating the use of antiferroelectrics as solid-state electrolytes in lithium-ion batteries",
+      "node_a": "15",
+      "node_b": "2",
+      "logic": "Antiferroelectrics have been proposed as a potential solution for energy storage applications, and solid-state electrolytes are being developed for use in lithium-ion batteries. Investigating the use of antiferroelectrics as solid-state electrolytes could lead to improved performance and safety in lithium-ion batteries."
+    },
+    {
+      "description": "Developing a theory to explain the icosahedral short-range order in Moir\u00e9 materials",
+      "node_a": "20",
+      "node_b": "13",
+      "logic": "The icosahedral short-range order has been observed in Moir\u00e9 materials, but a theory to explain this phenomenon is still lacking. Developing such a theory could lead to a deeper understanding of the properties of Moir\u00e9 materials and their potential applications."
+    },
+    {
+      "description": "Using Clifford algebras to construct new Moir\u00e9 materials with improved properties",
+      "node_a": "19",
+      "node_b": "13",
+      "logic": "Clifford algebras have been used to construct Moir\u00e9 materials, and it is possible that new materials with improved properties could be constructed using this mathematical framework. Investigating the use of Clifford algebras to construct new Moir\u00e9 materials could lead to improved performance in energy storage applications."
+    }
+  ],
+  "contradictions": []
+}

@@ -83,9 +83,20 @@ class Simulator:
         # 2. Execute Code
         result = await self._execute_code(code, sim_id)
         
-        # 3. Attach Plot Path if exists
+        # 3. Visual Verification (Gemini 3 Competition Feature: Multimodality)
         final_plot_path = str(plot_path) if plot_path.exists() else None
+        visual_reasoning = ""
         
+        if final_plot_path:
+            visual_reasoning = await self._visual_verify(hypothesis, final_plot_path)
+            result["output"] += f"\n\n=== VISUAL VERIFICATION ===\n{visual_reasoning}"
+            
+            # If visual reasoning is very confident it's a failure, we might override
+            if "VERDICT: FAILURE" in visual_reasoning.upper() and "VERDICT: SUCCESS" not in visual_reasoning.upper():
+                 result["supports_hypothesis"] = False
+            elif "VERDICT: SUCCESS" in visual_reasoning.upper():
+                 result["supports_hypothesis"] = True
+
         return SimulationResult(
             code=code,
             success=result["success"],
@@ -94,6 +105,34 @@ class Simulator:
             plot_path=final_plot_path,
             metrics=result["metrics"]
         )
+
+    async def _visual_verify(self, hypothesis: GroundedHypothesis, plot_path: str) -> str:
+        """Use multimodal Gemini to verify the simulation plot."""
+        prompt = f"""You are a Senior Research Scientist verifying a simulation result.
+
+HYPOTHESIS:
+"{hypothesis.claim}"
+
+PREDICTED OUTCOME:
+"{hypothesis.prediction}"
+
+TASK:
+1. Analyze the attached simulation plot.
+2. Does the visual data support the hypothesis and prediction?
+3. Describe the key trends you see in the chart.
+4. Provide a final verdict in the format: 'VERDICT: SUCCESS' or 'VERDICT: FAILURE'.
+
+Visual Analysis:"""
+
+        response = await self.client.generate_content(
+            prompt, 
+            image_paths=[plot_path],
+            model_override="gemini-2.0-flash"
+        )
+        
+        if hasattr(response, 'content'):
+            return response.content
+        return str(response)
 
     def _extract_code(self, response: str) -> str:
         """Extract python code from markdown."""

@@ -42,8 +42,8 @@ class LLMClient:
     # Global shared provider stats to ensure all instances share rate limits and key rotation state
     _shared_providers: dict[str, ProviderStats] = {
         "cerebras": ProviderStats("cerebras", 2.0),
-        "groq": ProviderStats("groq", 2.0),
-        "gemini": ProviderStats("gemini", 12.0),
+        "groq": ProviderStats("groq", 3.0), # 3s = 20 RPM (Safe buffer for 30 RPM limit)
+        "gemini": ProviderStats("gemini", 15.0), # 15s = 4 RPM (Safe for Free Tier)
     }
 
     def __init__(self, provider: Optional[str] = None, model: Optional[str] = None):
@@ -101,7 +101,12 @@ class LLMClient:
                 await asyncio.sleep(wait_time)
             provider_stats.last_request_time = time.time()
 
-    async def generate_content(self, prompt: str, model_override: Optional[str] = None) -> Any:
+    async def generate_content(
+        self, 
+        prompt: str, 
+        model_override: Optional[str] = None,
+        image_paths: Optional[list[str]] = None
+    ) -> Any:
         # NOTE: Returns GenerationResponse, typed as Any to avoid circular imports if schemas not available
         from src.contracts.schemas import GenerationResponse, TokenUsage
 
@@ -133,23 +138,34 @@ class LLMClient:
                     if provider_stats.name == "gemini":
                         # Instantiate fresh client for thread safety
                         import google.genai as genai
+                        from PIL import Image
+                        
                         current_key = provider_stats.get_current_key()
+                        
+                        # Prepare contents list for multimodal
+                        contents = [prompt]
+                        if image_paths:
+                            for path in image_paths:
+                                if os.path.exists(path):
+                                    img = Image.open(path)
+                                    contents.append(img)
+
                         # Use a local function to capture client and run sync
                         def _run_gemini_sync():
                             local_client = genai.Client(api_key=current_key)
                             return local_client.models.generate_content(
                                 model=model_name,
-                                contents=prompt,
+                                contents=contents,
                             )
 
                         coro = asyncio.to_thread(_run_gemini_sync)
                         
-                        # STRICT TIMEOUT: 30 seconds to fail fast
-                        response = await asyncio.wait_for(coro, timeout=30.0)
+                        # STRICT TIMEOUT: 60 seconds for multimodal
+                        response = await asyncio.wait_for(coro, timeout=60.0)
                         content = response.text
                         
                         # Estimate tokens for Gemini
-                        prompt_tok = len(prompt) // 4
+                        prompt_tok = (len(prompt) // 4) + (len(image_paths or []) * 258) # rough image token estimate
                         comp_tok = len(content) // 4
                         usage = TokenUsage(
                             prompt_tokens=prompt_tok,
@@ -159,6 +175,11 @@ class LLMClient:
                         )
 
                     elif provider_stats.name in ["groq", "cerebras"]:
+                        if image_paths:
+                             # Fallback: Groq/Cerebras don't support images in this client yet
+                             # We skip them if images are required
+                             print(f"[WARN] Provider {provider_stats.name} does not support images. Skipping...")
+                             break
                         client = client_or_marker # It's a real client for these
                         response = await client.chat.completions.create(
                             messages=[{"role": "user", "content": prompt}],
@@ -209,19 +230,27 @@ class LLMClient:
 
     def _resolve_model(self, provider: str, override: Optional[str]) -> str:
         """Get the correct model name for the provider."""
-        # Simple override logic for now
+        # Handle provider prefixes e.g. "gemini/gemini-3-flash"
+        if override and "/" in override:
+            req_provider, req_model = override.split("/", 1)
+            if provider == req_provider.lower():
+                return req_model
+            # Return nonsense to force failure/skip if provider doesn't match
+            return "SKIP_PROVIDER_MISMATCH"
+
+        # Abstract overrides
         if override:
-             # Basic mapping if user requests "flash" or "pro" abstractly
             if "flash" in override.lower():
-                if provider == "gemini": return "gemini-2.0-flash"
-                if provider == "groq": return "llama-3.3-70b-versatile" # Fast equivalent
+                if provider == "gemini": return "gemini-3-flash"
+                if provider == "groq": return "llama-3.3-70b-versatile"
                 if provider == "cerebras": return "llama-3.1-8b"
             if "pro" in override.lower():
-                if provider == "gemini": return "gemini-2.0-pro" # Placeholder if exists
+                if provider == "gemini": return "gemini-3-pro"
                 if provider == "groq": return "llama-3.3-70b-versatile"
         
+        # Defaults
         if provider == "gemini":
-            return "gemini-2.0-flash"
+            return "gemini-3-flash"
         elif provider == "groq":
             return os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
         elif provider == "cerebras":

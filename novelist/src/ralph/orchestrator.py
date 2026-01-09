@@ -20,6 +20,7 @@ from src.contracts.schemas import (
     BDIState,
     ConceptMap,
     ExtractedClaim,
+    GapType,
     GenerationMode,
     GroundedHypothesis,
     Hypothesis,
@@ -42,6 +43,8 @@ from src.kb.paper_summarizer import PaperSummarizer
 from src.soul.bdi import BDIAgent
 from src.soul.collective import SoulCollective
 from src.soul.memory import MemorySystem
+from src.soul.prompts.visualizer import VisualizerSoul
+from src.soul.prompts.persona_forge import PersonaForge
 from src.verify.novelty_arxiv import batch_verify_novelty
 from src.verify.scoring import ScoringService
 
@@ -67,6 +70,8 @@ class RalphOrchestrator:
             pro_model=self.config.pro_model,
         )
         self.scorer = ScoringService(model=self.config.flash_model)
+        self.visualizer = VisualizerSoul(model=self.config.flash_model)
+        self.persona_forge = PersonaForge(model=self.config.flash_model)
 
         # New literature-first pipeline components
         self.claim_extractor = ClaimExtractor(model=self.config.pro_model)
@@ -95,6 +100,17 @@ class RalphOrchestrator:
         self.concept_map: ConceptMap | None = None
         self.claims: list[ExtractedClaim] = []
         self.gaps: list[IdentifiedGap] = []
+        
+        # Knowledge Store
+        self.paper_store: dict[str, ArxivPaper] = {}
+        
+        # User Interaction
+        self.user_message_queue: asyncio.Queue[str] = asyncio.Queue()
+
+    async def inject_user_message(self, message: str) -> None:
+        """Receive a message from the user."""
+        await self.user_message_queue.put(message)
+        await self._emit_status("User message received.")
     
     async def _emit_status(self, status_msg: str) -> None:
         """Emit a status update via callback."""
@@ -141,6 +157,8 @@ class RalphOrchestrator:
         services = [
             self.scorer, 
             self.claim_extractor, 
+            self.visualizer,
+            self.persona_forge,
             # self.gap_analyzer, # Check if GapAnalyzer tracks usage
             # self.grounded_generator, # Check if Grounded tracks usage
         ]
@@ -181,6 +199,35 @@ class RalphOrchestrator:
         self.start_time = datetime.now()
         self.iteration = 0
 
+        # Phase 0: Dynamic Persona Generation (Gemini 3 Adaptive Team)
+        await self._emit_status("Assembling specialized research team...")
+        try:
+            specialist, maverick = await self.persona_forge.forge_team(topic)
+            
+            # Inject into Collective
+            self.collective.creative.set_persona(specialist.name, specialist.system_instruction)
+            self.collective.risk_taker.set_persona(maverick.name, maverick.system_instruction)
+            
+            await self._emit_status(f"Team Assembled: {specialist.name} ({specialist.role}) & {maverick.name} ({maverick.role})")
+            # Also store in agent beliefs for context
+            self.agent.perceive({
+                "active_personas": [specialist.name, maverick.name]
+            })
+            
+            # Emit Team Announcement Trace
+            team_trace = IterationTrace(
+                iteration=0,
+                thought=f"I have assembled a specialized team for {topic}: {specialist.name} ({specialist.role}) and {maverick.name} ({maverick.role}).",
+                action="Assemble Team",
+                observation="Team ready for debate.",
+                bdi_snapshot=self.agent.get_state(),
+            )
+            await self._emit_trace(team_trace)
+            
+        except Exception as e:
+            print(f"[WARN] Failed to forge personas: {e}")
+            await self._emit_status("Failed to assemble team; using default agents.")
+
         # Set up agent
         self.agent.reset(topic)
 
@@ -217,6 +264,7 @@ class RalphOrchestrator:
             total_cost_usd=self.total_cost,
             papers_ingested=self.agent.get_belief("papers_ingested") or 0,
             concept_map=self.concept_map,
+            source_metadata=self.paper_store,
         )
 
         # Save session if output_dir provided
@@ -312,51 +360,47 @@ class RalphOrchestrator:
                 papers = [p for _, p in scored]
             papers = papers[:paper_limit]
 
+            # Populate Knowledge Store
+            for p in papers:
+                self.paper_store[p.arxiv_id] = p
+
             if not papers:
                 return
 
-            # Summarize papers
-            await self._emit_status("Summarizing papers...")
-            summarizer = PaperSummarizer(model=self.config.flash_model)
-            
-            async def _progress(completed: int, total: int):
-                await self._emit_status(f"Summarizing papers ({completed}/{total})...")
-                
-            summaries = await summarizer.summarize_batch(
-                papers, 
-                max_concurrent=5,
-                on_progress=_progress
-            )
-
-            # Build concept map
-            await self._emit_status("Building concept map...")
+            # Phase 1: Global Concept Mapping (Gemini 3 Competition Feature: Long Context)
+            await self._emit_status(f"Building Global Concept Map from {len(papers)} papers...")
             builder = ConceptMapBuilder(model=self.config.pro_model)
-            self.concept_map = await builder.build_from_summaries(summaries)
+            self.concept_map = await builder.build_global_map_from_abstracts(papers)
             
-            # Track concept map builder usage manually since it's transient
+            # Map Trans-Paper Gaps into IdentifiedGap objects
+            if hasattr(self.concept_map, "gaps") and self.concept_map.gaps:
+                for gap_data in self.concept_map.gaps:
+                    gap = IdentifiedGap(
+                        gap_type=GapType.MISSING_CONNECTION,
+                        description=gap_data.get("description", "Potential link discovered via global analysis"),
+                        concept_a=gap_data.get("node_a", ""),
+                        concept_b=gap_data.get("node_b", ""),
+                        potential_value=gap_data.get("logic", "Inferred from trans-paper synthesis"),
+                    )
+                    self.gaps.append(gap)
+            
+            # Track concept map builder usage manually
             self.total_tokens += builder.total_tokens
             self.total_cost += builder.total_cost
 
-            # === NEW: Extract structured claims from papers ===
-            await self._emit_status("Extracting claims... (0/{})".format(claim_limit))
-            for idx, paper in enumerate(papers[:claim_limit], start=1):  # Limit to reduce API calls
+            # Phase 2: Targeted Claim Extraction for Grounding
+            await self._emit_status("Extracting quantitative baselines... (0/{})".format(claim_limit))
+            for idx, paper in enumerate(papers[:claim_limit], start=1):
                 claims = await self.claim_extractor.extract_claims(
                     paper_id=paper.arxiv_id,
                     title=paper.title,
                     abstract=paper.abstract,
                 )
                 self.claims.extend(claims)
-                await self._emit_status(f"Extracting claims... ({idx}/{claim_limit})")
+                await self._emit_status(f"Extracting quantitative baselines... ({idx}/{claim_limit})")
             
             self._update_costs()
-            await self._emit_status(f"Ingested {len(papers)} papers. Extracted {len(self.claims)} claims.")
-
-            # === NEW: Identify research gaps ===
-            await self._emit_status("Identifying research gaps...")
-            self.gap_analyzer.add_claims(self.claims)
-            self.gaps = await self.gap_analyzer.analyze(self.concept_map)
-            
-            self._update_costs()
+            await self._emit_status(f"Global Knowledge Base Ready: {len(self.concept_map.nodes)} concepts, {len(self.gaps)} trans-paper gaps.")
 
             # Update beliefs
             self.agent.perceive({
@@ -379,11 +423,25 @@ class RalphOrchestrator:
         mode = self.agent.state.current_mode
         self.memory.start_iteration(self.iteration, mode)
         
-        await self._emit_status(f"Iteration {self.iteration}: Deliberating with mode {mode.value}...")
+        # Process User Messages (The Research Assistant)
+        while not self.user_message_queue.empty():
+            msg = self.user_message_queue.get_nowait()
+            self.memory.working.user_guidance.append(msg)
+            self._add_trace(f"Integrating user guidance: {msg[:50]}...")
+        
+        if self.memory.working.user_guidance:
+            await self._emit_status(f"Iteration {self.iteration}: Pivoting based on user feedback...")
+        else:
+            await self._emit_status(f"Iteration {self.iteration}: Deliberating with mode {mode.value}...")
 
         # BDI deliberation
         current_scores = self._get_average_scores()
         thought = self.agent.deliberate(current_scores, len(self.hypotheses))
+        
+        # Integrate user guidance into the thought trace
+        if self.memory.working.user_guidance:
+            guidance_str = " | ".join(self.memory.working.user_guidance)
+            thought = f"USER GUIDANCE INCORPORATED: {guidance_str}. " + thought
 
         # Plan next action
         new_mode = self.agent.plan(current_scores, len(self.hypotheses))
@@ -459,7 +517,7 @@ class RalphOrchestrator:
                  await self._emit_status("Tree search returned no hypotheses; falling back to debate.")
                  new_hypotheses, debate_trace = await self.collective.run_debate(
                      topic=self.topic,
-                     context=self.memory.get_context_for_generation(),
+                     context=self.memory.get_context_for_generation(topic=self.topic),
                      mode=GenerationMode.RANDOM_INJECTION,
                      target_hypotheses=self.config.max_hypotheses,
                  )
@@ -470,7 +528,7 @@ class RalphOrchestrator:
              await self._emit_status("Brainstorming (Fallback)...")
              new_hypotheses, debate_trace = await self.collective.run_debate(
                  topic=self.topic,
-                 context=self.memory.get_context_for_generation(),
+                 context=self.memory.get_context_for_generation(topic=self.topic),
                  mode=GenerationMode.RANDOM_INJECTION,
                  target_hypotheses=self.config.max_hypotheses,
              )
@@ -480,12 +538,22 @@ class RalphOrchestrator:
              await self._emit_status("Refining hypotheses via debate...")
              new_hypotheses, debate_trace = await self.collective.run_debate( # Capture debate_trace
                  topic=self.topic, # Added topic
-                 context=self.memory.get_context_for_generation(), # Added context
+                 context=self.memory.get_context_for_generation(topic=self.topic), # Added context
                  mode=new_mode, # Added mode
                  target_hypotheses=self.config.max_hypotheses, # Added target_hypotheses
                  existing_hypotheses=self.hypotheses, # Pass existing hypotheses for refinement
              )
              observation += "\n\nRefined hypotheses through debate."
+
+        # Evolutionary Memory: Bury failed ideas (The Graveyard)
+        if debate_trace and "fatal_critiques" in debate_trace:
+            for fatal in debate_trace["fatal_critiques"]:
+                self.memory.graveyard.bury(
+                    hypothesis=fatal["hypothesis"],
+                    reason=fatal["reason"],
+                    topic=self.topic
+                )
+                self._add_trace(f"Buried failed hypothesis: {fatal['hypothesis'][:50]}...")
 
         self._update_costs()
 
@@ -499,6 +567,15 @@ class RalphOrchestrator:
         # Merge with existing hypotheses
         old_count = len(self.hypotheses)
         self.hypotheses = self._merge_hypotheses(self.hypotheses, new_hypotheses)
+
+        # Phase 3: Visualize Top Hypotheses (Gemini 3 Visual Mechanism)
+        for h in self.hypotheses[:3]:
+            if not h.diagram:
+                # Fire and forget / parallelize ideally, but sequential for safety now
+                try:
+                    h.diagram = await self.visualizer.generate_diagram(h)
+                except Exception as e:
+                    print(f"[WARN] Visualization failed for {h.id}: {e}")
 
         # Check for improvement
         new_scores = self._get_average_scores()

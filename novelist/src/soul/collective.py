@@ -13,8 +13,10 @@ from typing import Any
 from src.contracts.schemas import (
     Critique,
     CritiqueVerdict,
+    DialogueEntry,
     GenerationMode,
     Hypothesis,
+    SoulRole,
 )
 from src.soul.prompts.creative import CreativeSoul
 from src.soul.prompts.methodical import MethodicalSoul
@@ -62,12 +64,29 @@ class SoulCollective:
             "hypotheses_generated": 0,
             "hypotheses_killed": 0,
             "hypotheses_final": 0,
+            "dialogue": [],
         }
         if existing_hypotheses:
             trace["existing_hypotheses"] = len(existing_hypotheses)
 
-        # Phase 1: Generate proposals (parallel)
+        # Phase 1: Generate proposals
         proposals = await self._phase_generate(topic, context, mode)
+        
+        # Add Dialogue for Generators
+        creative_name = getattr(self.creative, 'custom_name', 'The Specialist')
+        maverick_name = getattr(self.risk_taker, 'custom_name', 'The Maverick')
+        
+        trace["dialogue"].append(DialogueEntry(
+            soul=creative_name,
+            role=SoulRole.CREATIVE,
+            message=f"I have proposed {len([h for h in proposals if h.source_soul == SoulRole.CREATIVE])} hypotheses grounded in the primary literature."
+        ))
+        trace["dialogue"].append(DialogueEntry(
+            soul=maverick_name,
+            role=SoulRole.RISK_TAKER,
+            message=f"I've injected {len([h for h in proposals if h.source_soul == SoulRole.RISK_TAKER])} radical, cross-disciplinary ideas into the pool."
+        ))
+
         trace["phase_results"]["generate"] = {
             "creative_count": len([h for h in proposals if h.source_soul and h.source_soul.value == "creative"]),
             "risktaker_count": len([h for h in proposals if h.source_soul and h.source_soul.value == "risk_taker"]),
@@ -81,6 +100,26 @@ class SoulCollective:
         # Phase 2: Critique all proposals
         critiques, survivors = await self._phase_critique(proposals, topic)
         killed = len(proposals) - len(survivors)
+        
+        # Add Dialogue for Skeptic
+        trace["dialogue"].append(DialogueEntry(
+            soul="The Skeptic",
+            role=SoulRole.SKEPTIC,
+            message=f"Reviewing {len(proposals)} proposals. I have rejected {killed} ideas for being unscientific or repetitive. {len(survivors)} remain for refinement."
+        ))
+        
+        # Identify fatal critiques for the Graveyard
+        fatal_critiques = []
+        for c in critiques:
+            if c.verdict == CritiqueVerdict.FATAL:
+                # Find the hypothesis text
+                killed_hyp = next((h for h in proposals if h.id == c.hypothesis_id), None)
+                if killed_hyp:
+                    fatal_critiques.append({
+                        "hypothesis": killed_hyp.hypothesis,
+                        "reason": "; ".join(c.issues)
+                    })
+
         trace["phase_results"]["critique"] = {
             "proposals": len(proposals),
             "survivors": len(survivors),
@@ -88,6 +127,7 @@ class SoulCollective:
             "verdicts": {v.value: len([c for c in critiques if c.verdict == v]) for v in CritiqueVerdict},
         }
         trace["hypotheses_killed"] = killed
+        trace["fatal_critiques"] = fatal_critiques
 
         if not survivors:
             return [], trace
@@ -101,6 +141,14 @@ class SoulCollective:
 
         # Phase 4: Synthesize into final set
         final = await self._phase_synthesize(enhanced, topic, target_hypotheses)
+        
+        # Add Dialogue for Synthesizer
+        trace["dialogue"].append(DialogueEntry(
+            soul="The Synthesizer",
+            role=SoulRole.SYNTHESIZER,
+            message=f"I have merged and polished the surviving ideas into a final set of {len(final)} rigorous hypotheses."
+        ))
+
         trace["phase_results"]["synthesize"] = {
             "input": len(enhanced),
             "output": len(final),

@@ -1,0 +1,501 @@
+{
+  "nodes": [
+    {
+      "id": "1",
+      "name": "Intermittent Fasting",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "2",
+      "name": "Calorie Restriction",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "3",
+      "name": "Exercise",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "4",
+      "name": "Neurotrophic Effects",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "5",
+      "name": "Aging",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "6",
+      "name": "Ketone Bodies",
+      "type": "chemical",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "7",
+      "name": "Resveratrol",
+      "type": "chemical",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "8",
+      "name": "Polyphenols",
+      "type": "chemical",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "9",
+      "name": "PI3K",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "10",
+      "name": "Akt",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "11",
+      "name": "mTOR",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "12",
+      "name": "AMPK",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "13",
+      "name": "GSK3\u03b2",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "14",
+      "name": "ULK",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "15",
+      "name": "MAPK",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "16",
+      "name": "PGC-1\u03b1",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "17",
+      "name": "NF-\u03baB",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "18",
+      "name": "Sirtuins",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "19",
+      "name": "Notch",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "20",
+      "name": "Wnt",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": []
+    }
+  ],
+  "edges": [
+    {
+      "source": "1",
+      "target": "4",
+      "relation": "induces",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2"
+      ]
+    },
+    {
+      "source": "2",
+      "target": "4",
+      "relation": "induces",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2"
+      ]
+    },
+    {
+      "source": "3",
+      "target": "4",
+      "relation": "induces",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2"
+      ]
+    },
+    {
+      "source": "6",
+      "target": "4",
+      "relation": "mediates",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2"
+      ]
+    },
+    {
+      "source": "7",
+      "target": "4",
+      "relation": "mimics",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2"
+      ]
+    },
+    {
+      "source": "8",
+      "target": "4",
+      "relation": "mimics",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2"
+      ]
+    },
+    {
+      "source": "9",
+      "target": "4",
+      "relation": "regulates",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2"
+      ]
+    },
+    {
+      "source": "10",
+      "target": "4",
+      "relation": "regulates",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2"
+      ]
+    },
+    {
+      "source": "11",
+      "target": "4",
+      "relation": "regulates",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2"
+      ]
+    },
+    {
+      "source": "12",
+      "target": "4",
+      "relation": "regulates",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2"
+      ]
+    },
+    {
+      "source": "13",
+      "target": "4",
+      "relation": "regulates",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2"
+      ]
+    },
+    {
+      "source": "14",
+      "target": "4",
+      "relation": "regulates",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2"
+      ]
+    },
+    {
+      "source": "15",
+      "target": "4",
+      "relation": "regulates",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2"
+      ]
+    },
+    {
+      "source": "16",
+      "target": "4",
+      "relation": "regulates",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2"
+      ]
+    },
+    {
+      "source": "17",
+      "target": "4",
+      "relation": "regulates",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2"
+      ]
+    },
+    {
+      "source": "18",
+      "target": "4",
+      "relation": "regulates",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2"
+      ]
+    },
+    {
+      "source": "19",
+      "target": "4",
+      "relation": "regulates",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2"
+      ]
+    },
+    {
+      "source": "20",
+      "target": "4",
+      "relation": "regulates",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2"
+      ]
+    },
+    {
+      "source": "5",
+      "target": "1",
+      "relation": "affected by",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2",
+        "cond-mat/0611749v2"
+      ]
+    },
+    {
+      "source": "5",
+      "target": "2",
+      "relation": "affected by",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2",
+        "cond-mat/0611749v2"
+      ]
+    },
+    {
+      "source": "5",
+      "target": "3",
+      "relation": "affected by",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2",
+        "cond-mat/0611749v2"
+      ]
+    },
+    {
+      "source": "5",
+      "target": "4",
+      "relation": "opposes",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2",
+        "q-bio/0510001v1"
+      ]
+    },
+    {
+      "source": "5",
+      "target": "9",
+      "relation": "influences",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2",
+        "cond-mat/0403212v3"
+      ]
+    },
+    {
+      "source": "5",
+      "target": "10",
+      "relation": "influences",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2",
+        "cond-mat/0403212v3"
+      ]
+    },
+    {
+      "source": "5",
+      "target": "11",
+      "relation": "influences",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2",
+        "cond-mat/0403212v3"
+      ]
+    },
+    {
+      "source": "5",
+      "target": "12",
+      "relation": "influences",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2",
+        "cond-mat/0403212v3"
+      ]
+    },
+    {
+      "source": "5",
+      "target": "13",
+      "relation": "influences",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2",
+        "cond-mat/0403212v3"
+      ]
+    },
+    {
+      "source": "5",
+      "target": "14",
+      "relation": "influences",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2",
+        "cond-mat/0403212v3"
+      ]
+    },
+    {
+      "source": "5",
+      "target": "15",
+      "relation": "influences",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2",
+        "cond-mat/0403212v3"
+      ]
+    },
+    {
+      "source": "5",
+      "target": "16",
+      "relation": "influences",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2",
+        "cond-mat/0403212v3"
+      ]
+    },
+    {
+      "source": "5",
+      "target": "17",
+      "relation": "influences",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2",
+        "cond-mat/0403212v3"
+      ]
+    },
+    {
+      "source": "5",
+      "target": "18",
+      "relation": "influences",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2",
+        "cond-mat/0403212v3"
+      ]
+    },
+    {
+      "source": "5",
+      "target": "19",
+      "relation": "influences",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2",
+        "cond-mat/0403212v3"
+      ]
+    },
+    {
+      "source": "5",
+      "target": "20",
+      "relation": "influences",
+      "confidence": 0.8,
+      "source_papers": [
+        "2305.11425v2",
+        "cond-mat/0403212v3"
+      ]
+    }
+  ],
+  "gaps": [
+    {
+      "description": "Investigation of the impact of intermittent fasting on aging in bacteria",
+      "node_a": "1",
+      "node_b": "5",
+      "logic": "Both intermittent fasting and aging have been studied separately in various contexts, but the connection between them in bacterial aging is not explored"
+    },
+    {
+      "description": "Study of the relationship between calorie restriction mimetics and neurotrophic effects in the context of aging",
+      "node_a": "7",
+      "node_b": "4",
+      "logic": "Calorie restriction mimetics have been shown to have neurotrophic effects, but the relationship between them in the context of aging is not fully understood"
+    },
+    {
+      "description": "Examination of the role of non-reciprocal interactions in the dynamics of tracers in active and passive systems",
+      "node_a": "15",
+      "node_b": "17",
+      "logic": "Non-reciprocal interactions have been studied in various contexts, but their role in the dynamics of tracers in active and passive systems is not well understood"
+    },
+    {
+      "description": "Investigation of the effects of physical aging on the flexural creep in 3D printed thermoplastics",
+      "node_a": "5",
+      "node_b": "3",
+      "logic": "Physical aging has been shown to affect the properties of 3D printed thermoplastics, but the effects on flexural creep are not well understood"
+    },
+    {
+      "description": "Analysis of the universality in driven systems with a multiply-degenerate umbilic point",
+      "node_a": "19",
+      "node_b": "20",
+      "logic": "Universality in driven systems has been studied in various contexts, but the connection to the multiply-degenerate umbilic point is not explored"
+    }
+  ],
+  "contradictions": []
+}

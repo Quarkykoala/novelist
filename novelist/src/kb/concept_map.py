@@ -129,6 +129,87 @@ class ConceptMapBuilder:
 
         return "concept"
 
+    async def build_global_map_from_abstracts(self, papers: list[Any]) -> ConceptMap:
+        """Gemini 3 Competition Feature: Long-Context Global Mapping.
+        Processes all paper abstracts at once to find 'Trans-Paper Gaps'.
+        """
+        if not papers:
+            return self.concept_map
+
+        # Format all papers into a single massive context block
+        full_context = ""
+        for i, p in enumerate(papers):
+            full_context += f"PAPER [{p.arxiv_id}]:\nTitle: {p.title}\nAbstract: {p.abstract}\n\n"
+
+        prompt = f"""You are a Strategic Research Analyst. Analyze the following collection of {len(papers)} research papers to build a GLOBAL CONCEPT MAP.
+
+RESEARCH LANDSCAPE:
+{full_context}
+
+TASK:
+1. Extract the top 20 most important ENTITIES (methods, chemicals, biological targets, etc.) across ALL papers.
+2. Extract the 30 most critical RELATIONSHIPS (A uses B, X contradicts Y, M improves N).
+3. Identify 5 'TRANS-PAPER GAPS': Connections between concepts that are implied by the data but NO SINGLE paper has explicitly explored yet.
+
+Respond with valid JSON:
+```json
+{{
+  "nodes": [
+    {{"id": "node_id", "name": "Entity Name", "type": "method|biological|metric|etc"}},
+    ...
+  ],
+  "edges": [
+    {{"source": "id1", "target": "id2", "relation": "uses", "paper_ids": ["arxiv1", "arxiv2"]}},
+    ...
+  ],
+  "trans_paper_gaps": [
+    {{"description": "Gap description", "node_a": "id1", "node_b": "id2", "logic": "Why this connection is implied"}}
+  ]
+}}
+```
+"""
+
+        try:
+            response_obj = await self.client.generate_content(prompt)
+            response_text = response_obj.content if hasattr(response_obj, 'content') else str(response_obj)
+            
+            json_str = extract_json_from_response(response_text)
+            if json_str:
+                data = json.loads(json_str)
+                
+                # Update nodes
+                for n in data.get("nodes", []):
+                    self.concept_map.nodes.append(ConceptNode(
+                        id=n["id"].lower().replace(" ", "_"),
+                        name=n["name"],
+                        type=n.get("type", "concept"),
+                        frequency=1,
+                        source_papers=[]
+                    ))
+                
+                # Update edges
+                for e in data.get("edges", []):
+                    self.concept_map.edges.append(ConceptEdge(
+                        source=e["source"].lower().replace(" ", "_"),
+                        target=e["target"].lower().replace(" ", "_"),
+                        relation=e["relation"],
+                        confidence=0.8,
+                        source_papers=e.get("paper_ids", [])
+                    ))
+                
+                # Store gaps (we'll map these to IdentifiedGap in orchestrator later)
+                self.concept_map.gaps = data.get("trans_paper_gaps", [])
+                
+                if hasattr(response_obj, 'usage'):
+                    self.total_tokens += response_obj.usage.total_tokens
+                    self.total_cost += response_obj.usage.cost_usd
+
+        except Exception as e:
+            print(f"[ERROR] Global Mapping failed: {e}")
+            # Fallback to empty map or partial results
+            
+        return self.concept_map
+
     async def extract_relations(self, summaries: list[PaperSummary]) -> list[ConceptEdge]:
         """Use LLM to extract relations between entities.
 

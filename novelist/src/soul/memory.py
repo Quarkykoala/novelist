@@ -117,6 +117,9 @@ class WorkingMemory:
 
     # Errors encountered
     errors: list[str] = field(default_factory=list)
+    
+    # User guidance for this iteration
+    user_guidance: list[str] = field(default_factory=list)
 
     def clear(self) -> None:
         """Clear working memory for new iteration."""
@@ -125,6 +128,12 @@ class WorkingMemory:
         self.focus_gap = None
         self.tokens_used = 0
         self.errors = []
+        # We DO NOT clear user_guidance immediately? 
+        # Or maybe we keep it for one iteration? 
+        # Let's keep it until explicitly cleared or just append new ones.
+        # Ideally, it should persist until the user changes it or the goal is met.
+        # For MVP, let's keep it transient per iteration but populated by Orchestrator.
+        self.user_guidance = []
 
     def add_hypothesis(self, hypothesis: Hypothesis) -> None:
         """Add a hypothesis to working memory."""
@@ -180,6 +189,58 @@ class SemanticMemory:
         ]
 
 
+@dataclass
+class Graveyard:
+    """Evolutionary Memory: The Graveyard of Bad Ideas.
+    
+    Persists failed hypotheses across sessions to prevent repeating mistakes.
+    """
+    ghosts: list[dict[str, Any]] = field(default_factory=list)
+    file_path: Path = Path("sessions/graveyard.json")
+
+    def __post_init__(self):
+        self.load()
+
+    def bury(self, hypothesis: str, reason: str, topic: str) -> None:
+        """Add a failed hypothesis to the graveyard."""
+        self.ghosts.append({
+            "hypothesis": hypothesis,
+            "reason": reason,
+            "topic": topic,
+            "timestamp": datetime.now().isoformat()
+        })
+        self.save()
+
+    def exhume(self, topic: str, limit: int = 5) -> list[str]:
+        """Get relevant failed ideas for the current topic."""
+        # Simple keyword matching for now
+        topic_keywords = set(topic.lower().split())
+        relevant = []
+        
+        for ghost in self.ghosts:
+            ghost_topic = ghost.get("topic", "").lower()
+            # If topics share keywords, it's relevant
+            if any(k in ghost_topic for k in topic_keywords):
+                relevant.append(f"FAILED IDEA: {ghost['hypothesis']} (REASON: {ghost['reason']})")
+        
+        return relevant[-limit:]
+
+    def save(self) -> None:
+        """Persist to disk."""
+        self.file_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(self.file_path, "w") as f:
+            json.dump(self.ghosts, f, indent=2)
+
+    def load(self) -> None:
+        """Load from disk."""
+        if self.file_path.exists():
+            try:
+                with open(self.file_path) as f:
+                    self.ghosts = json.load(f)
+            except Exception:
+                self.ghosts = []
+
+
 class MemorySystem:
     """Combined memory system for the research soul."""
 
@@ -187,6 +248,7 @@ class MemorySystem:
         self.episodic = EpisodicMemory()
         self.semantic = SemanticMemory()
         self.working = WorkingMemory()
+        self.graveyard = Graveyard()
 
     def start_iteration(self, iteration: int, mode: GenerationMode) -> None:
         """Initialize memory for a new iteration."""
@@ -198,7 +260,7 @@ class MemorySystem:
         """Finalize iteration and record to episodic memory."""
         self.episodic.record(trace)
 
-    def get_context_for_generation(self) -> dict[str, Any]:
+    def get_context_for_generation(self, topic: str = "") -> dict[str, Any]:
         """Get relevant context for hypothesis generation.
 
         Compiles information from all memory types.
@@ -210,6 +272,8 @@ class MemorySystem:
             "contradictions": self.semantic.get_contradictions()[:2],
             "high_freq_entities": self.semantic.get_high_frequency_entities()[:10],
             "lessons": self.episodic.summarize_lessons(),
+            "graveyard": self.graveyard.exhume(topic),
+            "user_guidance": self.working.user_guidance,
             "recent_avg_novelty": self._get_recent_avg("avg_novelty"),
             "recent_avg_feasibility": self._get_recent_avg("avg_feasibility"),
         }

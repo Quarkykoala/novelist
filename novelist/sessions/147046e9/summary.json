@@ -1,0 +1,10 @@
+{
+  "session_id": "147046e9",
+  "topic": "carbon capture ",
+  "started_at": "2026-01-09T11:03:16.145808",
+  "completed_at": "2026-01-09T11:05:48.821357",
+  "iterations": 3,
+  "stop_reason": "Convergence: all targets met",
+  "hypotheses_count": 15,
+  "papers_ingested": 12
+}

@@ -1,0 +1,469 @@
+{
+  "nodes": [
+    {
+      "id": "1",
+      "name": "Carbon Nanomaterials",
+      "type": "chemical",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "2",
+      "name": "Nanotechnology",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "3",
+      "name": "Graphene",
+      "type": "chemical",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "4",
+      "name": "Fullerene",
+      "type": "chemical",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "5",
+      "name": "Carbon Nanotubes",
+      "type": "chemical",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "6",
+      "name": "Thermal Plasma",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "7",
+      "name": "Raman Spectroscopy",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "8",
+      "name": "Borospherene",
+      "type": "chemical",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "9",
+      "name": "Toxic Gas Sensing",
+      "type": "application",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "10",
+      "name": "Antiviral Properties",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "11",
+      "name": "Hypergraph-Based Knowledge Representations",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "12",
+      "name": "SpectraFormer",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "13",
+      "name": "SiC Substrate",
+      "type": "material",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "14",
+      "name": "Buffer-Layer Graphene",
+      "type": "chemical",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "15",
+      "name": "Surface Strain-Gradient Elasticity",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "16",
+      "name": "Fracture Modeling",
+      "type": "application",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "17",
+      "name": "Covid-19",
+      "type": "biological",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "18",
+      "name": "Electronic Industry",
+      "type": "application",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "19",
+      "name": "Environmental Remediation",
+      "type": "application",
+      "frequency": 1,
+      "source_papers": []
+    },
+    {
+      "id": "20",
+      "name": "Large Language Models",
+      "type": "method",
+      "frequency": 1,
+      "source_papers": []
+    }
+  ],
+  "edges": [
+    {
+      "source": "1",
+      "target": "2",
+      "relation": "uses",
+      "confidence": 0.8,
+      "source_papers": [
+        "2109.13918v1",
+        "2004.11629v1"
+      ]
+    },
+    {
+      "source": "3",
+      "target": "5",
+      "relation": "contrasts",
+      "confidence": 0.8,
+      "source_papers": [
+        "1703.03758v1",
+        "2512.04880v1"
+      ]
+    },
+    {
+      "source": "6",
+      "target": "5",
+      "relation": "produces",
+      "confidence": 0.8,
+      "source_papers": [
+        "2512.04880v1"
+      ]
+    },
+    {
+      "source": "7",
+      "target": "14",
+      "relation": "analyzes",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04445v1"
+      ]
+    },
+    {
+      "source": "8",
+      "target": "9",
+      "relation": "enables",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04935v1"
+      ]
+    },
+    {
+      "source": "10",
+      "target": "1",
+      "relation": "is property of",
+      "confidence": 0.8,
+      "source_papers": [
+        "2012.15101v1"
+      ]
+    },
+    {
+      "source": "11",
+      "target": "20",
+      "relation": "complements",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04878v1"
+      ]
+    },
+    {
+      "source": "12",
+      "target": "7",
+      "relation": "improves",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04445v1"
+      ]
+    },
+    {
+      "source": "13",
+      "target": "14",
+      "relation": "supports",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04445v1"
+      ]
+    },
+    {
+      "source": "15",
+      "target": "16",
+      "relation": "models",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04532v1"
+      ]
+    },
+    {
+      "source": "17",
+      "target": "10",
+      "relation": "relates to",
+      "confidence": 0.8,
+      "source_papers": [
+        "2012.15101v1"
+      ]
+    },
+    {
+      "source": "18",
+      "target": "1",
+      "relation": "applies",
+      "confidence": 0.8,
+      "source_papers": [
+        "2004.11629v1"
+      ]
+    },
+    {
+      "source": "19",
+      "target": "8",
+      "relation": "involves",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04935v1"
+      ]
+    },
+    {
+      "source": "20",
+      "target": "11",
+      "relation": "utilizes",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04878v1"
+      ]
+    },
+    {
+      "source": "3",
+      "target": "4",
+      "relation": "contrasts",
+      "confidence": 0.8,
+      "source_papers": [
+        "1703.03758v1"
+      ]
+    },
+    {
+      "source": "5",
+      "target": "6",
+      "relation": "produced by",
+      "confidence": 0.8,
+      "source_papers": [
+        "2512.04880v1"
+      ]
+    },
+    {
+      "source": "7",
+      "target": "3",
+      "relation": "analyzes",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04445v1"
+      ]
+    },
+    {
+      "source": "8",
+      "target": "10",
+      "relation": "enables detection of",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04935v1"
+      ]
+    },
+    {
+      "source": "11",
+      "target": "12",
+      "relation": "complements",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04878v1"
+      ]
+    },
+    {
+      "source": "13",
+      "target": "15",
+      "relation": "is modeled by",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04532v1"
+      ]
+    },
+    {
+      "source": "14",
+      "target": "16",
+      "relation": "relates to",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04532v1"
+      ]
+    },
+    {
+      "source": "17",
+      "target": "1",
+      "relation": "relates to",
+      "confidence": 0.8,
+      "source_papers": [
+        "2012.15101v1"
+      ]
+    },
+    {
+      "source": "18",
+      "target": "20",
+      "relation": "utilizes",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04878v1"
+      ]
+    },
+    {
+      "source": "19",
+      "target": "8",
+      "relation": "involves",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04935v1"
+      ]
+    },
+    {
+      "source": "3",
+      "target": "5",
+      "relation": "contrasts",
+      "confidence": 0.8,
+      "source_papers": [
+        "1703.03758v1"
+      ]
+    },
+    {
+      "source": "6",
+      "target": "14",
+      "relation": "produces",
+      "confidence": 0.8,
+      "source_papers": [
+        "2512.04880v1"
+      ]
+    },
+    {
+      "source": "7",
+      "target": "12",
+      "relation": "improves",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04445v1"
+      ]
+    },
+    {
+      "source": "10",
+      "target": "17",
+      "relation": "relates to",
+      "confidence": 0.8,
+      "source_papers": [
+        "2012.15101v1"
+      ]
+    },
+    {
+      "source": "11",
+      "target": "20",
+      "relation": "utilizes",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04878v1"
+      ]
+    },
+    {
+      "source": "13",
+      "target": "15",
+      "relation": "is modeled by",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04532v1"
+      ]
+    },
+    {
+      "source": "15",
+      "target": "16",
+      "relation": "models",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04532v1"
+      ]
+    },
+    {
+      "source": "19",
+      "target": "8",
+      "relation": "involves",
+      "confidence": 0.8,
+      "source_papers": [
+        "2601.04935v1"
+      ]
+    }
+  ],
+  "gaps": [
+    {
+      "description": "Using borospherene for antiviral applications",
+      "node_a": "8",
+      "node_b": "10",
+      "logic": "Borospherene has shown promise in toxic gas sensing, and given its unique properties, it could also have antiviral properties, especially considering the current research on carbon nanomaterials for antiviral applications"
+    },
+    {
+      "description": "Applying hypergraph-based knowledge representations to carbon nanomaterials research",
+      "node_a": "11",
+      "node_b": "1",
+      "logic": "Hypergraph-based knowledge representations have been shown to be effective in capturing complex relationships in scientific data, and carbon nanomaterials research involves a wide range of interdisciplinary concepts that could benefit from such representations"
+    },
+    {
+      "description": "Investigating the use of SpectraFormer for analyzing carbon nanomaterials",
+      "node_a": "12",
+      "node_b": "1",
+      "logic": "SpectraFormer has been developed for analyzing Raman spectra of graphene on SiC substrates, but its potential applications could extend to other carbon nanomaterials, given the importance of Raman spectroscopy in characterizing these materials"
+    },
+    {
+      "description": "Examining the relationship between surface strain-gradient elasticity and fracture modeling in carbon nanomaterials",
+      "node_a": "15",
+      "node_b": "1",
+      "logic": "Surface strain-gradient elasticity is a method for modeling fracture in materials, and carbon nanomaterials have unique properties that could be better understood through this approach, especially considering their potential applications in harsh environments"
+    },
+    {
+      "description": "Developing Large Language Models for predicting the properties of carbon nanomaterials",
+      "node_a": "20",
+      "node_b": "1",
+      "logic": "Large Language Models have shown promise in predicting material properties, and carbon nanomaterials have a wide range of properties that are not yet fully understood, making them a potential target for such models"
+    }
+  ],
+  "contradictions": []
+}

@@ -57,7 +57,7 @@ knowledge_stats: dict[str, int] = {
 # Paths
 BASE_DIR = Path(__file__).parent.parent
 SESSIONS_DIR = BASE_DIR / "sessions"
-WEB_DIR = BASE_DIR / "src" / "web"
+WEB_DIR = BASE_DIR / "ui" / "dist"
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -69,6 +69,10 @@ class SessionCreateRequest(BaseModel):
     max_iterations: int = 4
     max_time: int = 300
     superprompt: bool = True
+
+
+class ChatRequest(BaseModel):
+    message: str
 
 
 class SessionResponse(BaseModel):
@@ -130,14 +134,45 @@ def _serialize_hypothesis(h: Hypothesis | dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _serialize_trace(trace: IterationTrace) -> dict[str, Any]:
-    """Convert iteration traces into lightweight soul messages."""
+def _serialize_dialogue(entry: Any) -> dict[str, Any]:
+    """Convert a dialogue entry into a soul message."""
     return {
-        "soul": "synthesizer",
-        "text": trace.thought or trace.observation,
-        "timestamp": trace.timestamp.isoformat(),
-        "highlighted": trace.avg_novelty >= 0.7 or trace.avg_feasibility >= 0.6,
+        "soul": entry.soul,
+        "role": entry.role.value if hasattr(entry.role, 'value') else str(entry.role),
+        "text": entry.message,
+        "timestamp": entry.timestamp.isoformat(),
+        "highlighted": entry.role in ["creative", "risk_taker"]
     }
+
+
+def _serialize_trace(trace: IterationTrace) -> list[dict[str, Any]]:
+    """Convert iteration trace into multiple soul messages if dialogue exists."""
+    messages = []
+    
+    # Add the main BDI thought
+    messages.append({
+        "soul": "Synthesizer",
+        "role": "synthesizer",
+        "text": trace.thought,
+        "timestamp": trace.timestamp.isoformat(),
+        "highlighted": True
+    })
+    
+    # Add detailed dialogue
+    if hasattr(trace, 'dialogue') and trace.dialogue:
+        for entry in trace.dialogue:
+            messages.append(_serialize_dialogue(entry))
+            
+    # Add observation
+    messages.append({
+        "soul": "Orchestrator",
+        "role": "synthesizer",
+        "text": trace.observation,
+        "timestamp": trace.timestamp.isoformat(),
+        "highlighted": False
+    })
+    
+    return messages
 
 
 async def run_session(session_id: str, topic: str, config: RalphConfig):
@@ -154,7 +189,10 @@ async def run_session(session_id: str, topic: str, config: RalphConfig):
         async def on_trace(trace: IterationTrace):
             if session_id in sessions:
                 sessions[session_id]["iteration"] = trace.iteration
-                sessions[session_id]["soulMessages"].append(_serialize_trace(trace))
+                # Append all messages from this trace
+                for msg in _serialize_trace(trace):
+                    sessions[session_id]["soulMessages"].append(msg)
+                
                 # Also update currently surviving hypotheses count if available in trace
                 sessions[session_id]["hypotheses_count"] = trace.hypotheses_surviving
                 sessions[session_id]["total_cost"] = trace.cost_usd
@@ -166,6 +204,9 @@ async def run_session(session_id: str, topic: str, config: RalphConfig):
                 "on_trace": on_trace,
             }
         )
+        
+        # Store instance for interaction
+        sessions[session_id]["orchestrator"] = orchestrator
 
         # Run the session (saves to sessions dir automatically)
         result = await orchestrator.run(topic, output_dir=SESSIONS_DIR)
@@ -263,6 +304,7 @@ async def create_session(
         "hypotheses": [],
         "soulMessages": [],
         "gaps": [],
+        "source_metadata": {},
         "result": None,
         "error": None,
     }
@@ -312,6 +354,13 @@ async def get_session_status(session_id: str):
         raise HTTPException(status_code=404, detail="Session not found")
 
     session = sessions[session_id]
+    
+    # Get live metadata if orchestrator is running
+    metadata = session.get("source_metadata", {})
+    orchestrator = session.get("orchestrator")
+    if orchestrator and hasattr(orchestrator, 'paper_store'):
+        metadata = {k: v.model_dump() for k, v in orchestrator.paper_store.items()}
+
     return {
         "id": session_id,
         "topic": session["topic"],
@@ -322,6 +371,7 @@ async def get_session_status(session_id: str):
         "hypotheses": session.get("hypotheses", []),
         "soulMessages": session.get("soulMessages", []),
         "gaps": session.get("gaps", []),
+        "source_metadata": metadata,
         "relevanceScore": session.get("relevanceScore"),
         "error": session.get("error"),
     }
@@ -339,6 +389,30 @@ async def stop_session(session_id: str):
         sessions[session_id]["complete"] = True
     
     return {"status": "stopped"}
+
+
+@app.post("/api/sessions/{session_id}/chat")
+async def session_chat(session_id: str, request: ChatRequest):
+    """Send a message to the running orchestrator."""
+    if session_id not in sessions:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    orchestrator = sessions[session_id].get("orchestrator")
+    if not orchestrator:
+        raise HTTPException(status_code=400, detail="Orchestrator not active for this session")
+    
+    await orchestrator.inject_user_message(request.message)
+    
+    # Provide instant feedback in the Soul Feed
+    sessions[session_id]["soulMessages"].append({
+        "soul": "System",
+        "role": "synthesizer",
+        "text": f"Instruction logged: '{request.message}'. The collective will incorporate this into the next iteration.",
+        "timestamp": datetime.now().isoformat(),
+        "highlighted": True
+    })
+    
+    return {"status": "message_injected"}
 
 
 @app.get("/api/sessions")
