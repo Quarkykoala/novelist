@@ -1,0 +1,769 @@
+INFO:     127.0.0.1:61697 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57419 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "POST /api/sessions HTTP/1.1" 200 OK
+[ERROR] Error on cerebras: Error code: 404 - {'message': 'Model SKIP_PROVIDER_MISMATCH does not exist or you do not have access to it.', 'type': 'not_found_error', 'param': 'model', 'code': 'model_not_found'}
+INFO:     127.0.0.1:60954 - "OPTIONS /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+MCTS: Initializing search from root (Depth 0)
+INFO:     127.0.0.1:60954 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+   Expanded 3 children
+MCTS Iteration 1/4...
+   Selected node: e179b4e4 (Explore Gap 1)
+   Reward: 0.900
+MCTS Iteration 2/4...
+   Selected node: b97bfff6 (Explore Gap 2)
+   Reward: 0.900
+MCTS Iteration 3/4...
+   Selected node: 441f9e72 (Explore Gap 3)
+   Reward: 0.900
+MCTS Iteration 4/4...
+   Selected node: e179b4e4 (Explore Gap 1)
+INFO:     127.0.0.1:60954 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+Simulation failed to run: 'GenerationResponse' object has no attribute 'strip'
+   Expanded 2 children
+   Reward: 0.900
+INFO:     127.0.0.1:60954 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60954 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/sessions/c33a46b4 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65086 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60652 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60721 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56013 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53969 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52763 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53257 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57606 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54867 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64616 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56093 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58760 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50436 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60082 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64506 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57369 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56885 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56075 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53365 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60187 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63945 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54293 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60363 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63376 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62236 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64559 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52450 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61988 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55944 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59904 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56447 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62405 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61418 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52551 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51876 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51876 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51876 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52869 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54358 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53113 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62522 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "OPTIONS /api/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "POST /api/sessions HTTP/1.1" 200 OK
+[ERROR] Error on cerebras: Error code: 404 - {'message': 'Model SKIP_PROVIDER_MISMATCH does not exist or you do not have access to it.', 'type': 'not_found_error', 'param': 'model', 'code': 'model_not_found'}
+INFO:     127.0.0.1:51076 - "OPTIONS /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+MCTS: Initializing search from root (Depth 0)
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+   Expanded 3 children
+MCTS Iteration 1/4...
+   Selected node: 7d853ff0 (Explore Gap 1)
+   Reward: 0.900
+MCTS Iteration 2/4...
+   Selected node: 58e16b45 (Explore Gap 2)
+   Reward: 0.900
+MCTS Iteration 3/4...
+   Selected node: 7ad272c8 (Explore Gap 3)
+   Reward: 0.900
+MCTS Iteration 4/4...
+   Selected node: 7d853ff0 (Explore Gap 1)
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/health HTTP/1.1" 200 OK
+Simulation failed to run: 'GenerationResponse' object has no attribute 'strip'
+   Expanded 2 children
+   Reward: 0.900
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51076 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56357 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52174 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57609 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57609 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59597 - "GET /api/sessions/8fc1ba90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59597 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52139 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56580 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57103 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63308 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61750 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57374 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59233 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63572 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50449 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63636 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55564 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53923 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53941 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55899 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52522 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49982 - "POST /api/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63005 - "GET /api/health HTTP/1.1" 200 OK
+[ERROR] Error on cerebras: Error code: 404 - {'message': 'Model SKIP_PROVIDER_MISMATCH does not exist or you do not have access to it.', 'type': 'not_found_error', 'param': 'model', 'code': 'model_not_found'}
+INFO:     127.0.0.1:63005 - "OPTIONS /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63005 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63005 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63005 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63005 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63005 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63005 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63005 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63005 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63005 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63005 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+MCTS: Initializing search from root (Depth 0)
+INFO:     127.0.0.1:63005 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63479 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63479 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63479 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+   Expanded 3 children
+MCTS Iteration 1/4...
+   Selected node: 852e5ab0 (Explore Gap 1)
+   Reward: 0.900
+MCTS Iteration 2/4...
+   Selected node: 6c71f5b6 (Explore Gap 2)
+   Reward: 0.900
+MCTS Iteration 3/4...
+   Selected node: ac366bfc (Explore Gap 3)
+   Reward: 0.900
+MCTS Iteration 4/4...
+   Selected node: 852e5ab0 (Explore Gap 1)
+INFO:     127.0.0.1:63479 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63479 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63479 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63479 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63479 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+Simulation failed to run: 'GenerationResponse' object has no attribute 'strip'
+   Expanded 2 children
+   Reward: 0.900
+INFO:     127.0.0.1:63479 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63479 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63479 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63479 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61927 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61927 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61927 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61927 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61927 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61927 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61927 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61927 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61927 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61927 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61927 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61927 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61836 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61836 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61836 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61836 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61836 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53280 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51698 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59122 - "GET /api/sessions/673add8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59122 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59122 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49812 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61178 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56649 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62244 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61092 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52832 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49697 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52715 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61630 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59976 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63644 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54845 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55793 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64134 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54566 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54566 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61917 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56848 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60201 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58910 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60791 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60596 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49744 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57990 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63908 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52107 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52203 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57647 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53520 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57788 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57788 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57788 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58277 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62648 - "OPTIONS /api/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62648 - "POST /api/sessions HTTP/1.1" 200 OK
+[ERROR] Error on cerebras: Error code: 404 - {'message': 'Model SKIP_PROVIDER_MISMATCH does not exist or you do not have access to it.', 'type': 'not_found_error', 'param': 'model', 'code': 'model_not_found'}
+INFO:     127.0.0.1:62648 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62648 - "OPTIONS /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62648 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62648 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62648 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62648 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62648 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62648 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49676 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49676 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49676 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49676 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+MCTS: Initializing search from root (Depth 0)
+INFO:     127.0.0.1:49676 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49676 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64671 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64671 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+   Expanded 3 children
+MCTS Iteration 1/4...
+   Selected node: 1f375dac (Explore Gap 1)
+   Reward: 0.900
+MCTS Iteration 2/4...
+   Selected node: 0e20feb8 (Explore Gap 2)
+   Reward: 0.900
+MCTS Iteration 3/4...
+   Selected node: 405a4b18 (Explore Gap 3)
+   Reward: 0.900
+MCTS Iteration 4/4...
+   Selected node: 1f375dac (Explore Gap 1)
+INFO:     127.0.0.1:64671 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64671 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64671 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+Simulation failed to run: 'GenerationResponse' object has no attribute 'strip'
+   Expanded 2 children
+   Reward: 0.900
+INFO:     127.0.0.1:64671 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51313 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51313 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51313 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51313 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51313 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51313 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51313 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51313 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51313 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51313 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51313 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51313 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57921 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57921 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57921 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57921 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57921 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57921 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58223 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58223 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58223 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58223 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58223 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58223 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58223 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58223 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58223 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58223 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58223 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58223 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62742 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62742 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62742 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62742 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62241 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65109 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59063 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59063 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59063 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59063 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59063 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59063 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59063 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59063 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59063 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59063 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64839 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64839 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64839 - "GET /api/sessions/e548659e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56372 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56867 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59587 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64208 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53953 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56458 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51674 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49175 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63432 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54158 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65226 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60227 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64642 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54976 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54976 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60200 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54680 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63099 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52496 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61668 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56337 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54465 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52813 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49713 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49713 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57831 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64903 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62392 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65183 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62558 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59881 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58940 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61374 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57122 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61718 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64851 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "OPTIONS /api/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "POST /api/sessions HTTP/1.1" 200 OK
+[ERROR] Error on cerebras: Error code: 404 - {'message': 'Model SKIP_PROVIDER_MISMATCH does not exist or you do not have access to it.', 'type': 'not_found_error', 'param': 'model', 'code': 'model_not_found'}
+INFO:     127.0.0.1:49919 - "OPTIONS /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+MCTS: Initializing search from root (Depth 0)
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/health HTTP/1.1" 200 OK
+   Expanded 3 children
+MCTS Iteration 1/4...
+   Selected node: 652f41db (Explore Gap 1)
+   Reward: 0.900
+MCTS Iteration 2/4...
+   Selected node: 1a287592 (Explore Gap 2)
+   Reward: 0.900
+MCTS Iteration 3/4...
+   Selected node: e140e312 (Explore Gap 3)
+   Reward: 0.900
+MCTS Iteration 4/4...
+   Selected node: 652f41db (Explore Gap 1)
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/health HTTP/1.1" 200 OK
+Simulation failed to run: 'GenerationResponse' object has no attribute 'strip'
+   Expanded 2 children
+   Reward: 0.900
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62922 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64902 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62718 - "GET /api/sessions/e23b0f25 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62718 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61304 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57309 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62375 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56061 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59019 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50681 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55205 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56121 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56121 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56813 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51192 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59522 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56862 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60805 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54152 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63926 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49165 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59535 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60326 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64497 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49672 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58700 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57341 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61295 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53462 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56906 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53627 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54719 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62451 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53140 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50213 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64863 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61616 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56442 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57566 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57814 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60541 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50559 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58599 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54022 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63110 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61683 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51641 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61902 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62817 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60514 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56040 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60934 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60738 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57387 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52041 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62637 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54184 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54184 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53705 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53705 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62747 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62747 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "OPTIONS /api/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "POST /api/sessions HTTP/1.1" 200 OK
+[ERROR] Error on cerebras: Error code: 404 - {'message': 'Model SKIP_PROVIDER_MISMATCH does not exist or you do not have access to it.', 'type': 'not_found_error', 'param': 'model', 'code': 'model_not_found'}
+INFO:     127.0.0.1:61337 - "OPTIONS /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/health HTTP/1.1" 200 OK
+MCTS: Initializing search from root (Depth 0)
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+   Expanded 3 children
+MCTS Iteration 1/4...
+   Selected node: a585189d (Explore Gap 1)
+   Reward: 0.900
+MCTS Iteration 2/4...
+   Selected node: b77bda0c (Explore Gap 2)
+   Reward: 0.900
+MCTS Iteration 3/4...
+   Selected node: 2e196567 (Explore Gap 3)
+   Reward: 0.900
+MCTS Iteration 4/4...
+   Selected node: a585189d (Explore Gap 1)
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+Simulation failed to run: 'GenerationResponse' object has no attribute 'strip'
+   Expanded 2 children
+   Reward: 0.900
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61337 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59011 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60663 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51486 - "GET /api/sessions/76fefeb3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51486 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54952 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49390 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56318 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59624 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58972 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51779 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53908 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57054 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61930 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56759 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53989 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56369 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56117 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53314 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55812 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51114 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55315 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50394 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60535 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56570 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64433 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50599 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62307 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60464 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64355 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49681 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52646 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64628 - "GET /api/health HTTP/1.1" 200 OK
