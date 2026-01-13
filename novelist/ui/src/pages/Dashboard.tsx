@@ -100,6 +100,26 @@ export function Dashboard() {
     }
   };
 
+  const handleVote = async (hypothesisId: string, direction: "up" | "down") => {
+    if (!sessionId) return;
+    try {
+      await api.voteHypothesis(sessionId, hypothesisId, direction);
+      addLog("user", `Voted ${direction} on hypothesis ${hypothesisId}`);
+    } catch (err: any) {
+      addLog("error", "Failed to vote: " + err.message);
+    }
+  };
+
+  const handleInvestigate = async (hypothesisId: string) => {
+    if (!sessionId) return;
+    try {
+      await api.investigateHypothesis(sessionId, hypothesisId);
+      addLog("user", `Requested investigation for hypothesis ${hypothesisId}`);
+    } catch (err: any) {
+      addLog("error", "Failed to queue investigation: " + err.message);
+    }
+  };
+
   const parseList = (value: string) => value.split(",").map((entry) => entry.trim()).filter(Boolean);
   const parseDatasetLinks = (value: string) => value.split(/[\n,]+/).map((entry) => entry.trim()).filter(Boolean);
   const isValidUrl = (value: string) => {
@@ -503,7 +523,12 @@ export function Dashboard() {
                 </div>
                 
                 <TabsContent value="hypotheses">
-                    <HypothesisList hypotheses={hypotheses} sourceMetadata={sourceMetadata} />
+                    <HypothesisList 
+                        hypotheses={hypotheses} 
+                        sourceMetadata={sourceMetadata} 
+                        onVote={handleVote}
+                        onInvestigate={handleInvestigate}
+                    />
                 </TabsContent>
                 
                 <TabsContent value="evidence" className="h-[600px]">

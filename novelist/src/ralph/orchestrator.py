@@ -275,6 +275,26 @@ class RalphOrchestrator:
             f"Persona {persona_id} regenerated: {new_persona.name}"
         )
 
+    async def vote_hypothesis(self, hypothesis_id: str, direction: str) -> None:
+        """Vote on a hypothesis to influence future iterations."""
+        # Find the hypothesis
+        target = next((h for h in self.hypotheses if h.id == hypothesis_id), None)
+        if not target:
+            return
+        
+        msg = f"User voted {direction} on hypothesis: '{target.hypothesis}'"
+        await self.inject_user_message(msg)
+        # We could also directly adjust scores or priority in memory here
+
+    async def investigate_hypothesis(self, hypothesis_id: str) -> None:
+        """Mark a hypothesis for deeper investigation in the next loop."""
+        target = next((h for h in self.hypotheses if h.id == hypothesis_id), None)
+        if not target:
+            return
+        
+        msg = f"DEEP INVESTIGATION REQUESTED for hypothesis: '{target.hypothesis}'. Focus next iteration on validating its core assumptions."
+        await self.inject_user_message(msg)
+
     async def run(
         self,
         topic: str,

@@ -98,3 +98,27 @@ Run: US-103 (Build)
 - Learnings for future iterations:
   - SVG is a sufficient lightweight alternative for graph visualization when dedicated libraries (d3/force-graph) are too heavy or complex for a quick iteration.
 ---
+
+## 2026-01-13 - US-104: Hypothesis Debate & Evolution
+Thread: 
+Run: US-104 (Build)
+- Guardrails reviewed: yes
+- No-commit run: false
+- Commit: (pending)
+- Post-commit status: clean
+- Verification:
+  - Command: npm run build -> PASS
+- Files changed:
+  - src/server.py
+  - src/ralph/orchestrator.py
+  - ui/src/lib/api.ts
+  - ui/src/components/HypothesisList.tsx
+  - ui/src/pages/Dashboard.tsx
+- What was implemented:
+  - Added backend endpoints for hypothesis voting and deeper investigation.
+  - Updated Orchestrator to integrate user feedback from votes/investigation into the loop.
+  - Enhanced HypothesisList UI with ThumbsUp, ThumbsDown, and Investigate controls.
+  - Normalized soulMessages to ensure they are always returned as a flat list.
+- Learnings for future iterations:
+  - Mapping user UI interactions directly to user_guidance messages is a robust way to influence BDI agent behavior without complex state management.
+---

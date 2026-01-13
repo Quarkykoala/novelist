@@ -115,6 +115,19 @@ export class API {
     });
   }
 
+  async voteHypothesis(sessionId: string, hypothesisId: string, direction: "up" | "down") {
+    return this.request(`/api/sessions/${sessionId}/hypotheses/${hypothesisId}/vote`, {
+      method: "POST",
+      body: { direction },
+    });
+  }
+
+  async investigateHypothesis(sessionId: string, hypothesisId: string) {
+    return this.request(`/api/sessions/${sessionId}/hypotheses/${hypothesisId}/investigate`, {
+      method: "POST",
+    });
+  }
+
   async getSessions() {
     return this.request("/api/sessions");
   }

@@ -1,6 +1,17 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, XCircle, Link as LinkIcon, FileText, ExternalLink, Image as ImageIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { 
+  CheckCircle2, 
+  XCircle, 
+  Link as LinkIcon, 
+  FileText, 
+  ExternalLink, 
+  Image as ImageIcon,
+  ThumbsUp,
+  ThumbsDown,
+  Search
+} from "lucide-react";
 
 export interface Hypothesis {
   id: string;
@@ -19,6 +30,8 @@ export interface Hypothesis {
 interface HypothesisListProps {
   hypotheses: Hypothesis[];
   sourceMetadata?: Record<string, any>;
+  onVote?: (id: string, direction: "up" | "down") => void;
+  onInvestigate?: (id: string) => void;
 }
 
 function getPlotFilename(path: string): string {
@@ -29,7 +42,7 @@ function getPlotFilename(path: string): string {
   }
 }
 
-export function HypothesisList({ hypotheses, sourceMetadata = {} }: HypothesisListProps) {
+export function HypothesisList({ hypotheses, sourceMetadata = {}, onVote, onInvestigate }: HypothesisListProps) {
   return (
     <div className="space-y-4">
       {hypotheses.map((h, i) => {
@@ -38,15 +51,51 @@ export function HypothesisList({ hypotheses, sourceMetadata = {} }: HypothesisLi
         const isVerified = simResult?.success && simResult?.supports_hypothesis;
 
         return (
-          <Card key={i} className="overflow-hidden animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: `${i * 100}ms` }}>
+          <Card key={i} className="overflow-hidden animate-in fade-in slide-in-from-bottom-4 group" style={{ animationDelay: `${i * 100}ms` }}>
             <CardContent className="p-4 flex gap-4">
-              <div className="text-4xl font-black text-muted/20 font-mono select-none">
-                {i + 1}
+              <div className="flex flex-col items-center gap-2">
+                <div className="text-4xl font-black text-muted/20 font-mono select-none">
+                    {i + 1}
+                </div>
+                {onVote && (
+                    <div className="flex flex-col gap-1">
+                        <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-8 w-8 text-muted-foreground hover:text-primary"
+                            onClick={() => onVote(h.id, "up")}
+                        >
+                            <ThumbsUp className="w-4 h-4" />
+                        </Button>
+                        <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                            onClick={() => onVote(h.id, "down")}
+                        >
+                            <ThumbsDown className="w-4 h-4" />
+                        </Button>
+                    </div>
+                )}
               </div>
+              
               <div className="flex-1 space-y-2">
-                <p className="font-medium text-lg leading-snug">
-                  {h.statement}
-                </p>
+                <div className="flex items-start justify-between gap-4">
+                    <p className="font-medium text-lg leading-snug">
+                    {h.statement}
+                    </p>
+                    {onInvestigate && (
+                        <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="h-8 gap-2 text-xs shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={() => onInvestigate(h.id)}
+                        >
+                            <Search className="w-3 h-3" />
+                            Investigate
+                        </Button>
+                    )}
+                </div>
 
                 {/* Tags and Metadata */}
                 <div className="flex flex-wrap gap-2 items-center">

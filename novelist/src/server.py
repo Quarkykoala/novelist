@@ -392,11 +392,13 @@ async def run_session(
         sessions[session_id]["hypotheses"] = [
             _serialize_hypothesis(h) for h in (result.final_hypotheses if result else [])
         ]
-        sessions[session_id]["soulMessages"] = [
-            msg
-            for trace in (result.traces if result else [])
-            for msg in _serialize_trace(trace)
-        ]
+        
+        # Flatten all traces into a single list of messages
+        final_messages = []
+        for trace in (result.traces if result else []):
+            final_messages.extend(_serialize_trace(trace))
+        sessions[session_id]["soulMessages"] = final_messages
+        
         sessions[session_id]["relevanceScore"] = (
             result.concept_map and len(result.concept_map.nodes) / 10
         ) or None
@@ -670,6 +672,35 @@ async def regenerate_persona(session_id: str, persona_id: str):
     
     await orchestrator.regenerate_persona(persona_id)
     return {"status": "regenerated"}
+
+
+@app.post("/api/sessions/{session_id}/hypotheses/{hypothesis_id}/vote")
+async def vote_hypothesis(session_id: str, hypothesis_id: str, request: dict[str, Any]):
+    """Vote on a hypothesis (up/down)."""
+    if session_id not in sessions:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    orchestrator = sessions[session_id].get("orchestrator")
+    if not orchestrator:
+        raise HTTPException(status_code=400, detail="Orchestrator not active")
+    
+    direction = request.get("direction", "up")
+    await orchestrator.vote_hypothesis(hypothesis_id, direction)
+    return {"status": "voted"}
+
+
+@app.post("/api/sessions/{session_id}/hypotheses/{hypothesis_id}/investigate")
+async def investigate_hypothesis(session_id: str, hypothesis_id: str):
+    """Mark a hypothesis for deeper investigation."""
+    if session_id not in sessions:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    orchestrator = sessions[session_id].get("orchestrator")
+    if not orchestrator:
+        raise HTTPException(status_code=400, detail="Orchestrator not active")
+    
+    await orchestrator.investigate_hypothesis(hypothesis_id)
+    return {"status": "investigation_queued"}
 
 
 @app.get("/api/sessions")

@@ -49,15 +49,15 @@
   - Verification: `pytest tests/test_pipeline_fix.py` and `cd ui && npm run build`
 
 ### US-104: Hypothesis Debate & Evolution
-- [ ] Normalize debate traces for the API
+- [x] Normalize debate traces for the API
   - Scope: Fix `sessions[session_id]["soulMessages"]` in `src/server.py` so traces are flattened instead of nested lists, embed per-iteration metadata (mode, owners, verdicts) coming from `src/soul/collective.py`, and ensure `_serialize_trace` preserves Skeptic critiques and Synthesizer outcomes.
   - Acceptance: The session status payload includes a chronological array of debate entries with persona badges plus kill/merge decisions, enabling the frontend to reconstruct the debate timeline.
   - Verification: `pytest tests/test_orchestrator_mock.py`
-- [ ] Expose hypothesis voting/deeper-investigation controls
+- [x] Expose hypothesis voting/deeper-investigation controls
   - Scope: Add endpoints such as `POST /api/sessions/{id}/hypotheses/{hid}/vote` and `POST /api/sessions/{id}/hypotheses/{hid}/investigate` that update orchestrator memory/user guidance, and log those interventions to the trace for audit.
   - Acceptance: Votes adjust hypothesis ordering or mark items for deeper study, and the next iteration acknowledges the intervention in both status text and stored trace.
   - Verification: `pytest tests/test_api_contract_final.py`
-- [ ] Build a debate timeline UI with ranking buttons
+- [x] Build a debate timeline UI with ranking buttons
   - Scope: Introduce a timeline/stacked table component in `ui/src/pages/Dashboard.tsx` (or a dedicated component) that visualizes each iteration (phase, persona owner, action, vote controls) and wires the up/down-rank buttons plus “Investigate” CTA to the new APIs.
   - Acceptance: Users can see a scrollable timeline of iterations, apply up/down votes, and observe immediate UI feedback showing the effect on hypothesis ordering.
   - Verification: `cd ui && npm run build`

@@ -47,7 +47,7 @@ Accessibility considerations: keyboard navigation, high-contrast themes for plot
 - Visualization (graph/map) of clusters, citation overlaps, and trans-paper gaps with hover details.
 - Evidence board linking each hypothesis to supporting papers/snippets (capped at 5 top citations per hypothesis).
 
-### [ ] US-104: Hypothesis Debate & Evolution
+### [x] US-104: Hypothesis Debate & Evolution
 - Timeline/table for hypotheses showing stage, owners, opposing critiques, decision (advance, merge, drop).
 - Debate transcripts with persona badges; highlight key critiques and resolutions.
 - Buttons for user to up/down-rank hypotheses or request deeper investigation.
