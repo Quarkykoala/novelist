@@ -61,7 +61,7 @@ Accessibility considerations: keyboard navigation, high-contrast themes for plot
 - Final list sorted by novelty x confidence; each entry includes summary, supporting evidence, simulation verdict, and recommended next experiments.
 - Provide export options (PDF, Markdown, JSON) and push to memory (“Graveyard”) with tags.
 
-### [ ] US-107: Live Steering Chat
+### [x] US-107: Live Steering Chat
 - Chat panel with streaming responses and system prompts showing applied instructions.
 - Controls to pin directives (e.g., “prioritize bio-safe materials”) and view effect history.
 - Safety guardrails to confirm destructive commands before execution.

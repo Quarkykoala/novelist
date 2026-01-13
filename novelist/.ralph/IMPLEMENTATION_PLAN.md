@@ -91,15 +91,15 @@
   - Verification: `cd ui && npm run build`
 
 ### US-107: Live Steering Chat
-- [ ] Stream chat acknowledgements with directive history
+- [x] Stream chat acknowledgements with directive history
   - Scope: Enhance `session_chat` in `src/server.py` to stream acknowledgements plus the updated directive backlog, persist directives in `MemorySystem.working.user_guidance`, and include a `directives` array in the status payload.
   - Acceptance: Users see their pinned directives echoed immediately, and each subsequent iteration references the active directives in the Soul Feed.
   - Verification: `pytest tests/test_api_contract_final.py -k chat`
-- [ ] Add pinning + destructive-command guardrails
+- [x] Add pinning + destructive-command guardrails
   - Scope: Introduce UI controls to pin/unpin directives, require modal confirmation for instructions flagged as destructive, and enforce backend validation that blocks dangerous commands unless confirmed.
   - Acceptance: Pinned directives remain visible in a side panel, destructive instructions prompt a confirmation modal, and the backend refuses execution without confirmation metadata.
   - Verification: `cd ui && npm run build`
-- [ ] Visualize chat impact history
+- [x] Visualize chat impact history
   - Scope: Store directive application logs per iteration in `src/soul/memory.py`, expose them via the API, and render a small history list showing which persona reacted to each directive and when.
   - Acceptance: Researchers can audit how their instructions changed debate behavior via a timestamped history panel.
   - Verification: `pytest tests/test_orchestrator_mock.py`

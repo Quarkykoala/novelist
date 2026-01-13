@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Play, RotateCcw, Activity, Send, Lock, Unlock, RefreshCcw, FileText, List, Download } from "lucide-react";
+import { Play, RotateCcw, Activity, Send, Lock, Unlock, RefreshCcw, FileText, List, Download, Pin, PinOff, History as HistoryIcon } from "lucide-react";
 import { Reactor } from "@/components/Reactor";
 import { SoulFeed, type SoulMessage } from "@/components/SoulFeed";
 import { HypothesisList, type Hypothesis } from "@/components/HypothesisList";
@@ -43,6 +43,8 @@ export function Dashboard() {
   const [personas, setPersonas] = useState<any[]>([]);
   const [conceptMap, setConceptMap] = useState<any>(null);
   const [knowledgeStats, setKnowledgeStats] = useState<any>(null);
+  const [pinnedDirectives, setPinnedDirectives] = useState<any[]>([]);
+  const [impactHistory, setImpactHistory] = useState<any[]>([]);
   
   const pollInterval = useRef<any>(null);
 
@@ -53,6 +55,15 @@ export function Dashboard() {
   const handleSendMessage = async () => {
     if (!chatMessage || !sessionId) return;
     const msg = chatMessage;
+
+    // Safety guardrail for destructive commands
+    const destructiveWords = ["delete", "stop", "reset", "clear", "kill"];
+    if (destructiveWords.some(w => msg.toLowerCase().includes(w))) {
+      if (!confirm(`This command contains a keyword (${destructiveWords.find(w => msg.toLowerCase().includes(w))}) that might be destructive. Are you sure you want to proceed?`)) {
+        return;
+      }
+    }
+
     setChatMessage("");
     addLog("user", msg);
     
@@ -60,6 +71,26 @@ export function Dashboard() {
       await api.sendChatMessage(sessionId, msg);
     } catch (err: any) {
       addLog("error", "Failed to send: " + err.message);
+    }
+  };
+
+  const handlePinDirective = async (msg: string) => {
+    if (!sessionId || !msg) return;
+    try {
+      await api.pinDirective(sessionId, msg);
+      addLog("system", `Pinned directive: ${msg}`);
+    } catch (err: any) {
+      addLog("error", "Failed to pin: " + err.message);
+    }
+  };
+
+  const handleUnpinDirective = async (msg: string) => {
+    if (!sessionId) return;
+    try {
+      await api.unpinDirective(sessionId, msg);
+      addLog("system", `Unpinned directive: ${msg}`);
+    } catch (err: any) {
+      addLog("error", "Failed to unpin: " + err.message);
     }
   };
 
@@ -242,6 +273,8 @@ export function Dashboard() {
           if (s.source_metadata) setSourceMetadata(s.source_metadata);
           if (s.soulMessages) setSoulMessages(s.soulMessages); 
           if (s.concept_map) setConceptMap(s.concept_map);
+          if (s.directives) setPinnedDirectives(s.directives);
+          if (s.impact_history) setImpactHistory(s.impact_history);
           
           // Poll global/session stats if available (or derived)
           // Ideally this comes from session status directly if we added it, 
@@ -459,6 +492,27 @@ export function Dashboard() {
           </CardContent>
         </Card>
 
+        {pinnedDirectives.length > 0 && (
+          <Card className="border-primary/20">
+            <CardHeader className="py-3">
+              <CardTitle className="flex items-center gap-2 text-xs uppercase tracking-widest">
+                <Pin className="w-3 h-3 text-primary" />
+                Active Directives
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 pb-3">
+              {pinnedDirectives.map((d, i) => (
+                <div key={i} className="flex items-center justify-between gap-2 p-2 rounded bg-primary/5 text-[11px] border border-primary/10">
+                  <span className="flex-1 line-clamp-2">{d.text}</span>
+                  <Button variant="ghost" size="icon" className="h-5 w-5 hover:text-destructive" onClick={() => handleUnpinDirective(d.text)}>
+                    <PinOff className="w-3 h-3" />
+                  </Button>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        )}
+
         <Card className="flex-1 min-h-[200px] flex flex-col">
             <CardHeader className="pb-3">
                 <CardTitle className="flex items-center gap-2 text-sm uppercase tracking-wider text-muted-foreground">
@@ -595,20 +649,40 @@ export function Dashboard() {
                         Research Assistant
                     </CardTitle>
                 </CardHeader>
-                <CardContent className="p-3">
+                <CardContent className="p-3 space-y-3">
                     <div className="flex gap-2">
                         <Input 
                             value={chatMessage} 
                             onChange={(e) => setChatMessage(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                            placeholder="Direct the collective (e.g. 'Focus on cost', 'Why ignore X?')..."
+                            placeholder="Direct the collective (e.g. 'Focus on cost')..."
                             className="flex-1"
                         />
+                        <Button size="icon" variant="outline" title="Pin Directive" onClick={() => handlePinDirective(chatMessage)} disabled={!chatMessage}>
+                            <Pin className="w-4 h-4" />
+                        </Button>
                         <Button size="icon" onClick={handleSendMessage} disabled={!chatMessage}>
                             <Send className="w-4 h-4" />
                         </Button>
                     </div>
-                    <p className="text-[10px] text-muted-foreground mt-2 px-1 italic">
+                    
+                    {impactHistory.length > 0 && (
+                      <div className="pt-2 border-t border-primary/10">
+                        <p className="text-[10px] font-bold uppercase text-muted-foreground flex items-center gap-1 mb-2">
+                          <HistoryIcon className="w-3 h-3" /> Impact History
+                        </p>
+                        <div className="space-y-2 max-h-32 overflow-y-auto pr-1">
+                          {impactHistory.map((h, i) => (
+                            <div key={i} className="text-[10px] leading-tight p-1.5 rounded bg-muted/50">
+                              <span className="font-semibold text-primary uppercase">{h.soul}: </span>
+                              {h.impact}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <p className="text-[10px] text-muted-foreground px-1 italic">
                         Your guidance will be integrated into the next iteration.
                     </p>
                 </CardContent>

@@ -90,6 +90,20 @@ export class API {
     });
   }
 
+  async pinDirective(sessionId: string, message: string) {
+    return this.request(`/api/sessions/${sessionId}/chat/pin`, {
+      method: "POST",
+      body: { message },
+    });
+  }
+
+  async unpinDirective(sessionId: string, message: string) {
+    return this.request(`/api/sessions/${sessionId}/chat/unpin`, {
+      method: "POST",
+      body: { message },
+    });
+  }
+
   async lockPersona(sessionId: string, personaId: string) {
     return this.request(`/api/sessions/${sessionId}/personas/${personaId}/lock`, {
       method: "POST",

@@ -295,6 +295,16 @@ class RalphOrchestrator:
         msg = f"DEEP INVESTIGATION REQUESTED for hypothesis: '{target.hypothesis}'. Focus next iteration on validating its core assumptions."
         await self.inject_user_message(msg)
 
+    async def pin_directive(self, text: str) -> None:
+        """Pin a user directive for persistent influence."""
+        self.memory.working.add_pinned_directive(text)
+        await self._emit_status(self.current_phase, f"Directive pinned: {text[:30]}...")
+
+    async def unpin_directive(self, text: str) -> None:
+        """Unpin a user directive."""
+        self.memory.working.remove_pinned_directive(text)
+        await self._emit_status(self.current_phase, f"Directive unpinned: {text[:30]}...")
+
     async def rerun_simulation(self, hypothesis_id: str, custom_code: str | None = None) -> None:
         """Rerun simulation for a specific hypothesis."""
         target = next((h for h in self.hypotheses if h.id == hypothesis_id), None)
@@ -740,9 +750,14 @@ class RalphOrchestrator:
         thought = self.agent.deliberate(current_scores, len(self.hypotheses))
         
         # Integrate user guidance into the thought trace
-        if self.memory.working.user_guidance:
-            guidance_str = " | ".join(self.memory.working.user_guidance)
-            thought = f"USER GUIDANCE INCORPORATED: {guidance_str}. " + thought
+        if self.memory.working.user_guidance or self.memory.working.pinned_directives:
+            guidance_parts = []
+            if self.memory.working.user_guidance:
+                guidance_parts.append("LATEST: " + " | ".join(self.memory.working.user_guidance))
+            if self.memory.working.pinned_directives:
+                guidance_parts.append("PINNED: " + " | ".join([d["text"] for d in self.memory.working.pinned_directives]))
+            
+            thought = f"USER GUIDANCE INCORPORATED: {' ; '.join(guidance_parts)}. " + thought
 
         # Plan next action
         new_mode = self.agent.plan(current_scores, len(self.hypotheses))

@@ -172,3 +172,28 @@ Run: US-106 (Build)
 - Learnings for future iterations:
   - Structured exports (Markdown) provide researchers with immediate shareable value after an autonomous run.
 ---
+
+## 2026-01-13 - US-107: Live Steering Chat
+Thread: 
+Run: US-107 (Build)
+- Guardrails reviewed: yes
+- No-commit run: false
+- Commit: (pending)
+- Post-commit status: clean
+- Verification:
+  - Command: npm run build -> PASS
+- Files changed:
+  - src/soul/memory.py
+  - src/ralph/orchestrator.py
+  - src/server.py
+  - ui/src/lib/api.ts
+  - ui/src/pages/Dashboard.tsx
+- What was implemented:
+  - Added pinned_directives and impact history to WorkingMemory.
+  - Updated Orchestrator to integrate persistent pinned directives into LLM context.
+  - Implemented pin/unpin endpoints in the backend.
+  - Enhanced Dashboard UI with a persistent Active Directives panel and pinning controls in the chat.
+  - Added safety guardrail confirmation for potentially destructive chat commands.
+- Learnings for future iterations:
+  - Persistent directives provide a powerful steering mechanism that ensures specific user constraints are never lost during long-running autonomous sessions.
+---

@@ -164,6 +164,8 @@ class SessionStatusResponse(BaseModel):
     phase_history: list[dict[str, Any]] = Field(default_factory=list)
     config: dict[str, Any] | None = None
     personas: list[dict[str, Any]] | None = None
+    directives: list[dict[str, Any]] | None = None
+    impact_history: list[dict[str, Any]] | None = None
 
 
 async def _spawn_session(
@@ -532,8 +534,13 @@ async def get_session_status(session_id: str):
     # Get live metadata if orchestrator is running
     metadata = session.get("source_metadata", {})
     orchestrator = session.get("orchestrator")
-    if orchestrator and hasattr(orchestrator, 'paper_store'):
-        metadata = {k: v.model_dump() for k, v in orchestrator.paper_store.items()}
+    directives = []
+    impact_history = []
+    if orchestrator:
+        if hasattr(orchestrator, 'paper_store'):
+            metadata = {k: v.model_dump() for k, v in orchestrator.paper_store.items()}
+        directives = getattr(orchestrator.memory.working, 'pinned_directives', [])
+        impact_history = getattr(orchestrator.memory.working, 'directive_impact_history', [])
 
     return {
         "id": session_id,
@@ -554,6 +561,8 @@ async def get_session_status(session_id: str):
         "phase_history": session.get("phase_history", []),
         "config": session.get("config"),
         "personas": session.get("personas"),
+        "directives": directives,
+        "impact_history": impact_history,
         "concept_map": session.get("concept_map"),
     }
 
@@ -616,6 +625,34 @@ async def session_chat(session_id: str, request: ChatRequest):
     })
     
     return {"status": "message_injected"}
+
+
+@app.post("/api/sessions/{session_id}/chat/pin")
+async def pin_directive(session_id: str, request: ChatRequest):
+    """Pin a directive."""
+    if session_id not in sessions:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    orchestrator = sessions[session_id].get("orchestrator")
+    if not orchestrator:
+        raise HTTPException(status_code=400, detail="Orchestrator not active")
+    
+    await orchestrator.pin_directive(request.message)
+    return {"status": "pinned"}
+
+
+@app.post("/api/sessions/{session_id}/chat/unpin")
+async def unpin_directive(session_id: str, request: ChatRequest):
+    """Unpin a directive."""
+    if session_id not in sessions:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    orchestrator = sessions[session_id].get("orchestrator")
+    if not orchestrator:
+        raise HTTPException(status_code=400, detail="Orchestrator not active")
+    
+    await orchestrator.unpin_directive(request.message)
+    return {"status": "unpinned"}
 
 
 @app.post("/api/sessions/{session_id}/personas/{persona_id}/lock")

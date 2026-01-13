@@ -120,6 +120,12 @@ class WorkingMemory:
     
     # User guidance for this iteration
     user_guidance: list[str] = field(default_factory=list)
+    
+    # Pinned directives that persist across iterations
+    pinned_directives: list[dict[str, Any]] = field(default_factory=list)
+    
+    # Track how directives influenced souls
+    directive_impact_history: list[dict[str, Any]] = field(default_factory=list)
 
     def clear(self) -> None:
         """Clear working memory for new iteration."""
@@ -128,12 +134,30 @@ class WorkingMemory:
         self.focus_gap = None
         self.tokens_used = 0
         self.errors = []
-        # We DO NOT clear user_guidance immediately? 
-        # Or maybe we keep it for one iteration? 
-        # Let's keep it until explicitly cleared or just append new ones.
-        # Ideally, it should persist until the user changes it or the goal is met.
-        # For MVP, let's keep it transient per iteration but populated by Orchestrator.
+        # Clear transient guidance but keep pinned ones
         self.user_guidance = []
+
+    def add_pinned_directive(self, text: str) -> None:
+        """Add a persistent directive."""
+        if not any(d["text"] == text for d in self.pinned_directives):
+            self.pinned_directives.append({
+                "text": text,
+                "timestamp": datetime.now().isoformat(),
+                "pinned": True
+            })
+
+    def remove_pinned_directive(self, text: str) -> None:
+        """Remove a persistent directive."""
+        self.pinned_directives = [d for d in self.pinned_directives if d["text"] != text]
+
+    def record_impact(self, directive: str, soul: str, impact: str) -> None:
+        """Record how a directive influenced a specific soul."""
+        self.directive_impact_history.append({
+            "directive": directive,
+            "soul": soul,
+            "impact": impact,
+            "timestamp": datetime.now().isoformat()
+        })
 
     def add_hypothesis(self, hypothesis: Hypothesis) -> None:
         """Add a hypothesis to working memory."""
@@ -274,6 +298,7 @@ class MemorySystem:
             "lessons": self.episodic.summarize_lessons(),
             "graveyard": self.graveyard.exhume(topic),
             "user_guidance": self.working.user_guidance,
+            "pinned_directives": [d["text"] for d in self.working.pinned_directives],
             "recent_avg_novelty": self._get_recent_avg("avg_novelty"),
             "recent_avg_feasibility": self._get_recent_avg("avg_feasibility"),
         }
