@@ -70,3 +70,31 @@ Run: US-102 (Build)
 - Learnings for future iterations:
   - Weighted sampling in the generation phase allows researchers to bias the collective toward specialist or radical thinking mid-run.
 ---
+
+## 2026-01-13 - US-103: Literature Mapping & Evidence Board
+Thread: 
+Run: US-103 (Build)
+- Guardrails reviewed: yes
+- No-commit run: false
+- Commit: (pending)
+- Post-commit status: clean
+- Verification:
+  - Command: pytest tests/test_knowledge_integration.py -> PASS
+  - Command: npm run build -> PASS
+- Files changed:
+  - src/ralph/orchestrator.py
+  - src/server.py
+  - ui/src/pages/Dashboard.tsx
+  - ui/src/components/ConceptMap.tsx
+  - ui/src/components/EvidenceBoard.tsx
+  - ui/src/components/ui/tabs.tsx
+  - tests/test_knowledge_integration.py
+- What was implemented:
+  - Orchestrator now streams knowledge stats and concept map data in real-time.
+  - Backend server stores and exposes global and session-specific concept maps.
+  - Added ConceptMap.tsx visualizer using SVG for node-link diagrams.
+  - Added EvidenceBoard.tsx to show hypotheses linked to their citations.
+  - Updated Dashboard.tsx with a tabbed interface for results and integrated the new visualizations.
+- Learnings for future iterations:
+  - SVG is a sufficient lightweight alternative for graph visualization when dedicated libraries (d3/force-graph) are too heavy or complex for a quick iteration.
+---

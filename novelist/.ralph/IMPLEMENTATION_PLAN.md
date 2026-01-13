@@ -35,15 +35,15 @@
   - Verification: `cd ui && npm run build`
 
 ### US-103: Literature Mapping & Evidence Board
-- [ ] Stream ingestion metrics and concept map data
+- [x] Stream ingestion metrics and concept map data
   - Scope: Ensure `_ingest_papers` updates contain normalized counters (papers fetched, categories covered, coverage %) and embed `concept_map` (nodes, edges, trans_paper_gaps) plus top evidence snippets in the session state stored by `src/server.py`.
   - Acceptance: `GET /api/sessions/{id}` returns live ingestion stats and the serialized concept map so the frontend can render coverage and gaps without extra calls.
   - Verification: `pytest tests/test_pipeline.py -k concept_map`
-- [ ] Implement concept map visualization and knowledge board UI
+- [x] Implement concept map visualization and knowledge board UI
   - Scope: Add a middle-column section in `ui/src/pages/Dashboard.tsx` (or a dedicated component) that renders the concept map using a lightweight force-graph, shows ingestion gauges, and highlights trans-paper gaps with hover tooltips that link to relevant papers.
   - Acceptance: Researchers can inspect the global map, see coverage metrics update in real time, and hover any gap to view the supporting nodes/papers.
   - Verification: `cd ui && npm run build`
-- [ ] Build an evidence board linking hypotheses to citations
+- [x] Build an evidence board linking hypotheses to citations
   - Scope: Limit `Hypothesis.supporting_papers` to the top five items in `src/ralph/orchestrator.py`, attach paper titles/authors from `paper_store`, and add a right-rail evidence board component that shows each hypothesis with its supporting snippets/citations.
   - Acceptance: Every hypothesis card lists ≤5 clickable citations with tooltips from `source_metadata`, and the new evidence board component groups hypotheses by citation clusters per the PRD.
   - Verification: `pytest tests/test_pipeline_fix.py` and `cd ui && npm run build`

@@ -343,12 +343,31 @@ async def run_session(
             if session_id in sessions:
                 sessions[session_id]["personas"] = personas
 
+        async def on_knowledge_update(stats: dict[str, Any]):
+            if session_id in sessions:
+                # Update session-specific stats
+                sessions[session_id]["papers_indexed"] = stats.get("papers_indexed", 0)
+                if "concept_map" in stats:
+                    sessions[session_id]["concept_map"] = stats["concept_map"]
+                
+                # Update global stats
+                knowledge_stats["papers_indexed"] = max(
+                    knowledge_stats.get("papers_indexed", 0), stats.get("papers_indexed", 0)
+                )
+                knowledge_stats["concepts_extracted"] = max(
+                    knowledge_stats.get("concepts_extracted", 0), stats.get("concepts_extracted", 0)
+                )
+                knowledge_stats["relations_found"] = max(
+                    knowledge_stats.get("relations_found", 0), stats.get("relations_found", 0)
+                )
+
         orchestrator = RalphOrchestrator(
             config=config,
             callbacks={
                 "on_status_change": on_status_change,
                 "on_trace": on_trace,
                 "on_personas": on_personas,
+                "on_knowledge_update": on_knowledge_update,
             }
         )
         
@@ -504,6 +523,7 @@ async def get_session_status(session_id: str):
             "phase_history": summary.get("phase_history", []),
             "config": summary.get("config"),
             "personas": summary.get("personas"),
+            "concept_map": summary.get("concept_map"),
         }
 
     # Live session
@@ -532,6 +552,7 @@ async def get_session_status(session_id: str):
         "phase_history": session.get("phase_history", []),
         "config": session.get("config"),
         "personas": session.get("personas"),
+        "concept_map": session.get("concept_map"),
     }
 
 

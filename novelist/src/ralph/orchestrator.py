@@ -146,6 +146,17 @@ class RalphOrchestrator:
             except Exception as e:
                 print(f"[WARN] Error in personas callback: {e}")
 
+    async def _emit_knowledge_update(self, stats: dict[str, Any]) -> None:
+        """Emit knowledge base statistics updates."""
+        if "on_knowledge_update" in self.callbacks:
+            try:
+                if asyncio.iscoroutinefunction(self.callbacks["on_knowledge_update"]):
+                    await self.callbacks["on_knowledge_update"](stats)
+                else:
+                    self.callbacks["on_knowledge_update"](stats)
+            except Exception as e:
+                print(f"[WARN] Error in knowledge callback: {e}")
+
     async def _emit_trace(self, trace: IterationTrace) -> None:
         """Emit a trace update via callback."""
         if "on_trace" in self.callbacks:
@@ -551,6 +562,11 @@ class RalphOrchestrator:
             for p in papers:
                 self.paper_store[p.arxiv_id] = p
 
+            await self._emit_knowledge_update({
+                "papers_indexed": len(self.paper_store),
+                "sources": ["arXiv"],
+            })
+
             if not papers:
                 return
 
@@ -561,6 +577,13 @@ class RalphOrchestrator:
             )
             builder = ConceptMapBuilder(model=self.config.pro_model)
             self.concept_map = await builder.build_global_map_from_abstracts(papers)
+            
+            await self._emit_knowledge_update({
+                "papers_indexed": len(self.paper_store),
+                "concepts_extracted": len(self.concept_map.nodes),
+                "relations_found": len(self.concept_map.edges),
+                "concept_map": self.concept_map.model_dump(),
+            })
             
             # Map Trans-Paper Gaps into IdentifiedGap objects
             if hasattr(self.concept_map, "gaps") and self.concept_map.gaps:

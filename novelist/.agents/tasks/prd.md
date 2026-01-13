@@ -42,7 +42,7 @@ Accessibility considerations: keyboard navigation, high-contrast themes for plot
 - Allow user edits: lock persona, request “regenerate persona,” or adjust weightings (e.g., aggressiveness slider).
 - Visual indicator of persona influence on later outputs.
 
-### [ ] US-103: Literature Mapping & Evidence Board
+### [x] US-103: Literature Mapping & Evidence Board
 - Show ingestion status (paper counts, sources, coverage).
 - Visualization (graph/map) of clusters, citation overlaps, and trans-paper gaps with hover details.
 - Evidence board linking each hypothesis to supporting papers/snippets (capped at 5 top citations per hypothesis).

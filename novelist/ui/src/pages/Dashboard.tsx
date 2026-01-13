@@ -4,10 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Play, RotateCcw, Activity, Send, Lock, Unlock, RefreshCcw } from "lucide-react";
+import { Play, RotateCcw, Activity, Send, Lock, Unlock, RefreshCcw, FileText, List } from "lucide-react";
 import { Reactor } from "@/components/Reactor";
 import { SoulFeed, type SoulMessage } from "@/components/SoulFeed";
 import { HypothesisList, type Hypothesis } from "@/components/HypothesisList";
+import { ConceptMap } from "@/components/ConceptMap";
+import { EvidenceBoard } from "@/components/EvidenceBoard";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type PhaseRecord = {
   phase: string;
@@ -38,6 +41,8 @@ export function Dashboard() {
   const [datasetError, setDatasetError] = useState<string | null>(null);
   const [activeConstraints, setActiveConstraints] = useState<SessionConstraintsPayload | null>(null);
   const [personas, setPersonas] = useState<any[]>([]);
+  const [conceptMap, setConceptMap] = useState<any>(null);
+  const [knowledgeStats, setKnowledgeStats] = useState<any>(null);
   
   const pollInterval = useRef<any>(null);
 
@@ -119,6 +124,8 @@ export function Dashboard() {
     setPhase("queued");
     setPhaseHistory([{ phase: "queued", detail: "Queued for execution", timestamp: new Date().toISOString() }]);
     setPersonas([]);
+    setConceptMap(null);
+    setKnowledgeStats(null);
 
     const domains = parseList(domainsInput);
     const modalities = parseList(modalitiesInput);
@@ -178,7 +185,19 @@ export function Dashboard() {
           if (s.gaps) setGaps(s.gaps);
           if (s.source_metadata) setSourceMetadata(s.source_metadata);
           if (s.soulMessages) setSoulMessages(s.soulMessages); 
+          if (s.concept_map) setConceptMap(s.concept_map);
           
+          // Poll global/session stats if available (or derived)
+          // Ideally this comes from session status directly if we added it, 
+          // or we can just derive from concept map for now.
+          if (s.concept_map) {
+             setKnowledgeStats({
+                 papers_indexed: Object.keys(s.source_metadata || {}).length,
+                 concepts_extracted: s.concept_map.nodes?.length || 0,
+                 relations_found: s.concept_map.edges?.length || 0,
+             });
+          }
+
           if (s.complete) {
             setIsGenerating(false);
             setStatus("Complete");
@@ -210,6 +229,7 @@ export function Dashboard() {
     <div className="grid grid-cols-12 gap-6 p-6 h-[calc(100vh-64px)] overflow-hidden">
       {/* LEFT COLUMN: Input & Status */}
       <div className="col-span-3 flex flex-col gap-6 h-full overflow-y-auto pr-2">
+        {/* ... (Keep existing Input Card) ... */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
@@ -435,6 +455,16 @@ export function Dashboard() {
             </CardContent>
         </Card>
 
+        {conceptMap && (
+            <div className="h-[400px]">
+                <ConceptMap 
+                    nodes={conceptMap.nodes} 
+                    edges={conceptMap.edges} 
+                    stats={knowledgeStats}
+                />
+            </div>
+        )}
+
         {gaps.length > 0 && (
             <div className="space-y-4">
                 <h2 className="text-xl font-bold tracking-tight flex items-center gap-2">
@@ -459,8 +489,27 @@ export function Dashboard() {
         )}
 
         <div className="space-y-4">
-            <h2 className="text-xl font-bold tracking-tight">Generated Hypotheses</h2>
-            <HypothesisList hypotheses={hypotheses} sourceMetadata={sourceMetadata} />
+            <Tabs defaultValue="hypotheses" className="w-full">
+                <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-xl font-bold tracking-tight">Results</h2>
+                    <TabsList>
+                        <TabsTrigger value="hypotheses" className="gap-2">
+                            <List className="w-4 h-4" /> Hypotheses
+                        </TabsTrigger>
+                        <TabsTrigger value="evidence" className="gap-2">
+                            <FileText className="w-4 h-4" /> Evidence Board
+                        </TabsTrigger>
+                    </TabsList>
+                </div>
+                
+                <TabsContent value="hypotheses">
+                    <HypothesisList hypotheses={hypotheses} sourceMetadata={sourceMetadata} />
+                </TabsContent>
+                
+                <TabsContent value="evidence" className="h-[600px]">
+                    <EvidenceBoard hypotheses={hypotheses} sourceMetadata={sourceMetadata} />
+                </TabsContent>
+            </Tabs>
         </div>
 
         {isGenerating && (
