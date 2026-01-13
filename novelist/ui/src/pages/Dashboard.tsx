@@ -11,6 +11,7 @@ import { HypothesisList, type Hypothesis } from "@/components/HypothesisList";
 import { ConceptMap } from "@/components/ConceptMap";
 import { EvidenceBoard } from "@/components/EvidenceBoard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/hooks/use-toast";
 
 type PhaseRecord = {
   phase: string;
@@ -19,6 +20,7 @@ type PhaseRecord = {
 };
 
 export function Dashboard() {
+  const { toast } = useToast();
   const [topic, setTopic] = useState("The effects of intermittent fasting on aging");
   const [isGenerating, setIsGenerating] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -47,6 +49,7 @@ export function Dashboard() {
   const [impactHistory, setImpactHistory] = useState<any[]>([]);
   
   const pollInterval = useRef<any>(null);
+  const lastPhase = useRef<string>("queued");
 
   const addLog = (label: string, text: string) => {
     setLogs(prev => [{label, text, ts: new Date()}, ...prev].slice(0, 20));
@@ -71,6 +74,11 @@ export function Dashboard() {
       await api.sendChatMessage(sessionId, msg);
     } catch (err: any) {
       addLog("error", "Failed to send: " + err.message);
+      toast({
+        variant: "destructive",
+        title: "Message Failed",
+        description: err.message,
+      });
     }
   };
 
@@ -79,6 +87,7 @@ export function Dashboard() {
     try {
       await api.pinDirective(sessionId, msg);
       addLog("system", `Pinned directive: ${msg}`);
+      toast({ title: "Directive Pinned", description: "This instruction will persist across iterations." });
     } catch (err: any) {
       addLog("error", "Failed to pin: " + err.message);
     }
@@ -116,6 +125,7 @@ export function Dashboard() {
     try {
       await api.regeneratePersona(sessionId, personaId);
       addLog("system", `Regenerating persona: ${personaId}`);
+      toast({ title: "Regenerating Persona", description: "The forge is creating a new expert..." });
     } catch (err: any) {
       addLog("error", "Failed to regenerate: " + err.message);
     }
@@ -146,6 +156,7 @@ export function Dashboard() {
     try {
       await api.investigateHypothesis(sessionId, hypothesisId);
       addLog("user", `Requested investigation for hypothesis ${hypothesisId}`);
+      toast({ title: "Investigation Queued", description: "The collective will focus on this next." });
     } catch (err: any) {
       addLog("error", "Failed to queue investigation: " + err.message);
     }
@@ -156,6 +167,7 @@ export function Dashboard() {
     try {
       await api.rerunSimulation(sessionId, hypothesisId);
       addLog("system", `Queued simulation rerun for ${hypothesisId}`);
+      toast({ title: "Simulation Rerun", description: "Rerunning verification model..." });
     } catch (err: any) {
       addLog("error", "Failed to rerun simulation: " + err.message);
     }
@@ -172,8 +184,10 @@ export function Dashboard() {
       a.download = `research_report_${sessionId}.${format === "json" ? "json" : "md"}`;
       a.click();
       addLog("system", `Exported as ${format.toUpperCase()}`);
+      toast({ title: "Export Successful", description: `Report saved as ${format.toUpperCase()}` });
     } catch (err: any) {
       addLog("error", "Export failed: " + err.message);
+      toast({ variant: "destructive", title: "Export Failed", description: err.message });
     }
   };
 
@@ -182,8 +196,38 @@ export function Dashboard() {
     try {
       await api.buryHypothesis(sessionId, hypothesisId, "Rejected by researcher after review");
       addLog("user", `Sent hypothesis ${hypothesisId} to Graveyard`);
+      toast({ title: "Hypothesis Buried", description: "Added to evolutionary memory." });
     } catch (err: any) {
       addLog("error", "Failed to bury hypothesis: " + err.message);
+    }
+  };
+
+  const handleRetrySession = async () => {
+    if (!sessionId) return;
+    try {
+        await api.retrySession(sessionId);
+        setIsGenerating(true);
+        setStatus("Retrying");
+        addLog("system", "Retrying session from last checkpoint...");
+        toast({ title: "Retrying Session", description: "Resuming form last state." });
+    } catch (err: any) {
+        addLog("error", "Retry failed: " + err.message);
+        toast({ variant: "destructive", title: "Retry Failed", description: err.message });
+    }
+  };
+
+  const handleDownloadLogs = async () => {
+    if (!sessionId) return;
+    try {
+        const logs = await api.getSessionLogs(sessionId);
+        const blob = new Blob([logs.content], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `session_${sessionId}_error.log`;
+        a.click();
+    } catch (err: any) {
+        toast({ variant: "destructive", title: "Log Download Failed", description: err.message });
     }
   };
 
@@ -213,6 +257,7 @@ export function Dashboard() {
     setPersonas([]);
     setConceptMap(null);
     setKnowledgeStats(null);
+    lastPhase.current = "queued";
 
     const domains = parseList(domainsInput);
     const modalities = parseList(modalitiesInput);
@@ -244,11 +289,13 @@ export function Dashboard() {
       setStatus((session.phase || "queued").replace(/^./, (c: string) => c.toUpperCase()));
       setStatusDetail("Queued for execution");
       addLog("system", "Session started: " + session.id);
+      toast({ title: "Session Started", description: `Researching: ${topic}` });
     } catch (err: any) {
       console.error(err);
       setStatus("Error: " + err.message);
       setIsGenerating(false);
       addLog("error", err.message);
+      toast({ variant: "destructive", title: "Start Failed", description: err.message });
     }
   };
 
@@ -262,6 +309,16 @@ export function Dashboard() {
           const prettyPhase = phaseValue.charAt(0).toUpperCase() + phaseValue.slice(1);
           setStatus(prettyPhase);
           setPhase(phaseValue);
+          
+          // Phase transition toast
+          if (phaseValue !== lastPhase.current) {
+             toast({ 
+                 title: `Phase: ${prettyPhase}`, 
+                 description: s.status_detail || "Advancing to next stage..." 
+             });
+             lastPhase.current = phaseValue;
+          }
+
           setLoop(s.iteration || 0);
           if (s.phase_history) setPhaseHistory(s.phase_history);
           setStatusDetail(s.status_detail || "");
@@ -293,6 +350,7 @@ export function Dashboard() {
             setStatusDetail(s.status_detail || "Session finalized");
             if (pollInterval.current) clearInterval(pollInterval.current);
             addLog("system", "Generation complete");
+            toast({ title: "Research Complete", description: "Session finalized successfully." });
           }
           
           if (s.error) {
@@ -301,6 +359,17 @@ export function Dashboard() {
              setStatusDetail(s.error);
              addLog("error", s.error);
              if (pollInterval.current) clearInterval(pollInterval.current);
+             toast({ 
+                 variant: "destructive", 
+                 title: "Session Error", 
+                 description: s.error,
+                 action: (
+                     <div className="flex gap-2">
+                         <Button size="sm" variant="secondary" onClick={handleDownloadLogs}>Logs</Button>
+                         <Button size="sm" onClick={handleRetrySession}>Retry</Button>
+                     </div>
+                 )
+             });
           }
 
         } catch (err) {
@@ -312,7 +381,7 @@ export function Dashboard() {
     return () => {
       if (pollInterval.current) clearInterval(pollInterval.current);
     };
-  }, [sessionId, isGenerating]);
+  }, [sessionId, isGenerating, toast]);
 
   return (
     <div className="grid grid-cols-12 gap-6 p-6 h-[calc(100vh-64px)] overflow-hidden">

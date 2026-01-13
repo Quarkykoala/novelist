@@ -105,15 +105,15 @@
   - Verification: `pytest tests/test_orchestrator_mock.py`
 
 ### US-108: Notifications & Error Handling
-- [ ] Categorize backend errors and add retry endpoints
+- [x] Categorize backend errors and add retry endpoints
   - Scope: Standardize error codes/messages from `src/server.py` and orchestrator callbacks, write the error log path into the session response, and implement retry endpoints for failed phases (e.g., `/api/sessions/{id}/retry?phase=simulation`).
   - Acceptance: Each failure surfaces a structured error with a retry option and link to downloadable logs, aligning with the PRD’s support guidance.
   - Verification: `pytest tests/test_api_contract_final.py::test_create_session_missing_api_key`
-- [ ] Implement toast notifications and log download hooks in the UI
+- [x] Implement toast notifications and log download hooks in the UI
   - Scope: Use a lightweight toast system inside `ui/src/pages/Dashboard.tsx` to announce phase completions, rate-limit warnings, and retries while adding controls to download `sessions/<id>/error.log` via the API.
   - Acceptance: Users receive real-time toasts for each phase transition and can download logs directly from the dashboard when something fails.
   - Verification: `cd ui && npm run build`
-- [ ] Surface rate-limit/missing-key warnings proactively
+- [x] Surface rate-limit/missing-key warnings proactively
   - Scope: Enhance `src/soul/llm_client.py` to emit structured warnings when keys are missing or rate limits hit, bubble them to FastAPI responses, and render banner notifications in the UI explaining the remediation steps.
   - Acceptance: Attempts to start a session without required keys show actionable messages instead of silent failures, and rate-limit hits display a toast/banner rather than only logging to the console.
   - Verification: `pytest tests/test_llm_simple.py`

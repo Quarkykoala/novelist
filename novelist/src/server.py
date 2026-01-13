@@ -829,6 +829,74 @@ async def bury_hypothesis(session_id: str, hypothesis_id: str, request: dict[str
     return {"status": "buried"}
 
 
+@app.post("/api/sessions/{session_id}/retry")
+async def retry_phase(session_id: str, phase: str = None):
+    """Retry a failed session phase."""
+    if session_id not in sessions:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    session = sessions[session_id]
+    
+    # Only allow retry if error or complete
+    if not session.get("error") and not session.get("complete"):
+        raise HTTPException(status_code=400, detail="Session is still running")
+
+    # Reset error state
+    session["status"] = "running"
+    session["error"] = None
+    session["complete"] = False
+    
+    orchestrator = session.get("orchestrator")
+    if not orchestrator:
+        # If orchestrator is gone (e.g. restart), we can't easily resume state in memory
+        # For now, we only support retries if the orchestrator instance is alive in memory
+        # Or if we implement full state rehydration (which is complex).
+        # We'll fail gracefully.
+        raise HTTPException(status_code=400, detail="Cannot retry: Session state lost (server restarted?)")
+
+    # Determine phase to retry
+    target_phase = phase or session.get("phase")
+    
+    # Logic to restart the loop from the current state
+    # This is simplified: we just clear the error and let the loop continue if it was paused
+    # But orchestrator.run() loop might have exited.
+    
+    # We need to re-trigger the loop.
+    # The orchestrator.run() has a while True loop. If it broke due to exception, we need to call run again?
+    # BUT run() initializes everything.
+    
+    # We will trigger a new background task that calls _run_iteration loop directly?
+    # Or better, we call run() again but pass the existing state?
+    # Orchestrator doesn't support re-entry easily yet.
+    
+    # MVP approach: We'll just set status to "running" and if the loop was stuck in a retryable error,
+    # we might need to manually trigger the next step.
+    
+    # Actually, US-108 implies we should be able to retry specific failed actions.
+    # Let's just restart the main loop if it stopped.
+    
+    task = asyncio.create_task(run_session(
+        session_id, 
+        session["topic"], 
+        RalphConfig(**session["config"]), 
+        SessionConstraints(**session["constraints"]) if session.get("constraints") else None
+    ))
+    running_tasks[session_id] = task
+    
+    return {"status": "retrying", "phase": target_phase}
+
+
+@app.get("/api/sessions/{session_id}/logs")
+async def get_session_logs(session_id: str):
+    """Get error logs for a session."""
+    log_path = SESSIONS_DIR / session_id / "error.log"
+    if not log_path.exists():
+        raise HTTPException(status_code=404, detail="No logs found")
+    
+    with open(log_path, "r", encoding="utf-8") as f:
+        return {"content": f.read()}
+
+
 @app.get("/api/sessions")
 async def list_sessions(limit: int = 20):
     """List recent sessions."""

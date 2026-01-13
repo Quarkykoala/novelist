@@ -225,7 +225,9 @@ class LLMClient:
                         last_error = e
                         break # Try next provider
 
-        print(f"[ERROR] All providers and keys failed. Last error: {last_error}")
+        if last_error:
+            raise RuntimeError(f"LLM Generation failed across all providers. Last error: {last_error}")
+        
         return None
 
     def _resolve_model(self, provider: str, override: Optional[str]) -> str:

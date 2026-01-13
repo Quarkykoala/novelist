@@ -160,6 +160,16 @@ export class API {
     });
   }
 
+  async retrySession(sessionId: string, phase?: string) {
+    return this.request(`/api/sessions/${sessionId}/retry${phase ? `?phase=${phase}` : ''}`, {
+      method: "POST",
+    });
+  }
+
+  async getSessionLogs(sessionId: string) {
+    return this.request(`/api/sessions/${sessionId}/logs`);
+  }
+
   async getSessions() {
     return this.request("/api/sessions");
   }

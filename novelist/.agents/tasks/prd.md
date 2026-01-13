@@ -66,7 +66,7 @@ Accessibility considerations: keyboard navigation, high-contrast themes for plot
 - Controls to pin directives (e.g., “prioritize bio-safe materials”) and view effect history.
 - Safety guardrails to confirm destructive commands before execution.
 
-### [ ] US-108: Notifications & Error Handling
+### [x] US-108: Notifications & Error Handling
 - Toasts/status banners for phase completions, API rate issues, or missing keys.
 - Retry actions for failed steps, plus “contact support/log download” option.
 

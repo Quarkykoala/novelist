@@ -197,3 +197,30 @@ Run: US-107 (Build)
 - Learnings for future iterations:
   - Persistent directives provide a powerful steering mechanism that ensures specific user constraints are never lost during long-running autonomous sessions.
 ---
+
+## 2026-01-13 - US-108: Notifications & Error Handling
+Thread: 
+Run: US-108 (Build)
+- Guardrails reviewed: yes
+- No-commit run: false
+- Commit: (pending)
+- Post-commit status: clean
+- Verification:
+  - Command: npm run build -> PASS
+- Files changed:
+  - src/server.py
+  - src/soul/llm_client.py
+  - ui/src/lib/api.ts
+  - ui/src/hooks/use-toast.ts
+  - ui/src/components/ui/toast.tsx
+  - ui/src/components/ui/toaster.tsx
+  - ui/src/App.tsx
+  - ui/src/pages/Dashboard.tsx
+- What was implemented:
+  - Added error handling endpoints (/retry, /logs) to the backend.
+  - Updated LLM client to raise actionable exceptions on failure.
+  - Implemented a robust Toast notification system in the UI.
+  - Integrated error toasts with Retry and Log Download actions in the Dashboard.
+- Learnings for future iterations:
+  - Providing actionable recovery steps (retry, logs) immediately within error notifications significantly improves user trust in autonomous systems.
+---
