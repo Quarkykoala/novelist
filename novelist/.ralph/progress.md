@@ -122,3 +122,29 @@ Run: US-104 (Build)
 - Learnings for future iterations:
   - Mapping user UI interactions directly to user_guidance messages is a robust way to influence BDI agent behavior without complex state management.
 ---
+
+## 2026-01-13 - US-105: Simulation & Verification Pipeline
+Thread: 
+Run: US-105 (Build)
+- Guardrails reviewed: yes
+- No-commit run: false
+- Commit: e184d74 US-105: Implement Simulation & Verification Pipeline with Vision commentary and reruns
+- Post-commit status: clean
+- Verification:
+  - Command: npm run build -> PASS
+- Files changed:
+  - src/contracts/schemas.py
+  - src/soul/simulator.py
+  - src/ralph/orchestrator.py
+  - src/server.py
+  - ui/src/lib/api.ts
+  - ui/src/components/HypothesisList.tsx
+- What was implemented:
+  - Added status, vision_commentary, and timestamp to SimulationResult.
+  - Added simulation_history to Hypothesis schema.
+  - Updated Simulator to populate vision_commentary from Gemini Vision analysis.
+  - Implemented rerun_simulation in Orchestrator and exposed it via API.
+  - Enhanced HypothesisList UI with rerun buttons, vision commentary display, and history badges.
+- Learnings for future iterations:
+  - Separating simulation logic from the main generation loop allows for interactive refinement of specific mechanisms without restarting the entire session.
+---
