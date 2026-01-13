@@ -39,3 +39,34 @@ Run summary: /mnt/c/users/lenovo/projects/novelist/.ralph/runs/run-20260113-0804
   - The monorepo structure requires careful git handling.
   - Testing with pytest on Windows via .venv-win needs explicit path handling or PYTHONPATH.
 ---
+
+## 2026-01-13 - US-102: Persona Forge Module
+Thread: 
+Run: US-102 (Build)
+- Guardrails reviewed: yes
+- No-commit run: false
+- Commit: 5e5bc58 US-102: Complete Persona Forge Module with locking, regeneration, and weighted sampling
+- Post-commit status: clean
+- Verification:
+  - Command: pytest tests/test_persona_forge_api.py -> PASS
+  - Command: npm run build -> PASS
+- Files changed:
+  - src/contracts/schemas.py
+  - src/soul/prompts/persona_forge.py
+  - src/soul/prompts/creative.py
+  - src/soul/prompts/risk_taker.py
+  - src/soul/collective.py
+  - src/ralph/orchestrator.py
+  - src/server.py
+  - ui/src/lib/api.ts
+  - ui/src/pages/Dashboard.tsx
+  - tests/test_persona_forge_api.py
+- What was implemented:
+  - Centralized Persona schema with id, locked, and weight fields.
+  - Added regeneration and locking capabilities to PersonaForge.
+  - Updated SoulCollective to sample hypotheses proportionally to persona weights.
+  - Implemented persona management endpoints in the backend server.
+  - Added UI controls (lock, regenerate, weight slider) to the Dashboard roster panel.
+- Learnings for future iterations:
+  - Weighted sampling in the generation phase allows researchers to bias the collective toward specialist or radical thinking mid-run.
+---
