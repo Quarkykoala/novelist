@@ -1,11 +1,31 @@
 import { cn } from "@/lib/utils";
 
+type PhaseRecord = {
+  phase: string;
+  detail?: string;
+  timestamp?: string;
+};
+
 interface ReactorProps {
   isActive: boolean;
   status: string;
+  phase: string;
+  history?: PhaseRecord[];
+  statusDetail?: string;
 }
 
-export function Reactor({ isActive, status }: ReactorProps) {
+const STAGES = [
+  { key: "queued", label: "Queued" },
+  { key: "forging", label: "Forging" },
+  { key: "mapping", label: "Mapping" },
+  { key: "debating", label: "Debating" },
+  { key: "verifying", label: "Verifying" },
+  { key: "complete", label: "Complete" },
+  { key: "error", label: "Error" },
+];
+
+export function Reactor({ isActive, status, phase, history = [], statusDetail }: ReactorProps) {
+  const currentIndex = STAGES.findIndex((stage) => stage.key === phase);
   return (
     <div className="relative flex flex-col items-center justify-center py-8">
       <div className="relative w-48 h-48 flex items-center justify-center">
@@ -41,6 +61,41 @@ export function Reactor({ isActive, status }: ReactorProps) {
         isActive ? "text-primary animate-pulse" : "text-muted-foreground"
       )}>
         {status}
+      </div>
+      {statusDetail && (
+        <div className="text-xs text-muted-foreground mt-1 text-center max-w-sm">
+          {statusDetail}
+        </div>
+      )}
+      <div className="w-full mt-8 px-6">
+        <div className="flex items-center justify-between">
+          {STAGES.map((stage, idx) => {
+            const stageReached = currentIndex >= idx && currentIndex !== -1;
+            const detail = [...history].reverse().find((entry: PhaseRecord) => entry.phase === stage.key)?.detail;
+            return (
+              <div key={stage.key} className="flex flex-col items-center text-center flex-1">
+                <div
+                  className={cn(
+                    "w-8 h-8 rounded-full border flex items-center justify-center text-xs font-semibold transition-colors",
+                    stageReached
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border text-muted-foreground"
+                  )}
+                >
+                  {idx + 1}
+                </div>
+                <span className="mt-2 text-[10px] uppercase tracking-wider text-muted-foreground">
+                  {stage.label}
+                </span>
+                {detail && (
+                  <span className="mt-1 text-[10px] text-muted-foreground/70 line-clamp-2">
+                    {detail}
+                  </span>
+                )}
+              </div>
+          );
+          })}
+        </div>
       </div>
     </div>
   );

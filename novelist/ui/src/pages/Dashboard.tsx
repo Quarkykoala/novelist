@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { api } from "@/lib/api";
+import { api, type SessionConstraintsPayload } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -9,11 +9,20 @@ import { Reactor } from "@/components/Reactor";
 import { SoulFeed, type SoulMessage } from "@/components/SoulFeed";
 import { HypothesisList, type Hypothesis } from "@/components/HypothesisList";
 
+type PhaseRecord = {
+  phase: string;
+  detail?: string;
+  timestamp?: string;
+};
+
 export function Dashboard() {
   const [topic, setTopic] = useState("The effects of intermittent fasting on aging");
   const [isGenerating, setIsGenerating] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [status, setStatus] = useState("Idle");
+  const [statusDetail, setStatusDetail] = useState("");
+  const [phase, setPhase] = useState("queued");
+  const [phaseHistory, setPhaseHistory] = useState<PhaseRecord[]>([]);
   const [loop, setLoop] = useState(0);
   const [maxLoops] = useState(4);
   const [hypotheses, setHypotheses] = useState<Hypothesis[]>([]);
@@ -22,6 +31,13 @@ export function Dashboard() {
   const [soulMessages, setSoulMessages] = useState<SoulMessage[]>([]);
   const [chatMessage, setChatMessage] = useState("");
   const [logs, setLogs] = useState<{label: string, text: string, ts: Date}[]>([]);
+  const [domainsInput, setDomainsInput] = useState("");
+  const [modalitiesInput, setModalitiesInput] = useState("");
+  const [timelineInput, setTimelineInput] = useState("");
+  const [datasetInput, setDatasetInput] = useState("");
+  const [datasetError, setDatasetError] = useState<string | null>(null);
+  const [activeConstraints, setActiveConstraints] = useState<SessionConstraintsPayload | null>(null);
+  const [personas, setPersonas] = useState<any[]>([]);
   
   const pollInterval = useRef<any>(null);
 
@@ -42,6 +58,17 @@ export function Dashboard() {
     }
   };
 
+  const parseList = (value: string) => value.split(",").map((entry) => entry.trim()).filter(Boolean);
+  const parseDatasetLinks = (value: string) => value.split(/[\n,]+/).map((entry) => entry.trim()).filter(Boolean);
+  const isValidUrl = (value: string) => {
+    try {
+      new URL(value);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
   const handleGenerate = async () => {
     if (!topic) return;
     
@@ -50,11 +77,41 @@ export function Dashboard() {
     setSoulMessages([]);
     setLogs([]);
     setLoop(0);
-    setStatus("Initializing...");
+    setStatus("Queued");
+    setStatusDetail("Queued for execution");
+    setPhase("queued");
+    setPhaseHistory([{ phase: "queued", detail: "Queued for execution", timestamp: new Date().toISOString() }]);
+    setPersonas([]);
+
+    const domains = parseList(domainsInput);
+    const modalities = parseList(modalitiesInput);
+    const datasetLinks = parseDatasetLinks(datasetInput);
+    const invalidLink = datasetLinks.find((link) => !isValidUrl(link));
+    if (invalidLink) {
+      setDatasetError(`Invalid dataset URL: ${invalidLink}`);
+      setIsGenerating(false);
+      return;
+    }
+    setDatasetError(null);
+
+    const constraintsPayload: SessionConstraintsPayload = {
+      domains,
+      modalities,
+      timeline: timelineInput || undefined,
+      dataset_links: datasetLinks,
+    };
+
+    setActiveConstraints(constraintsPayload);
 
     try {
-      const session = await api.startSession(topic);
+      const session = await api.startSession(topic, {
+        maxIterations: maxLoops,
+        constraints: constraintsPayload,
+      });
       setSessionId(session.id);
+      setPhase(session.phase || "queued");
+      setStatus((session.phase || "queued").replace(/^./, (c: string) => c.toUpperCase()));
+      setStatusDetail("Queued for execution");
       addLog("system", "Session started: " + session.id);
     } catch (err: any) {
       console.error(err);
@@ -70,8 +127,15 @@ export function Dashboard() {
         try {
           const s = await api.getSessionStatus(sessionId);
           
-          setStatus(s.phase || "Processing");
+          const phaseValue = s.phase || "processing";
+          const prettyPhase = phaseValue.charAt(0).toUpperCase() + phaseValue.slice(1);
+          setStatus(prettyPhase);
+          setPhase(phaseValue);
           setLoop(s.iteration || 0);
+          if (s.phase_history) setPhaseHistory(s.phase_history);
+          setStatusDetail(s.status_detail || "");
+          if (s.constraints) setActiveConstraints(s.constraints);
+          if (s.personas) setPersonas(s.personas);
           
           if (s.hypotheses) setHypotheses(s.hypotheses);
           if (s.gaps) setGaps(s.gaps);
@@ -81,6 +145,7 @@ export function Dashboard() {
           if (s.complete) {
             setIsGenerating(false);
             setStatus("Complete");
+            setStatusDetail(s.status_detail || "Session finalized");
             if (pollInterval.current) clearInterval(pollInterval.current);
             addLog("system", "Generation complete");
           }
@@ -88,6 +153,7 @@ export function Dashboard() {
           if (s.error) {
              setIsGenerating(false);
              setStatus("Error");
+             setStatusDetail(s.error);
              addLog("error", s.error);
              if (pollInterval.current) clearInterval(pollInterval.current);
           }
@@ -115,12 +181,53 @@ export function Dashboard() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Research Topic</label>
+                <label className="text-sm font-medium">Research Topic</label>
+                <Input 
+                  value={topic} 
+                  onChange={(e) => setTopic(e.target.value)} 
+                  placeholder="e.g. CRISPR delivery..."
+                />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Domains</label>
               <Input 
-                value={topic} 
-                onChange={(e) => setTopic(e.target.value)} 
-                placeholder="e.g. CRISPR delivery..."
+                value={domainsInput}
+                onChange={(e) => setDomainsInput(e.target.value)}
+                placeholder="comma separated e.g. longevity, systems biology"
               />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Modalities</label>
+              <Input 
+                value={modalitiesInput}
+                onChange={(e) => setModalitiesInput(e.target.value)}
+                placeholder="e.g. simulation, wet lab"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Timeline Pressure</label>
+              <Input 
+                value={timelineInput}
+                onChange={(e) => setTimelineInput(e.target.value)}
+                placeholder="e.g. deliver recommendations within 2 weeks"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Dataset Links</label>
+              <textarea
+                value={datasetInput}
+                onChange={(e) => setDatasetInput(e.target.value)}
+                placeholder="One URL per line or comma separated"
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                rows={3}
+              />
+              {datasetError && (
+                <p className="text-xs text-destructive">{datasetError}</p>
+              )}
             </div>
             
             <div className="space-y-2">
@@ -131,11 +238,63 @@ export function Dashboard() {
                 </div>
             </div>
 
+            {activeConstraints && (
+              <div className="rounded-md border bg-muted/30 p-3 space-y-1 text-xs">
+                <p className="font-semibold uppercase text-[10px] tracking-wider text-muted-foreground">Active constraints</p>
+                <div className="flex flex-wrap gap-2">
+                  {activeConstraints.domains?.map((d) => (
+                    <Badge key={d} variant="outline">{d}</Badge>
+                  ))}
+                  {activeConstraints.modalities?.map((m) => (
+                    <Badge key={m} variant="secondary">{m}</Badge>
+                  ))}
+                </div>
+                {activeConstraints.timeline && (
+                  <p className="text-muted-foreground">Timeline: {activeConstraints.timeline}</p>
+                )}
+                {activeConstraints.dataset_links?.length ? (
+                  <div className="text-muted-foreground/80">
+                    Datasets:
+                    <ul className="list-disc ml-4">
+                      {activeConstraints.dataset_links.map((link) => (
+                        <li key={link} className="truncate">{link}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+              </div>
+            )}
+
+            {personas.length > 0 && (
+              <div className="rounded-md border bg-muted/30 p-3 space-y-2 text-xs">
+                <p className="font-semibold uppercase text-[10px] tracking-wider text-muted-foreground">Persona roster</p>
+                <div className="space-y-2">
+                  {personas.map((persona) => (
+                    <div key={`${persona.soul_role}-${persona.name}`} className="rounded-md border bg-background/80 p-2">
+                      <div className="flex items-center justify-between">
+                        <span className="font-semibold">{persona.name}</span>
+                        <Badge variant="outline" className="text-[10px] uppercase">
+                          {persona.soul_role?.replace("_", " ")}
+                        </Badge>
+                      </div>
+                      <p className="text-muted-foreground">{persona.role}</p>
+                      {persona.objective && (
+                        <p className="text-muted-foreground/80">Objective: {persona.objective}</p>
+                      )}
+                      {typeof persona.weight === "number" && (
+                        <p className="text-muted-foreground/80">Weight: {persona.weight}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <Button 
                 className="w-full mt-4" 
                 size="lg" 
                 onClick={handleGenerate} 
-                disabled={isGenerating}
+                disabled={isGenerating || !!datasetError}
             >
               {isGenerating ? (
                   <>
@@ -182,7 +341,13 @@ export function Dashboard() {
       <div className="col-span-6 flex flex-col gap-6 h-full overflow-y-auto pr-2 pb-20">
         <Card>
             <CardContent className="pt-6">
-                <Reactor isActive={isGenerating} status={status} />
+                <Reactor 
+                  isActive={isGenerating} 
+                  status={status} 
+                  phase={phase}
+                  history={phaseHistory}
+                  statusDetail={statusDetail}
+                />
                 
                 <div className="flex justify-center mt-4 gap-8 text-sm text-muted-foreground">
                     <div className="flex flex-col items-center">

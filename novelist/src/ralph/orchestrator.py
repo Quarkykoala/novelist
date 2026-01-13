@@ -28,6 +28,8 @@ from src.contracts.schemas import (
     IterationTrace,
     RalphConfig,
     ScoreBlock,
+    SessionConstraints,
+    SessionPhase,
     SessionResult,
     SoulRole,
 )
@@ -103,25 +105,46 @@ class RalphOrchestrator:
         
         # Knowledge Store
         self.paper_store: dict[str, ArxivPaper] = {}
-        
+
         # User Interaction
         self.user_message_queue: asyncio.Queue[str] = asyncio.Queue()
+        self.constraints: SessionConstraints | None = None
+        self.current_phase: SessionPhase = SessionPhase.QUEUED
+        self.persona_roster: list[dict[str, Any]] = []
 
     async def inject_user_message(self, message: str) -> None:
         """Receive a message from the user."""
         await self.user_message_queue.put(message)
-        await self._emit_status("User message received.")
+        await self._emit_status(self.current_phase, "User message received.")
     
-    async def _emit_status(self, status_msg: str) -> None:
+    async def _emit_status(self, phase: SessionPhase, detail: str | None = None) -> None:
         """Emit a status update via callback."""
+        self.current_phase = phase
+        payload = {
+            "phase": phase.value if isinstance(phase, SessionPhase) else str(phase),
+            "detail": detail,
+            "timestamp": datetime.now().isoformat(),
+        }
+
         if "on_status_change" in self.callbacks:
             try:
                 if asyncio.iscoroutinefunction(self.callbacks["on_status_change"]):
-                    await self.callbacks["on_status_change"](status_msg)
+                    await self.callbacks["on_status_change"](payload)
                 else:
-                    self.callbacks["on_status_change"](status_msg)
+                    self.callbacks["on_status_change"](payload)
             except Exception as e:
                 print(f"[WARN] Error in status callback: {e}")
+
+    async def _emit_personas(self, personas: list[dict[str, Any]]) -> None:
+        """Emit persona roster updates via callback."""
+        if "on_personas" in self.callbacks:
+            try:
+                if asyncio.iscoroutinefunction(self.callbacks["on_personas"]):
+                    await self.callbacks["on_personas"](personas)
+                else:
+                    self.callbacks["on_personas"](personas)
+            except Exception as e:
+                print(f"[WARN] Error in personas callback: {e}")
 
     async def _emit_trace(self, trace: IterationTrace) -> None:
         """Emit a trace update via callback."""
@@ -183,6 +206,9 @@ class RalphOrchestrator:
         self,
         topic: str,
         output_dir: Path | None = None,
+        *,
+        session_id: str | None = None,
+        constraints: SessionConstraints | None = None,
     ) -> SessionResult:
         """Run a complete hypothesis generation session.
 
@@ -194,24 +220,69 @@ class RalphOrchestrator:
             SessionResult with final hypotheses and traces
         """
         # Initialize session
-        self.session_id = str(uuid.uuid4())[:8]
+        self.session_id = session_id or str(uuid.uuid4())[:8]
         self.topic = topic
         self.start_time = datetime.now()
         self.iteration = 0
+        self.constraints = constraints
+        self.current_phase = SessionPhase.QUEUED
 
         # Phase 0: Dynamic Persona Generation (Gemini 3 Adaptive Team)
-        await self._emit_status("Assembling specialized research team...")
+        await self._emit_status(SessionPhase.FORGING, "Assembling specialized research team...")
         try:
-            specialist, maverick = await self.persona_forge.forge_team(topic)
-            
+            roster = await self.persona_forge.forge_team(topic)
+            specialist = roster.get("specialist")
+            maverick = roster.get("maverick")
+            skeptic = roster.get("skeptic")
+            if not specialist or not maverick or not skeptic:
+                raise ValueError("Persona roster incomplete")
+
             # Inject into Collective
-            self.collective.creative.set_persona(specialist.name, specialist.system_instruction)
-            self.collective.risk_taker.set_persona(maverick.name, maverick.system_instruction)
-            
-            await self._emit_status(f"Team Assembled: {specialist.name} ({specialist.role}) & {maverick.name} ({maverick.role})")
+            if specialist:
+                self.collective.creative.set_persona(specialist.name, specialist.system_instruction)
+            if maverick:
+                self.collective.risk_taker.set_persona(maverick.name, maverick.system_instruction)
+            if skeptic:
+                self.collective.skeptic.set_persona(skeptic.name, skeptic.system_instruction)
+
+            self.persona_roster = [
+                {
+                    "name": specialist.name,
+                    "role": specialist.role,
+                    "style": specialist.style,
+                    "objective": specialist.objective,
+                    "weight": specialist.weight,
+                    "soul_role": "creative",
+                },
+                {
+                    "name": maverick.name,
+                    "role": maverick.role,
+                    "style": maverick.style,
+                    "objective": maverick.objective,
+                    "weight": maverick.weight,
+                    "soul_role": "risk_taker",
+                },
+                {
+                    "name": skeptic.name,
+                    "role": skeptic.role,
+                    "style": skeptic.style,
+                    "objective": skeptic.objective,
+                    "weight": skeptic.weight,
+                    "soul_role": "skeptic",
+                },
+            ]
+            await self._emit_personas(self.persona_roster)
+
+            await self._emit_status(
+                SessionPhase.FORGING,
+                (
+                    f"Team Assembled: {specialist.name} ({specialist.role}), "
+                    f"{maverick.name} ({maverick.role}), {skeptic.name} ({skeptic.role})"
+                ),
+            )
             # Also store in agent beliefs for context
             self.agent.perceive({
-                "active_personas": [specialist.name, maverick.name]
+                "active_personas": [p["name"] for p in self.persona_roster]
             })
             
             # Emit Team Announcement Trace
@@ -226,7 +297,41 @@ class RalphOrchestrator:
             
         except Exception as e:
             print(f"[WARN] Failed to forge personas: {e}")
-            await self._emit_status("Failed to assemble team; using default agents.")
+            fallback = self.persona_forge._get_fallback_personas()
+            specialist = fallback["specialist"]
+            maverick = fallback["maverick"]
+            skeptic = fallback["skeptic"]
+            self.collective.creative.set_persona(specialist.name, specialist.system_instruction)
+            self.collective.risk_taker.set_persona(maverick.name, maverick.system_instruction)
+            self.collective.skeptic.set_persona(skeptic.name, skeptic.system_instruction)
+            self.persona_roster = [
+                {
+                    "name": specialist.name,
+                    "role": specialist.role,
+                    "style": specialist.style,
+                    "objective": specialist.objective,
+                    "weight": specialist.weight,
+                    "soul_role": "creative",
+                },
+                {
+                    "name": maverick.name,
+                    "role": maverick.role,
+                    "style": maverick.style,
+                    "objective": maverick.objective,
+                    "weight": maverick.weight,
+                    "soul_role": "risk_taker",
+                },
+                {
+                    "name": skeptic.name,
+                    "role": skeptic.role,
+                    "style": skeptic.style,
+                    "objective": skeptic.objective,
+                    "weight": skeptic.weight,
+                    "soul_role": "skeptic",
+                },
+            ]
+            await self._emit_personas(self.persona_roster)
+            await self._emit_status(SessionPhase.FORGING, "Failed to assemble team; using default agents.")
 
         # Set up agent
         self.agent.reset(topic)
@@ -251,13 +356,14 @@ class RalphOrchestrator:
             await self._run_iteration()
 
         # Build result
+        final_reason = reason or "Complete"
         result = SessionResult(
             session_id=self.session_id,
             topic=topic,
             started_at=self.start_time,
             completed_at=datetime.now(),
             iterations_completed=self.iteration,
-            stop_reason=reason,
+            stop_reason=final_reason,
             final_hypotheses=self.hypotheses[: self.config.max_hypotheses],
             traces=list(self.memory.episodic.episodes),
             total_tokens_used=self.total_tokens,
@@ -265,11 +371,14 @@ class RalphOrchestrator:
             papers_ingested=self.agent.get_belief("papers_ingested") or 0,
             concept_map=self.concept_map,
             source_metadata=self.paper_store,
+            constraints=self.constraints,
         )
 
         # Save session if output_dir provided
         if output_dir:
             await self._save_session(output_dir, result)
+
+        await self._emit_status(SessionPhase.COMPLETE, final_reason)
 
         return result
 
@@ -355,7 +464,10 @@ class RalphOrchestrator:
 
                 scored = sorted((( _score_paper(p), p) for p in papers), key=lambda pair: pair[0], reverse=True)
                 if scored and scored[0][0] == 0:
-                    await self._emit_status("No relevant papers found for query; skipping literature pipeline.")
+                    await self._emit_status(
+                        SessionPhase.MAPPING,
+                        "No relevant papers found for query; skipping literature pipeline.",
+                    )
                     return
                 papers = [p for _, p in scored]
             papers = papers[:paper_limit]
@@ -368,7 +480,10 @@ class RalphOrchestrator:
                 return
 
             # Phase 1: Global Concept Mapping (Gemini 3 Competition Feature: Long Context)
-            await self._emit_status(f"Building Global Concept Map from {len(papers)} papers...")
+            await self._emit_status(
+                SessionPhase.MAPPING,
+                f"Building Global Concept Map from {len(papers)} papers...",
+            )
             builder = ConceptMapBuilder(model=self.config.pro_model)
             self.concept_map = await builder.build_global_map_from_abstracts(papers)
             
@@ -389,7 +504,10 @@ class RalphOrchestrator:
             self.total_cost += builder.total_cost
 
             # Phase 2: Targeted Claim Extraction for Grounding
-            await self._emit_status("Extracting quantitative baselines... (0/{})".format(claim_limit))
+            await self._emit_status(
+                SessionPhase.MAPPING,
+                "Extracting quantitative baselines... (0/{})".format(claim_limit),
+            )
             for idx, paper in enumerate(papers[:claim_limit], start=1):
                 claims = await self.claim_extractor.extract_claims(
                     paper_id=paper.arxiv_id,
@@ -397,10 +515,16 @@ class RalphOrchestrator:
                     abstract=paper.abstract,
                 )
                 self.claims.extend(claims)
-                await self._emit_status(f"Extracting quantitative baselines... ({idx}/{claim_limit})")
+                await self._emit_status(
+                    SessionPhase.MAPPING,
+                    f"Extracting quantitative baselines... ({idx}/{claim_limit})",
+                )
             
             self._update_costs()
-            await self._emit_status(f"Global Knowledge Base Ready: {len(self.concept_map.nodes)} concepts, {len(self.gaps)} trans-paper gaps.")
+            await self._emit_status(
+                SessionPhase.MAPPING,
+                f"Global Knowledge Base Ready: {len(self.concept_map.nodes)} concepts, {len(self.gaps)} trans-paper gaps.",
+            )
 
             # Update beliefs
             self.agent.perceive({
@@ -430,9 +554,15 @@ class RalphOrchestrator:
             self._add_trace(f"Integrating user guidance: {msg[:50]}...")
         
         if self.memory.working.user_guidance:
-            await self._emit_status(f"Iteration {self.iteration}: Pivoting based on user feedback...")
+            await self._emit_status(
+                SessionPhase.DEBATING,
+                f"Iteration {self.iteration}: Pivoting based on user feedback...",
+            )
         else:
-            await self._emit_status(f"Iteration {self.iteration}: Deliberating with mode {mode.value}...")
+            await self._emit_status(
+                SessionPhase.DEBATING,
+                f"Iteration {self.iteration}: Deliberating with mode {mode.value}...",
+            )
 
         # BDI deliberation
         current_scores = self._get_average_scores()
@@ -455,7 +585,7 @@ class RalphOrchestrator:
         # PHASE 1: GENERATION (MCTS or Linear)
         # ---------------------------------------------------------------------
         if self.iteration == 1 and self.gaps: # Changed 'iteration' to 'self.iteration'
-             await self._emit_status("Running Agentic Tree Search...")
+             await self._emit_status(SessionPhase.DEBATING, "Running Agentic Tree Search...")
              
              # Create initial state for MCTS
              root_state = ResearchState(
@@ -506,7 +636,10 @@ class RalphOrchestrator:
                  self.hypotheses.append(h)
 
              observation += f"\n\nAnalyzed {len(self.gaps)} research gaps using Agentic Tree Search. Generated {len(self.hypotheses)} grounded hypotheses."
-             await self._emit_status(f"Tree Search complete. Found {len(self.hypotheses)} hypotheses.")
+             await self._emit_status(
+                 SessionPhase.DEBATING,
+                 f"Tree Search complete. Found {len(self.hypotheses)} hypotheses.",
+             )
              debate_trace = {
                  "hypotheses_generated": len(self.hypotheses),
                  "hypotheses_killed": 0,
@@ -514,7 +647,10 @@ class RalphOrchestrator:
                  "gap_based": True,
              }
              if not self.hypotheses:
-                 await self._emit_status("Tree search returned no hypotheses; falling back to debate.")
+                 await self._emit_status(
+                     SessionPhase.DEBATING,
+                     "Tree search returned no hypotheses; falling back to debate.",
+                 )
                  new_hypotheses, debate_trace = await self.collective.run_debate(
                      topic=self.topic,
                      context=self.memory.get_context_for_generation(topic=self.topic),
@@ -525,7 +661,7 @@ class RalphOrchestrator:
 
         elif self.iteration == 1: # Changed 'iteration' to 'self.iteration'     
              # Fallback if no gaps (should rare)
-             await self._emit_status("Brainstorming (Fallback)...")
+             await self._emit_status(SessionPhase.DEBATING, "Brainstorming (Fallback)...")
              new_hypotheses, debate_trace = await self.collective.run_debate(
                  topic=self.topic,
                  context=self.memory.get_context_for_generation(topic=self.topic),
@@ -535,7 +671,7 @@ class RalphOrchestrator:
              observation += f"\n\nGenerated {len(new_hypotheses)} initial hypotheses via brainstorming."
         else:
              # Subsequent iterations: Refine existing standard hypotheses
-             await self._emit_status("Refining hypotheses via debate...")
+             await self._emit_status(SessionPhase.DEBATING, "Refining hypotheses via debate...")
              new_hypotheses, debate_trace = await self.collective.run_debate( # Capture debate_trace
                  topic=self.topic, # Added topic
                  context=self.memory.get_context_for_generation(topic=self.topic), # Added context
@@ -559,6 +695,10 @@ class RalphOrchestrator:
 
         # Verify novelty
         if new_hypotheses:
+            await self._emit_status(
+                SessionPhase.VERIFYING,
+                "Validating novelty and scoring hypotheses...",
+            )
             await batch_verify_novelty(new_hypotheses)
 
             # Score feasibility and impact
@@ -712,6 +852,9 @@ class RalphOrchestrator:
             "stop_reason": result.stop_reason,
             "hypotheses_count": len(result.final_hypotheses),
             "papers_ingested": result.papers_ingested,
+            "constraints": result.constraints.model_dump() if result.constraints else None,
+            "personas": self.persona_roster,
+            "config": self.config.model_dump(),
         }
         with open(session_dir / "summary.json", "w") as f:
             json.dump(summary, f, indent=2)

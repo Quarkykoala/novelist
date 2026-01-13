@@ -1,5 +1,18 @@
-
 const BASE_URL = "http://localhost:8000";
+
+export interface SessionConstraintsPayload {
+  domains: string[];
+  modalities: string[];
+  timeline?: string;
+  dataset_links: string[];
+}
+
+interface StartSessionOptions {
+  maxIterations?: number;
+  maxTime?: number;
+  superprompt?: boolean;
+  constraints?: SessionConstraintsPayload;
+}
 
 export class API {
   baseUrl: string;
@@ -53,7 +66,7 @@ export class API {
     }
   }
 
-  async startSession(topic: string, options: any = {}) {
+  async startSession(topic: string, options: StartSessionOptions = {}) {
     return this.request("/api/sessions", {
       method: "POST",
       body: {
@@ -61,6 +74,7 @@ export class API {
         max_iterations: options.maxIterations || 4,
         max_time: options.maxTime || 300,
         superprompt: options.superprompt ?? true,
+        constraints: options.constraints,
       },
     });
   }
@@ -78,6 +92,12 @@ export class API {
 
   async stopSession(sessionId: string) {
     return this.request(`/api/sessions/${sessionId}/stop`, {
+      method: "POST",
+    });
+  }
+
+  async resumeSession(sessionId: string) {
+    return this.request(`/api/sessions/${sessionId}/resume`, {
       method: "POST",
     });
   }

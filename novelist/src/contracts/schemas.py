@@ -11,7 +11,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import AnyHttpUrl, BaseModel, Field
 
 
 # =============================================================================
@@ -46,6 +46,18 @@ class GenerationMode(str, Enum):
     ANALOGY_TRANSFER = "analogy_transfer"  # Cross-domain analogies
     CONSTRAINT_RELAX = "constraint_relax"  # Invert assumptions
     RANDOM_INJECTION = "random_injection"  # Inject random domain
+
+
+class SessionPhase(str, Enum):
+    """Deterministic lifecycle states for a session."""
+
+    QUEUED = "queued"
+    FORGING = "forging"
+    MAPPING = "mapping"
+    DEBATING = "debating"
+    VERIFYING = "verifying"
+    COMPLETE = "complete"
+    ERROR = "error"
 
 
 # =============================================================================
@@ -509,6 +521,18 @@ class ConceptMap(BaseModel):
 # =============================================================================
 
 
+class SessionConstraints(BaseModel):
+    """Optional researcher-provided constraints for a session."""
+
+    domains: list[str] = Field(default_factory=list, description="Preferred domains or fields")
+    modalities: list[str] = Field(default_factory=list, description="Desired modalities (e.g., wet lab, simulation)")
+    timeline: str | None = Field(default=None, description="Timeline pressure or deadline phrasing")
+    dataset_links: list[AnyHttpUrl] = Field(
+        default_factory=list,
+        description="External dataset links to ground the run",
+    )
+
+
 class RalphConfig(BaseModel):
     """Configuration for a Ralph loop session."""
 
@@ -523,6 +547,10 @@ class RalphConfig(BaseModel):
     max_hypotheses: int = Field(default=15, ge=1)
     flash_model: str = Field(default="groq/llama-3.3-70b-versatile")
     pro_model: str = Field(default="gemini/gemini-3-flash")
+    domains: list[str] = Field(default_factory=list)
+    modalities: list[str] = Field(default_factory=list)
+    timeline_hint: str | None = Field(default=None)
+    dataset_links: list[str] = Field(default_factory=list)
 
 
 class SessionResult(BaseModel):
@@ -541,3 +569,4 @@ class SessionResult(BaseModel):
     papers_ingested: int = Field(default=0, ge=0)
     concept_map: ConceptMap | None = Field(default=None)
     source_metadata: dict[str, ArxivPaper] = Field(default_factory=dict)
+    constraints: SessionConstraints | None = Field(default=None)

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Header } from "@/components/layout/Header";
 import { Dashboard } from "@/pages/Dashboard";
+import { History } from "@/pages/History";
 
 function App() {
   const [activePage, setActivePage] = useState("dashboard");
@@ -39,7 +40,8 @@ function App() {
         
         <main className="flex-1 bg-muted/20 relative">
             {activePage === "dashboard" && <Dashboard />}
-            {activePage !== "dashboard" && (
+            {activePage === "history" && <History />}
+            {activePage !== "dashboard" && activePage !== "history" && (
                 <div className="flex items-center justify-center h-full text-muted-foreground">
                     Work in progress...
                 </div>
