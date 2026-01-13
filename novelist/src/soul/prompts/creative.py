@@ -35,21 +35,23 @@ Your hypotheses should surprise and inspire, even if they seem unusual at first.
         topic: str,
         context: dict[str, Any],
         mode: GenerationMode,
+        count: int = 3,
     ) -> list[Hypothesis]:
         """Generate creative, cross-domain hypotheses."""
-        prompt = self._build_prompt(topic, context, mode)
+        prompt = self._build_prompt(topic, context, mode, count)
 
         response_text = await self._call_model_with_retry(prompt)
         if not response_text:
             return []
 
-        return self._parse_response(response_text)
+        return self._parse_response(response_text, count)
 
     def _build_prompt(
         self,
         topic: str,
         context: dict[str, Any],
         mode: GenerationMode,
+        count: int = 3,
     ) -> str:
         """Build the generation prompt with SuperPrompt-style metadata."""
 
@@ -88,7 +90,7 @@ Objective: Surprise with unexpected yet plausible connections
 </generation_mode>
 
 <task>
-Generate 3-5 creative, cross-domain scientific hypotheses about this topic.
+Generate exactly {count} creative, cross-domain scientific hypotheses about this topic.
 
 Think like this:
 1. What patterns from other fields might apply here?
@@ -122,7 +124,7 @@ Bring in ideas from completely unrelated fields. Be wild!""",
         }
         return instructions.get(mode, instructions[GenerationMode.GAP_HUNT])
 
-    def _parse_response(self, response_text: str) -> list[Hypothesis]:
+    def _parse_response(self, response_text: str, count: int = 3) -> list[Hypothesis]:
         """Parse LLM response into Hypothesis objects."""
         json_str = extract_json_from_response(response_text)
         if not json_str:
@@ -134,7 +136,7 @@ Bring in ideas from completely unrelated fields. Be wild!""",
                 data = [data]
 
             hypotheses = []
-            for i, item in enumerate(data[:5]):  # Max 5 hypotheses
+            for i, item in enumerate(data[:count]):  # Use count instead of hardcoded limit
                 try:
                     design = item.get("experimental_design", [])
                     if not isinstance(design, list):

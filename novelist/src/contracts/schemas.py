@@ -517,6 +517,37 @@ class ConceptMap(BaseModel):
 
 
 # =============================================================================
+# Persona Forge
+# =============================================================================
+
+
+class Persona(BaseModel):
+    """A generated expert persona."""
+
+    id: str = Field(..., description="Unique ID for this persona")
+    name: str = Field(..., description="Name of the agent (e.g., 'Dr. Vance')")
+    role: str = Field(..., description="Specialized role (e.g., 'Plasma Physicist')")
+    style: str = Field(..., description="Communication style (e.g., 'Concise', 'Radical')")
+    objective: str = Field(..., description="Primary objective for this persona")
+    weight: float = Field(default=0.33, ge=0.0, le=1.0, description="Relative weight in debate")
+    system_instruction: str = Field(..., description="The full system prompt for this persona")
+    locked: bool = Field(default=False, description="Whether this persona is locked from regeneration")
+    soul_role: SoulRole | None = Field(default=None, description="Mapping to a collective soul role")
+
+
+class PersonaWeightRequest(BaseModel):
+    """Request to update a persona's weight."""
+
+    weight: float = Field(..., ge=0.0, le=1.0)
+
+
+class PersonaLockRequest(BaseModel):
+    """Request to lock/unlock a persona."""
+
+    locked: bool
+
+
+# =============================================================================
 # Session and Configuration
 # =============================================================================
 

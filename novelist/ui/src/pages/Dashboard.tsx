@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Play, RotateCcw, Activity, Send } from "lucide-react";
+import { Play, RotateCcw, Activity, Send, Lock, Unlock, RefreshCcw } from "lucide-react";
 import { Reactor } from "@/components/Reactor";
 import { SoulFeed, type SoulMessage } from "@/components/SoulFeed";
 import { HypothesisList, type Hypothesis } from "@/components/HypothesisList";
@@ -55,6 +55,43 @@ export function Dashboard() {
       await api.sendChatMessage(sessionId, msg);
     } catch (err: any) {
       addLog("error", "Failed to send: " + err.message);
+    }
+  };
+
+  const handleLockPersona = async (personaId: string, currentLocked: boolean) => {
+    if (!sessionId) return;
+    try {
+      if (currentLocked) {
+        await api.unlockPersona(sessionId, personaId);
+        addLog("system", `Unlocked persona: ${personaId}`);
+      } else {
+        await api.lockPersona(sessionId, personaId);
+        addLog("system", `Locked persona: ${personaId}`);
+      }
+      // Status poll will pick up the change, but we can update locally for snappiness
+      setPersonas(prev => prev.map(p => p.id === personaId ? { ...p, locked: !currentLocked } : p));
+    } catch (err: any) {
+      addLog("error", "Failed to toggle lock: " + err.message);
+    }
+  };
+
+  const handleRegeneratePersona = async (personaId: string) => {
+    if (!sessionId) return;
+    try {
+      await api.regeneratePersona(sessionId, personaId);
+      addLog("system", `Regenerating persona: ${personaId}`);
+    } catch (err: any) {
+      addLog("error", "Failed to regenerate: " + err.message);
+    }
+  };
+
+  const handleWeightChange = async (personaId: string, weight: number) => {
+    if (!sessionId) return;
+    try {
+      await api.updatePersonaWeight(sessionId, personaId, weight);
+      setPersonas(prev => prev.map(p => p.id === personaId ? { ...p, weight } : p));
+    } catch (err: any) {
+      addLog("error", "Failed to update weight: " + err.message);
     }
   };
 
@@ -270,7 +307,7 @@ export function Dashboard() {
                 <p className="font-semibold uppercase text-[10px] tracking-wider text-muted-foreground">Persona roster</p>
                 <div className="space-y-2">
                   {personas.map((persona) => (
-                    <div key={`${persona.soul_role}-${persona.name}`} className="rounded-md border bg-background/80 p-2">
+                    <div key={`${persona.soul_role}-${persona.name}`} className="rounded-md border bg-background/80 p-2 space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="font-semibold">{persona.name}</span>
                         <Badge variant="outline" className="text-[10px] uppercase">
@@ -279,11 +316,46 @@ export function Dashboard() {
                       </div>
                       <p className="text-muted-foreground">{persona.role}</p>
                       {persona.objective && (
-                        <p className="text-muted-foreground/80">Objective: {persona.objective}</p>
+                        <p className="text-muted-foreground/80 italic line-clamp-2">"{persona.objective}"</p>
                       )}
-                      {typeof persona.weight === "number" && (
-                        <p className="text-muted-foreground/80">Weight: {persona.weight}</p>
-                      )}
+                      
+                      <div className="flex flex-col gap-1 pt-1 border-t border-muted">
+                        <div className="flex items-center justify-between">
+                          <label className="text-[10px] text-muted-foreground">Influence Weight</label>
+                          <span className="text-[10px] font-mono">{Math.round((persona.weight || 0) * 100)}%</span>
+                        </div>
+                        <input 
+                          type="range" 
+                          min="0" 
+                          max="1" 
+                          step="0.05"
+                          value={persona.weight || 0}
+                          onChange={(e) => handleWeightChange(persona.id, parseFloat(e.target.value))}
+                          className="w-full h-1 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
+                        />
+                      </div>
+
+                      <div className="flex gap-2 pt-1">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="h-7 px-2 text-[10px] gap-1"
+                          onClick={() => handleLockPersona(persona.id, !!persona.locked)}
+                        >
+                          {persona.locked ? <Lock className="w-3 h-3" /> : <Unlock className="w-3 h-3" />}
+                          {persona.locked ? "Locked" : "Lock"}
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="h-7 px-2 text-[10px] gap-1"
+                          onClick={() => handleRegeneratePersona(persona.id)}
+                          disabled={persona.locked}
+                        >
+                          <RefreshCcw className="w-3 h-3" />
+                          Regenerate
+                        </Button>
+                      </div>
                     </div>
                   ))}
                 </div>

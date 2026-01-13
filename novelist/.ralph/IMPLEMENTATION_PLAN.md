@@ -21,15 +21,15 @@
   - Verification: `pytest tests/test_orchestrator_mock.py` and `cd ui && npm run build`
 
 ### US-102: Persona Forge Module
-- [ ] Extend Persona Forge to emit a full roster and expose it via the API
+- [x] Extend Persona Forge to emit a full roster and expose it via the API
   - Scope: Update `src/soul/prompts/persona_forge.py` to generate at least three personas (creative, skeptic, specialist) with weights/objectives, persist them on `RalphOrchestrator`, and include a `personas` field on session status responses from `src/server.py`.
   - Acceptance: After topic intake the API returns persona metadata (name, role, stance, objectives, instruction) for ≥3 personas and those personas are applied to `SoulCollective` roles.
   - Verification: `pytest tests/test_orchestrator_mock.py::test_orchestrator_flow`
-- [ ] Add persona locking, regeneration, and weighting endpoints
+- [x] Add persona locking, regeneration, and weighting endpoints
   - Scope: Introduce routes such as `POST /api/sessions/{id}/personas/{persona_id}/lock` and `POST /api/sessions/{id}/personas/{persona_id}/regenerate` inside `src/server.py`, persist lock state on the orchestrator, and allow weight sliders to influence debate sampling inside `src/soul/collective.py`.
   - Acceptance: Locked personas persist across iterations/resumes, regeneration yields new instructions unless locked, and weight sliders alter the proportion of hypotheses attributed to each persona.
   - Verification: `pytest tests/test_api_contract_final.py -k persona`
-- [ ] Build Persona Forge UI controls
+- [x] Build Persona Forge UI controls
   - Scope: Create a dedicated persona panel in `ui/src/pages/Dashboard.tsx` backed by reusable card/slider components that display persona attributes, lock toggles, and "Regenerate" buttons that call the new endpoints through `ui/src/lib/api.ts`.
   - Acceptance: Users see persona cards before launch, can lock/unlock/regenerate them, and adjustments immediately reflect in the session payload preview.
   - Verification: `cd ui && npm run build`

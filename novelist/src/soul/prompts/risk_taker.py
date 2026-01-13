@@ -36,15 +36,16 @@ than something incremental that's guaranteed to work."""
         topic: str,
         context: dict[str, Any],
         mode: GenerationMode,
+        count: int = 3,
     ) -> list[Hypothesis]:
         """Generate bold, high-upside hypotheses."""
-        prompt = self._build_prompt(topic, context, mode)
+        prompt = self._build_prompt(topic, context, mode, count)
 
         response_text = await self._call_model_with_retry(prompt)
         if not response_text:
             return []
 
-        return self._parse_response(response_text)
+        return self._parse_response(response_text, count)
 
     async def amplify(
         self,
@@ -61,13 +62,14 @@ than something incremental that's guaranteed to work."""
         if not response_text:
             return hypotheses
 
-        return self._parse_response(response_text)
+        return self._parse_response(response_text, len(hypotheses))
 
     def _build_prompt(
         self,
         topic: str,
         context: dict[str, Any],
         mode: GenerationMode,
+        count: int = 3,
     ) -> str:
         """Build generation prompt for bold hypotheses."""
 
@@ -89,7 +91,7 @@ than something incremental that's guaranteed to work."""
 </context>
 
 <task>
-Generate 3-5 BOLD, HIGH-UPSIDE scientific hypotheses.
+Generate exactly {count} BOLD, HIGH-UPSIDE scientific hypotheses.
 
 Requirements:
 - Each hypothesis should have paradigm-shifting potential
@@ -102,7 +104,7 @@ Ask yourself:
 - "What 'impossible' thing might actually be possible?"
 - "What would win a Nobel Prize if validated?"
 
-Be audacious. The Skeptic will ground us later.
+Be audacious. The Skeptic will filter out bad ideas later.
 </task>
 
 {HYPOTHESIS_OUTPUT_SCHEMA}
@@ -147,7 +149,7 @@ Transform incremental ideas into revolutionary ones.
 {HYPOTHESIS_OUTPUT_SCHEMA}
 """
 
-    def _parse_response(self, response_text: str) -> list[Hypothesis]:
+    def _parse_response(self, response_text: str, count: int = 3) -> list[Hypothesis]:
         """Parse response into Hypothesis objects."""
         json_str = extract_json_from_response(response_text)
         if not json_str:
@@ -159,7 +161,7 @@ Transform incremental ideas into revolutionary ones.
                 data = [data]
 
             hypotheses = []
-            for i, item in enumerate(data[:5]):
+            for i, item in enumerate(data[:count]):
                 try:
                     design = item.get("experimental_design", [])
                     if not isinstance(design, list):

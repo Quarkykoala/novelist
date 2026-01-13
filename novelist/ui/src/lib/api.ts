@@ -90,20 +90,39 @@ export class API {
     });
   }
 
-  async stopSession(sessionId: string) {
-    return this.request(`/api/sessions/${sessionId}/stop`, {
+  async lockPersona(sessionId: string, personaId: string) {
+    return this.request(`/api/sessions/${sessionId}/personas/${personaId}/lock`, {
       method: "POST",
     });
+  }
+
+  async unlockPersona(sessionId: string, personaId: string) {
+    return this.request(`/api/sessions/${sessionId}/personas/${personaId}/unlock`, {
+      method: "POST",
+    });
+  }
+
+  async updatePersonaWeight(sessionId: string, personaId: string, weight: number) {
+    return this.request(`/api/sessions/${sessionId}/personas/${personaId}/weight`, {
+      method: "POST",
+      body: { weight },
+    });
+  }
+
+  async regeneratePersona(sessionId: string, personaId: string) {
+    return this.request(`/api/sessions/${sessionId}/personas/${personaId}/regenerate`, {
+      method: "POST",
+    });
+  }
+
+  async getSessions() {
+    return this.request("/api/sessions");
   }
 
   async resumeSession(sessionId: string) {
     return this.request(`/api/sessions/${sessionId}/resume`, {
       method: "POST",
     });
-  }
-
-  async getSessions(limit: number = 20) {
-    return this.request(`/api/sessions?limit=${limit}`);
   }
 
   async getKnowledgeStats() {

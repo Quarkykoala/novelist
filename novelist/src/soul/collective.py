@@ -46,6 +46,7 @@ class SoulCollective:
         mode: GenerationMode,
         target_hypotheses: int = 10,
         existing_hypotheses: list[Hypothesis] | None = None,
+        weights: dict[str, float] | None = None,
     ) -> tuple[list[Hypothesis], dict[str, Any]]:
         """Run a full debate round to generate and refine hypotheses.
 
@@ -55,6 +56,7 @@ class SoulCollective:
             mode: Generation mode
             target_hypotheses: Target number for final output
             existing_hypotheses: Optional hypotheses to refine (recorded in trace)
+            weights: Optional weights for specialist/maverick (proportional generation)
 
         Returns:
             Tuple of (final hypotheses, debate trace)
@@ -70,7 +72,7 @@ class SoulCollective:
             trace["existing_hypotheses"] = len(existing_hypotheses)
 
         # Phase 1: Generate proposals
-        proposals = await self._phase_generate(topic, context, mode)
+        proposals = await self._phase_generate(topic, context, mode, weights, target_hypotheses)
         
         # Add Dialogue for Generators
         creative_name = getattr(self.creative, 'custom_name', 'The Specialist')
@@ -162,18 +164,37 @@ class SoulCollective:
         topic: str,
         context: dict[str, Any],
         mode: GenerationMode,
+        weights: dict[str, float] | None = None,
+        target_total: int = 10,
     ) -> list[Hypothesis]:
-        """Phase 1: Creative and Risk-Taker generate sequentially."""
-        # Run sequentially to be gentler on rate limits
-        creative_hypotheses = await self.creative.generate(topic, context, mode)
-        risktaker_hypotheses = await self.risk_taker.generate(topic, context, mode)
+        """Phase 1: Creative and Risk-Taker generate proportionally to weights."""
+        if not weights:
+            weights = {"specialist": 0.5, "maverick": 0.5}
+        
+        # Normalize weights for generators only
+        gen_total = weights.get("specialist", 0.5) + weights.get("maverick", 0.5)
+        if gen_total == 0:
+            weights = {"specialist": 0.5, "maverick": 0.5}
+            gen_total = 1.0
+            
+        creative_ratio = weights.get("specialist", 0.5) / gen_total
+        risk_ratio = weights.get("maverick", 0.5) / gen_total
+        
+        # We want more proposals than target final hypotheses to allow for filtering
+        pool_size = max(target_total * 1.5, 6)
+        creative_count = max(1, round(pool_size * creative_ratio))
+        risk_count = max(1, round(pool_size * risk_ratio))
+
+        # Run in parallel if model supports it, but sequentially for safety/rate limits
+        creative_hypotheses = await self.creative.generate(topic, context, mode, count=creative_count)
+        risktaker_hypotheses = await self.risk_taker.generate(topic, context, mode, count=risk_count)
 
         proposals = creative_hypotheses + risktaker_hypotheses
 
         # Assign unique IDs
         for i, h in enumerate(proposals):
-            if not h.id or h.id.startswith(("creative_", "risktaker_")):
-                h.id = f"proposal_{i}"
+            if not h.id or h.id.startswith(("creative_", "risktaker_", "proposal_")):
+                h.id = f"proposal_{i}_{h.source_soul.value if h.source_soul else 'unknown'}"
 
         return proposals
 

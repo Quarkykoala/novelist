@@ -37,7 +37,7 @@ Accessibility considerations: keyboard navigation, high-contrast themes for plot
 - Persistent session ID with resume/replay support; show status (queued, forging, mapping, debating, verifying, complete, error).
 - Ability to run multiple sessions sequentially with history list.
 
-### [ ] US-102: Persona Forge Module
+### [x] US-102: Persona Forge Module
 - Generate ≥3 personas per topic with roles (Creative, Skeptic, Specialist) and display expertise, stance, and key objectives.
 - Allow user edits: lock persona, request “regenerate persona,” or adjust weightings (e.g., aggressiveness slider).
 - Visual indicator of persona influence on later outputs.

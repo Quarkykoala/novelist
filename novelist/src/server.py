@@ -28,6 +28,8 @@ from src.contracts.schemas import (
     RalphConfig,
     SessionConstraints,
     SessionPhase,
+    PersonaWeightRequest,
+    PersonaLockRequest,
 )
 from src.ralph.orchestrator import RalphOrchestrator
 
@@ -591,6 +593,62 @@ async def session_chat(session_id: str, request: ChatRequest):
     })
     
     return {"status": "message_injected"}
+
+
+@app.post("/api/sessions/{session_id}/personas/{persona_id}/lock")
+async def lock_persona(session_id: str, persona_id: str):
+    """Lock a persona."""
+    if session_id not in sessions:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    orchestrator = sessions[session_id].get("orchestrator")
+    if not orchestrator:
+        raise HTTPException(status_code=400, detail="Orchestrator not active")
+    
+    await orchestrator.lock_persona(persona_id)
+    return {"status": "locked"}
+
+
+@app.post("/api/sessions/{session_id}/personas/{persona_id}/unlock")
+async def unlock_persona(session_id: str, persona_id: str):
+    """Unlock a persona."""
+    if session_id not in sessions:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    orchestrator = sessions[session_id].get("orchestrator")
+    if not orchestrator:
+        raise HTTPException(status_code=400, detail="Orchestrator not active")
+    
+    await orchestrator.unlock_persona(persona_id)
+    return {"status": "unlocked"}
+
+
+@app.post("/api/sessions/{session_id}/personas/{persona_id}/weight")
+async def update_persona_weight(session_id: str, persona_id: str, request: PersonaWeightRequest):
+    """Update persona weight."""
+    if session_id not in sessions:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    orchestrator = sessions[session_id].get("orchestrator")
+    if not orchestrator:
+        raise HTTPException(status_code=400, detail="Orchestrator not active")
+    
+    await orchestrator.update_persona_weight(persona_id, request.weight)
+    return {"status": "weight_updated"}
+
+
+@app.post("/api/sessions/{session_id}/personas/{persona_id}/regenerate")
+async def regenerate_persona(session_id: str, persona_id: str):
+    """Regenerate a persona."""
+    if session_id not in sessions:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    orchestrator = sessions[session_id].get("orchestrator")
+    if not orchestrator:
+        raise HTTPException(status_code=400, detail="Orchestrator not active")
+    
+    await orchestrator.regenerate_persona(persona_id)
+    return {"status": "regenerated"}
 
 
 @app.get("/api/sessions")

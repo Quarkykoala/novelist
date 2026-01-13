@@ -202,6 +202,68 @@ class RalphOrchestrator:
         self.total_cost = total_cost
         self.total_tokens = total_tokens
 
+    async def lock_persona(self, persona_id: str) -> None:
+        """Lock a persona from regeneration."""
+        for p in self.persona_roster:
+            if p["id"] == persona_id:
+                p["locked"] = True
+        await self._emit_personas(self.persona_roster)
+
+    async def unlock_persona(self, persona_id: str) -> None:
+        """Unlock a persona for regeneration."""
+        for p in self.persona_roster:
+            if p["id"] == persona_id:
+                p["locked"] = False
+        await self._emit_personas(self.persona_roster)
+
+    async def update_persona_weight(self, persona_id: str, weight: float) -> None:
+        """Update a persona's weight in the collective."""
+        for p in self.persona_roster:
+            if p["id"] == persona_id:
+                p["weight"] = weight
+        await self._emit_personas(self.persona_roster)
+
+    async def regenerate_persona(self, persona_id: str) -> None:
+        """Regenerate a single persona if not locked."""
+        persona_idx = -1
+        for i, p in enumerate(self.persona_roster):
+            if p["id"] == persona_id:
+                if p.get("locked"):
+                    return
+                persona_idx = i
+                break
+        
+        if persona_idx == -1:
+            return
+
+        new_persona = await self.persona_forge.regenerate_persona(self.topic, persona_id)
+        
+        # Update Roster
+        self.persona_roster[persona_idx] = {
+            "id": new_persona.id,
+            "name": new_persona.name,
+            "role": new_persona.role,
+            "style": new_persona.style,
+            "objective": new_persona.objective,
+            "weight": new_persona.weight,
+            "soul_role": new_persona.soul_role.value if new_persona.soul_role else "unknown",
+            "locked": False,
+        }
+
+        # Update Collective
+        if new_persona.soul_role == SoulRole.CREATIVE:
+            self.collective.creative.set_persona(new_persona.name, new_persona.system_instruction)
+        elif new_persona.soul_role == SoulRole.RISK_TAKER:
+            self.collective.risk_taker.set_persona(new_persona.name, new_persona.system_instruction)
+        elif new_persona.soul_role == SoulRole.SKEPTIC:
+            self.collective.skeptic.set_persona(new_persona.name, new_persona.system_instruction)
+
+        await self._emit_personas(self.persona_roster)
+        await self._emit_status(
+            self.current_phase, 
+            f"Persona {persona_id} regenerated: {new_persona.name}"
+        )
+
     async def run(
         self,
         topic: str,
@@ -228,110 +290,123 @@ class RalphOrchestrator:
         self.current_phase = SessionPhase.QUEUED
 
         # Phase 0: Dynamic Persona Generation (Gemini 3 Adaptive Team)
-        await self._emit_status(SessionPhase.FORGING, "Assembling specialized research team...")
-        try:
-            roster = await self.persona_forge.forge_team(topic)
-            specialist = roster.get("specialist")
-            maverick = roster.get("maverick")
-            skeptic = roster.get("skeptic")
-            if not specialist or not maverick or not skeptic:
-                raise ValueError("Persona roster incomplete")
+        if not self.persona_roster:
+            await self._emit_status(SessionPhase.FORGING, "Assembling specialized research team...")
+            try:
+                roster = await self.persona_forge.forge_team(topic)
+                specialist = roster.get("specialist")
+                maverick = roster.get("maverick")
+                skeptic = roster.get("skeptic")
+                if not specialist or not maverick or not skeptic:
+                    raise ValueError("Persona roster incomplete")
 
-            # Inject into Collective
-            if specialist:
+                # Inject into Collective
+                if specialist:
+                    self.collective.creative.set_persona(specialist.name, specialist.system_instruction)
+                if maverick:
+                    self.collective.risk_taker.set_persona(maverick.name, maverick.system_instruction)
+                if skeptic:
+                    self.collective.skeptic.set_persona(skeptic.name, skeptic.system_instruction)
+
+                self.persona_roster = [
+                    {
+                        "id": "specialist",
+                        "name": specialist.name,
+                        "role": specialist.role,
+                        "style": specialist.style,
+                        "objective": specialist.objective,
+                        "weight": specialist.weight,
+                        "soul_role": "creative",
+                        "locked": False,
+                    },
+                    {
+                        "id": "maverick",
+                        "name": maverick.name,
+                        "role": maverick.role,
+                        "style": maverick.style,
+                        "objective": maverick.objective,
+                        "weight": maverick.weight,
+                        "soul_role": "risk_taker",
+                        "locked": False,
+                    },
+                    {
+                        "id": "skeptic",
+                        "name": skeptic.name,
+                        "role": skeptic.role,
+                        "style": skeptic.style,
+                        "objective": skeptic.objective,
+                        "weight": skeptic.weight,
+                        "soul_role": "skeptic",
+                        "locked": False,
+                    },
+                ]
+                await self._emit_personas(self.persona_roster)
+
+                await self._emit_status(
+                    SessionPhase.FORGING,
+                    (
+                        f"Team Assembled: {specialist.name} ({specialist.role}), "
+                        f"{maverick.name} ({maverick.role}), {skeptic.name} ({skeptic.role})"
+                    ),
+                )
+                # Also store in agent beliefs for context
+                self.agent.perceive({
+                    "active_personas": [p["name"] for p in self.persona_roster]
+                })
+                
+                # Emit Team Announcement Trace
+                team_trace = IterationTrace(
+                    iteration=0,
+                    thought=f"I have assembled a specialized team for {topic}: {specialist.name} ({specialist.role}) and {maverick.name} ({maverick.role}).",
+                    action="Assemble Team",
+                    observation="Team ready for debate.",
+                    bdi_snapshot=self.agent.get_state(),
+                )
+                await self._emit_trace(team_trace)
+                
+            except Exception as e:
+                print(f"[WARN] Failed to forge personas: {e}")
+                fallback = self.persona_forge._get_fallback_personas()
+                specialist = fallback["specialist"]
+                maverick = fallback["maverick"]
+                skeptic = fallback["skeptic"]
                 self.collective.creative.set_persona(specialist.name, specialist.system_instruction)
-            if maverick:
                 self.collective.risk_taker.set_persona(maverick.name, maverick.system_instruction)
-            if skeptic:
                 self.collective.skeptic.set_persona(skeptic.name, skeptic.system_instruction)
-
-            self.persona_roster = [
-                {
-                    "name": specialist.name,
-                    "role": specialist.role,
-                    "style": specialist.style,
-                    "objective": specialist.objective,
-                    "weight": specialist.weight,
-                    "soul_role": "creative",
-                },
-                {
-                    "name": maverick.name,
-                    "role": maverick.role,
-                    "style": maverick.style,
-                    "objective": maverick.objective,
-                    "weight": maverick.weight,
-                    "soul_role": "risk_taker",
-                },
-                {
-                    "name": skeptic.name,
-                    "role": skeptic.role,
-                    "style": skeptic.style,
-                    "objective": skeptic.objective,
-                    "weight": skeptic.weight,
-                    "soul_role": "skeptic",
-                },
-            ]
-            await self._emit_personas(self.persona_roster)
-
-            await self._emit_status(
-                SessionPhase.FORGING,
-                (
-                    f"Team Assembled: {specialist.name} ({specialist.role}), "
-                    f"{maverick.name} ({maverick.role}), {skeptic.name} ({skeptic.role})"
-                ),
-            )
-            # Also store in agent beliefs for context
-            self.agent.perceive({
-                "active_personas": [p["name"] for p in self.persona_roster]
-            })
-            
-            # Emit Team Announcement Trace
-            team_trace = IterationTrace(
-                iteration=0,
-                thought=f"I have assembled a specialized team for {topic}: {specialist.name} ({specialist.role}) and {maverick.name} ({maverick.role}).",
-                action="Assemble Team",
-                observation="Team ready for debate.",
-                bdi_snapshot=self.agent.get_state(),
-            )
-            await self._emit_trace(team_trace)
-            
-        except Exception as e:
-            print(f"[WARN] Failed to forge personas: {e}")
-            fallback = self.persona_forge._get_fallback_personas()
-            specialist = fallback["specialist"]
-            maverick = fallback["maverick"]
-            skeptic = fallback["skeptic"]
-            self.collective.creative.set_persona(specialist.name, specialist.system_instruction)
-            self.collective.risk_taker.set_persona(maverick.name, maverick.system_instruction)
-            self.collective.skeptic.set_persona(skeptic.name, skeptic.system_instruction)
-            self.persona_roster = [
-                {
-                    "name": specialist.name,
-                    "role": specialist.role,
-                    "style": specialist.style,
-                    "objective": specialist.objective,
-                    "weight": specialist.weight,
-                    "soul_role": "creative",
-                },
-                {
-                    "name": maverick.name,
-                    "role": maverick.role,
-                    "style": maverick.style,
-                    "objective": maverick.objective,
-                    "weight": maverick.weight,
-                    "soul_role": "risk_taker",
-                },
-                {
-                    "name": skeptic.name,
-                    "role": skeptic.role,
-                    "style": skeptic.style,
-                    "objective": skeptic.objective,
-                    "weight": skeptic.weight,
-                    "soul_role": "skeptic",
-                },
-            ]
-            await self._emit_personas(self.persona_roster)
-            await self._emit_status(SessionPhase.FORGING, "Failed to assemble team; using default agents.")
+                self.persona_roster = [
+                    {
+                        "id": "specialist",
+                        "name": specialist.name,
+                        "role": specialist.role,
+                        "style": specialist.style,
+                        "objective": specialist.objective,
+                        "weight": specialist.weight,
+                        "soul_role": "creative",
+                        "locked": False,
+                    },
+                    {
+                        "id": "maverick",
+                        "name": maverick.name,
+                        "role": maverick.role,
+                        "style": maverick.style,
+                        "objective": maverick.objective,
+                        "weight": maverick.weight,
+                        "soul_role": "risk_taker",
+                        "locked": False,
+                    },
+                    {
+                        "id": "skeptic",
+                        "name": skeptic.name,
+                        "role": skeptic.role,
+                        "style": skeptic.style,
+                        "objective": skeptic.objective,
+                        "weight": skeptic.weight,
+                        "soul_role": "skeptic",
+                        "locked": False,
+                    },
+                ]
+                await self._emit_personas(self.persona_roster)
+                await self._emit_status(SessionPhase.FORGING, "Failed to assemble team; using default agents.")
 
         # Set up agent
         self.agent.reset(topic)
@@ -581,6 +656,9 @@ class RalphOrchestrator:
         debate_trace: dict[str, Any] = {}
         observation = "" # Initialize observation
 
+        # Get weights from roster for sampling
+        persona_weights = {p["id"]: p.get("weight", 0.33) for p in self.persona_roster}
+
         # ---------------------------------------------------------------------
         # PHASE 1: GENERATION (MCTS or Linear)
         # ---------------------------------------------------------------------
@@ -656,6 +734,7 @@ class RalphOrchestrator:
                      context=self.memory.get_context_for_generation(topic=self.topic),
                      mode=GenerationMode.RANDOM_INJECTION,
                      target_hypotheses=self.config.max_hypotheses,
+                     weights=persona_weights,
                  )
                  observation += f"\n\nFallback debate generated {len(new_hypotheses)} hypotheses."
 
@@ -667,6 +746,7 @@ class RalphOrchestrator:
                  context=self.memory.get_context_for_generation(topic=self.topic),
                  mode=GenerationMode.RANDOM_INJECTION,
                  target_hypotheses=self.config.max_hypotheses,
+                 weights=persona_weights,
              )
              observation += f"\n\nGenerated {len(new_hypotheses)} initial hypotheses via brainstorming."
         else:
@@ -678,6 +758,7 @@ class RalphOrchestrator:
                  mode=new_mode, # Added mode
                  target_hypotheses=self.config.max_hypotheses, # Added target_hypotheses
                  existing_hypotheses=self.hypotheses, # Pass existing hypotheses for refinement
+                 weights=persona_weights,
              )
              observation += "\n\nRefined hypotheses through debate."
 
