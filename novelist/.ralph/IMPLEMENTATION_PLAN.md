@@ -77,15 +77,15 @@
   - Verification: `pytest tests/test_pipeline.py`
 
 ### US-106: Ranked Output & Export
-- [ ] Align ranking logic with novelty × confidence metric
+- [x] Update ranking logic + expose composite score
   - Scope: Update `_merge_hypotheses` and scoring logic in `src/ralph/orchestrator.py` so final ordering uses a documented novelty × feasibility product (or weighted composite), and expose the rank + composite score in the API.
   - Acceptance: Hypotheses are sorted deterministically by the composite metric, and the frontend labels each card with its rank and score per PRD.
   - Verification: `pytest tests/test_tree_search.py`
-- [ ] Provide export + Graveyard integration endpoints
+- [x] Export + Graveyard endpoints
   - Scope: Implement `/api/sessions/{id}/export` that produces PDF/Markdown/JSON artifacts, ensure exports include evidence/simulation summaries, and add an action to push hypotheses into the Graveyard (`src/soul/memory.py`) with tags/notes.
   - Acceptance: Users can download all three export formats and send selected hypotheses to the memory store with descriptive tags.
   - Verification: `pytest tests/test_api_contract_final.py -k export`
-- [ ] Surface export controls and next-step suggestions in the UI
+- [x] Output panel with export controls
   - Scope: Add an “Output” panel on the dashboard with rank-sorted cards, recommended next experiments, export buttons, and Graveyard toggles that call the new backend endpoints.
   - Acceptance: Final hypotheses display summaries, recommended next experiments, and provide one-click export/push-to-graveyard controls per the PRD.
   - Verification: `cd ui && npm run build`

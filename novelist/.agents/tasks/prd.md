@@ -57,7 +57,7 @@ Accessibility considerations: keyboard navigation, high-contrast themes for plot
 - Surface plots inline (support multiple types: line, scatter, heatmap) with Gemini Vision commentary (pass/fail, anomalies).
 - Allow user-triggered reruns with tweaked parameters.
 
-### [ ] US-106: Ranked Output & Export
+### [x] US-106: Ranked Output & Export
 - Final list sorted by novelty x confidence; each entry includes summary, supporting evidence, simulation verdict, and recommended next experiments.
 - Provide export options (PDF, Markdown, JSON) and push to memory (“Graveyard”) with tags.
 

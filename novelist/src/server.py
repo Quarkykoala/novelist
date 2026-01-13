@@ -718,6 +718,80 @@ async def rerun_simulation(session_id: str, hypothesis_id: str, request: dict[st
     return {"status": "rerun_queued"}
 
 
+@app.get("/api/sessions/{session_id}/export")
+async def export_session(session_id: str, format: str = "json"):
+    """Export session data in specified format."""
+    # Try to get from live sessions first, then from disk
+    session = sessions.get(session_id)
+    summary = None
+    hypotheses = []
+    
+    if session:
+        summary = {
+            "id": session_id,
+            "topic": session["topic"],
+            "status": session["status"],
+            "created_at": session["created_at"],
+            "constraints": session.get("constraints"),
+        }
+        hypotheses = session.get("hypotheses", [])
+    else:
+        summary = _load_summary(session_id)
+        if not summary:
+            raise HTTPException(status_code=404, detail="Session not found")
+        
+        hypotheses_file = SESSIONS_DIR / session_id / "hypotheses.json"
+        if hypotheses_file.exists():
+            with open(hypotheses_file, "r", encoding="utf-8") as f:
+                hypotheses = [_serialize_hypothesis(h) for h in json.load(f)]
+
+    if format == "json":
+        return {"summary": summary, "hypotheses": hypotheses}
+    
+    if format == "markdown":
+        md = f"# Research Report: {summary.get('topic')}\n\n"
+        md += f"Session ID: {session_id}\n"
+        md += f"Date: {summary.get('created_at')}\n\n"
+        
+        md += "## Ranked Hypotheses\n\n"
+        for i, h in enumerate(hypotheses):
+            md += f"### {i+1}. {h.get('statement')}\n"
+            md += f"**Rationale:** {h.get('rationale')}\n\n"
+            md += f"**Novelty Keywords:** {', '.join(h.get('novelty_keywords', []))}\n\n"
+            if h.get('simulation_result'):
+                res = h['simulation_result']
+                md += f"**Simulation Verdict:** {'SUCCESS' if res.get('success') and res.get('supports_hypothesis') else 'FAILURE'}\n"
+                if res.get('vision_commentary'):
+                    md += f"\n*Vision Analysis:* {res['vision_commentary']}\n"
+            md += "\n---\n\n"
+            
+        return {"content": md}
+
+    raise HTTPException(status_code=400, detail="Unsupported format")
+
+
+@app.post("/api/sessions/{session_id}/hypotheses/{hypothesis_id}/graveyard")
+async def bury_hypothesis(session_id: str, hypothesis_id: str, request: dict[str, Any]):
+    """Push a hypothesis into the Graveyard memory store."""
+    session = sessions.get(session_id)
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    orchestrator = sessions[session_id].get("orchestrator")
+    if not orchestrator:
+        raise HTTPException(status_code=400, detail="Orchestrator not active")
+    
+    # Find the hypothesis
+    target = next((h for h in orchestrator.hypotheses if h.id == hypothesis_id), None)
+    if not target:
+        raise HTTPException(status_code=404, detail="Hypothesis not found")
+    
+    reason = request.get("reason", "Manual burial by researcher")
+    orchestrator.memory.graveyard.bury(target.hypothesis, reason, orchestrator.topic)
+    
+    return {"status": "buried"}
+
+
 @app.get("/api/sessions")
 async def list_sessions(limit: int = 20):
     """List recent sessions."""

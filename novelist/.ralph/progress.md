@@ -148,3 +148,27 @@ Run: US-105 (Build)
 - Learnings for future iterations:
   - Separating simulation logic from the main generation loop allows for interactive refinement of specific mechanisms without restarting the entire session.
 ---
+
+## 2026-01-13 - US-106: Ranked Output & Export
+Thread: 
+Run: US-106 (Build)
+- Guardrails reviewed: yes
+- No-commit run: false
+- Commit: (pending)
+- Post-commit status: clean
+- Verification:
+  - Command: npm run build -> PASS
+- Files changed:
+  - src/server.py
+  - src/ralph/orchestrator.py
+  - ui/src/lib/api.ts
+  - ui/src/pages/Dashboard.tsx
+  - ui/src/components/HypothesisList.tsx
+- What was implemented:
+  - Refined hypothesis ranking logic to use weighted aggregate scores (novelty, feasibility, impact, cross-domain).
+  - Added Markdown and JSON export endpoints to the backend.
+  - Implemented Graveyard integration to manually bury hypotheses into cross-session memory.
+  - Updated Dashboard UI with export buttons and ranked cards with Graveyard controls.
+- Learnings for future iterations:
+  - Structured exports (Markdown) provide researchers with immediate shareable value after an autonomous run.
+---

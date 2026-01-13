@@ -135,6 +135,17 @@ export class API {
     });
   }
 
+  async exportSession(sessionId: string, format: "json" | "markdown") {
+    return this.request(`/api/sessions/${sessionId}/export?format=${format}`);
+  }
+
+  async buryHypothesis(sessionId: string, hypothesisId: string, reason: string) {
+    return this.request(`/api/sessions/${sessionId}/hypotheses/${hypothesisId}/graveyard`, {
+      method: "POST",
+      body: { reason },
+    });
+  }
+
   async getSessions() {
     return this.request("/api/sessions");
   }

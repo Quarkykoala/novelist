@@ -11,7 +11,8 @@ import {
   ThumbsUp,
   ThumbsDown,
   Search,
-  RotateCcw
+  RotateCcw,
+  Skull
 } from "lucide-react";
 
 export interface Hypothesis {
@@ -38,6 +39,7 @@ interface HypothesisListProps {
   onVote?: (id: string, direction: "up" | "down") => void;
   onInvestigate?: (id: string) => void;
   onRerun?: (id: string) => void;
+  onBury?: (id: string) => void;
 }
 
 function getPlotFilename(path: string): string {
@@ -48,7 +50,7 @@ function getPlotFilename(path: string): string {
   }
 }
 
-export function HypothesisList({ hypotheses, sourceMetadata = {}, onVote, onInvestigate, onRerun }: HypothesisListProps) {
+export function HypothesisList({ hypotheses, sourceMetadata = {}, onVote, onInvestigate, onRerun, onBury }: HypothesisListProps) {
   return (
     <div className="space-y-4">
       {hypotheses.map((h, i) => {
@@ -103,6 +105,17 @@ export function HypothesisList({ hypotheses, sourceMetadata = {}, onVote, onInve
                             >
                                 <Search className="w-3 h-3" />
                                 Investigate
+                            </Button>
+                        )}
+                        {onBury && (
+                            <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={() => onBury(h.id)}
+                                title="Send to Graveyard"
+                            >
+                                <Skull className="w-4 h-4" />
                             </Button>
                         )}
                     </div>

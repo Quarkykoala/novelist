@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Play, RotateCcw, Activity, Send, Lock, Unlock, RefreshCcw, FileText, List } from "lucide-react";
+import { Play, RotateCcw, Activity, Send, Lock, Unlock, RefreshCcw, FileText, List, Download } from "lucide-react";
 import { Reactor } from "@/components/Reactor";
 import { SoulFeed, type SoulMessage } from "@/components/SoulFeed";
 import { HypothesisList, type Hypothesis } from "@/components/HypothesisList";
@@ -117,6 +117,42 @@ export function Dashboard() {
       addLog("user", `Requested investigation for hypothesis ${hypothesisId}`);
     } catch (err: any) {
       addLog("error", "Failed to queue investigation: " + err.message);
+    }
+  };
+
+  const handleRerun = async (hypothesisId: string) => {
+    if (!sessionId) return;
+    try {
+      await api.rerunSimulation(sessionId, hypothesisId);
+      addLog("system", `Queued simulation rerun for ${hypothesisId}`);
+    } catch (err: any) {
+      addLog("error", "Failed to rerun simulation: " + err.message);
+    }
+  };
+
+  const handleExport = async (format: "json" | "markdown") => {
+    if (!sessionId) return;
+    try {
+      const data = await api.exportSession(sessionId, format);
+      const blob = new Blob([format === "json" ? JSON.stringify(data, null, 2) : data.content], { type: format === "json" ? "application/json" : "text/markdown" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `research_report_${sessionId}.${format === "json" ? "json" : "md"}`;
+      a.click();
+      addLog("system", `Exported as ${format.toUpperCase()}`);
+    } catch (err: any) {
+      addLog("error", "Export failed: " + err.message);
+    }
+  };
+
+  const handleBury = async (hypothesisId: string) => {
+    if (!sessionId) return;
+    try {
+      await api.buryHypothesis(sessionId, hypothesisId, "Rejected by researcher after review");
+      addLog("user", `Sent hypothesis ${hypothesisId} to Graveyard`);
+    } catch (err: any) {
+      addLog("error", "Failed to bury hypothesis: " + err.message);
     }
   };
 
@@ -511,7 +547,19 @@ export function Dashboard() {
         <div className="space-y-4">
             <Tabs defaultValue="hypotheses" className="w-full">
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-bold tracking-tight">Results</h2>
+                    <div className="flex items-center gap-4">
+                        <h2 className="text-xl font-bold tracking-tight">Results</h2>
+                        {!isGenerating && hypotheses.length > 0 && (
+                            <div className="flex gap-2">
+                                <Button variant="outline" size="sm" className="h-7 text-[10px] gap-1" onClick={() => handleExport("markdown")}>
+                                    <Download className="w-3 h-3" /> Markdown
+                                </Button>
+                                <Button variant="outline" size="sm" className="h-7 text-[10px] gap-1" onClick={() => handleExport("json")}>
+                                    <Download className="w-3 h-3" /> JSON
+                                </Button>
+                            </div>
+                        )}
+                    </div>
                     <TabsList>
                         <TabsTrigger value="hypotheses" className="gap-2">
                             <List className="w-4 h-4" /> Hypotheses
@@ -528,6 +576,8 @@ export function Dashboard() {
                         sourceMetadata={sourceMetadata} 
                         onVote={handleVote}
                         onInvestigate={handleInvestigate}
+                        onRerun={handleRerun}
+                        onBury={handleBury}
                     />
                 </TabsContent>
                 
