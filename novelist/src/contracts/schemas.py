@@ -125,6 +125,10 @@ class Hypothesis(BaseModel):
     source_soul: SoulRole | None = Field(default=None, description="Which soul generated this")
     iteration: int = Field(default=0, ge=0, description="Which iteration this was generated in")
     created_at: datetime = Field(default_factory=datetime.now)
+    
+    # Simulation
+    simulation_result: SimulationResult | None = Field(default=None)
+    simulation_history: list[SimulationResult] = Field(default_factory=list)
 
     def meets_thresholds(
         self,
@@ -419,6 +423,9 @@ class SimulationResult(BaseModel):
     output_log: str = Field(default="", description="Stdout/Stderr from the execution")
     plot_path: str | None = Field(default=None, description="Path to generated plot image")
     metrics: dict[str, float] = Field(default_factory=dict, description="Key metrics from the simulation")
+    vision_commentary: str | None = Field(default=None, description="Gemini Vision analysis of the plot")
+    status: str = Field(default="complete", description="queued, running, complete, error")
+    timestamp: datetime = Field(default_factory=datetime.now)
 
 
 class GroundedHypothesis(BaseModel):
@@ -466,6 +473,7 @@ class GroundedHypothesis(BaseModel):
     simulation_result: SimulationResult | None = Field(
         default=None, description="Result of in-silico verification"
     )
+    simulation_history: list[SimulationResult] = Field(default_factory=list)
 
     # Scores and metadata
     scores: ScoreBlock | dict[str, Any] = Field(default_factory=dict, description="Scoring breakdown")

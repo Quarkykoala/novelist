@@ -103,7 +103,9 @@ class Simulator:
             supports_hypothesis=result["supports_hypothesis"],
             output_log=result["output"],
             plot_path=final_plot_path,
-            metrics=result["metrics"]
+            metrics=result["metrics"],
+            vision_commentary=visual_reasoning if final_plot_path else None,
+            status="complete" if result["success"] else "error"
         )
 
     async def _visual_verify(self, hypothesis: GroundedHypothesis, plot_path: str) -> str:

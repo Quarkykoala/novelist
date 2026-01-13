@@ -128,6 +128,13 @@ export class API {
     });
   }
 
+  async rerunSimulation(sessionId: string, hypothesisId: string, code?: string) {
+    return this.request(`/api/sessions/${sessionId}/hypotheses/${hypothesisId}/rerun`, {
+      method: "POST",
+      body: code ? { code } : undefined,
+    });
+  }
+
   async getSessions() {
     return this.request("/api/sessions");
   }

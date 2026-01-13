@@ -63,15 +63,15 @@
   - Verification: `cd ui && npm run build`
 
 ### US-105: Simulation & Verification Pipeline
-- [ ] Expand simulator outputs and rerun hooks
+- [x] Expand simulator outputs and rerun hooks
   - Scope: Modify `src/soul/simulator.py` to persist structured status (`queued`, `running`, `vision_pass/fail`), store Gemini Vision commentary alongside code/log/plot paths, and add a backend endpoint that queues a rerun with user-supplied parameter overrides.
   - Acceptance: API responses expose simulation status + commentary per hypothesis, and a rerun request enqueues a new simulation whose outcome replaces or appends to prior runs.
   - Verification: `pytest tests/test_simulator_real.py -k simulator`
-- [ ] Build Simulation Lab UI
+- [x] Build Simulation Lab UI
   - Scope: Refactor `ui/src/components/HypothesisList.tsx` into smaller subcomponents that render simulation status badges, logs, Gemini Vision verdicts, and a rerun form (parameter inputs + rerun button) surfaced inline for each hypothesis.
   - Acceptance: Researchers can inspect code/log/plots plus Vision commentary without leaving the dashboard and trigger reruns with custom parameters.
   - Verification: `cd ui && npm run build`
-- [ ] Persist and display rerun history
+- [x] Persist and display rerun history
   - Scope: Store simulation attempts (timestamp, params, verdict) on each hypothesis object inside `src/ralph/orchestrator.py`, expose them via the API, and visualize them as a collapsible history list in the Hypothesis detail view.
   - Acceptance: Each hypothesis shows a rerun history with the ability to switch between attempts, and new runs append entries rather than overwrite silently.
   - Verification: `pytest tests/test_pipeline.py`

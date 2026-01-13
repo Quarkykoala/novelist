@@ -703,6 +703,21 @@ async def investigate_hypothesis(session_id: str, hypothesis_id: str):
     return {"status": "investigation_queued"}
 
 
+@app.post("/api/sessions/{session_id}/hypotheses/{hypothesis_id}/rerun")
+async def rerun_simulation(session_id: str, hypothesis_id: str, request: dict[str, Any] = None):
+    """Rerun simulation for a hypothesis."""
+    if session_id not in sessions:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    orchestrator = sessions[session_id].get("orchestrator")
+    if not orchestrator:
+        raise HTTPException(status_code=400, detail="Orchestrator not active")
+    
+    custom_code = request.get("code") if request else None
+    await orchestrator.rerun_simulation(hypothesis_id, custom_code)
+    return {"status": "rerun_queued"}
+
+
 @app.get("/api/sessions")
 async def list_sessions(limit: int = 20):
     """List recent sessions."""

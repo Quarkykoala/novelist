@@ -295,6 +295,59 @@ class RalphOrchestrator:
         msg = f"DEEP INVESTIGATION REQUESTED for hypothesis: '{target.hypothesis}'. Focus next iteration on validating its core assumptions."
         await self.inject_user_message(msg)
 
+    async def rerun_simulation(self, hypothesis_id: str, custom_code: str | None = None) -> None:
+        """Rerun simulation for a specific hypothesis."""
+        target = next((h for h in self.hypotheses if h.id == hypothesis_id), None)
+        if not target:
+            return
+
+        await self._emit_status(SessionPhase.VERIFYING, f"Rerunning simulation for {hypothesis_id}...")
+        
+        # We need a GroundedHypothesis for the simulator
+        # If it's a standard Hypothesis, we'll need to wrap it or update Simulator
+        # For now, let's assume we can map it back or use a more generic verify
+        
+        # Find if we have a grounded version
+        gh = next((g for g in self.grounded_hypotheses if g.id == hypothesis_id), None)
+        if not gh:
+            # Fallback: create a temporary grounded hypothesis from the hypothesis object
+            from src.contracts.schemas import GroundedHypothesis, MechanismStep
+            gh = GroundedHypothesis(
+                id=target.id,
+                claim=target.hypothesis,
+                mechanism=[MechanismStep(cause="Input", effect="Effect")], # Placeholder
+                prediction="Outcome predicted by model",
+                null_result="No significant change observed",
+                gap_addressed="Direct verification request"
+            )
+
+        if custom_code:
+            # If user provided code, we just execute it
+            sim_id = str(uuid.uuid4())[:8]
+            result_dict = await self.simulator._execute_code(custom_code, sim_id)
+            
+            # Try to get visual verification if a plot was expected
+            # (Requires plot path convention in custom code)
+            
+            new_result = SimulationResult(
+                code=custom_code,
+                success=result_dict["success"],
+                supports_hypothesis=result_dict["supports_hypothesis"],
+                output_log=result_dict["output"],
+                metrics=result_dict["metrics"],
+                status="complete" if result_dict["success"] else "error"
+            )
+        else:
+            # Generate new code and run
+            new_result = await self.simulator.verify_hypothesis(gh)
+
+        # Update history
+        if target.simulation_result:
+            target.simulation_history.append(target.simulation_result)
+        target.simulation_result = new_result
+        
+        await self._emit_status(SessionPhase.VERIFYING, f"Simulation rerun complete for {hypothesis_id}")
+
     async def run(
         self,
         topic: str,

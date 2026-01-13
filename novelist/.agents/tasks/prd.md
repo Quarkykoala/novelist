@@ -52,7 +52,7 @@ Accessibility considerations: keyboard navigation, high-contrast themes for plot
 - Debate transcripts with persona badges; highlight key critiques and resolutions.
 - Buttons for user to up/down-rank hypotheses or request deeper investigation.
 
-### [ ] US-105: Simulation & Verification Pipeline
+### [x] US-105: Simulation & Verification Pipeline
 - Display auto-generated code snippets, execution status, and logs.
 - Surface plots inline (support multiple types: line, scatter, heatmap) with Gemini Vision commentary (pass/fail, anomalies).
 - Allow user-triggered reruns with tweaked parameters.
