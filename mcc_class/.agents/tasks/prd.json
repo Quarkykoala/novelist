@@ -1,0 +1,261 @@
+﻿{
+  "version": 1,
+  "project": "Evidence-Backed Letter Issuance System",
+  "overview": "Build a compliant letter issuance, approval, verification, and dispute-response system with strict auditability, immutable approvals, and separated governance contexts.",
+  "goals": [
+    "Streamline compliant letter issuance with evidence-backed records",
+    "Ensure auditability, immutability, and separation of authority between contexts",
+    "Reduce dispute handling time with linked evidence and status visibility"
+  ],
+  "nonGoals": [
+    "Public verification endpoints",
+    "Automated approvals without explicit approver action",
+    "Replacing external email systems or fully automated dispute sending"
+  ],
+  "successMetrics": [
+    "100% of issued letters have an approval record, version hash, and issuance log",
+    "Audit log coverage for all create/update/approve/issue/verify/revoke actions",
+    "Dispute response draft can be generated for linked emails in under 2 minutes"
+  ],
+  "openQuestions": [
+    "Final framework and hosting selections",
+    "Auth provider and MFA requirements",
+    "Printer integration capabilities for capturing printer identifiers",
+    "Retention policy for audit logs and uploaded acknowledgements",
+    "QR vs barcode standard and expiration policy"
+  ],
+  "stack": {
+    "framework": "React (Vite) + Node.js (Express)",
+    "hosting": "TBD",
+    "database": "PostgreSQL",
+    "auth": "RBAC with audit logging (provider TBD)"
+  },
+  "routes": [
+    { "path": "/login", "name": "Login", "purpose": "Authenticate internal staff or approved partners" },
+    { "path": "/dashboard", "name": "Dashboard", "purpose": "Overview of letter status, approvals, disputes" },
+    { "path": "/letters", "name": "Letters", "purpose": "List and filter letters by context, department, tag" },
+    { "path": "/letters/new", "name": "New Letter", "purpose": "Create draft letter" },
+    { "path": "/letters/:id", "name": "Letter Detail", "purpose": "View versions, approvals, issuance, audits" },
+    { "path": "/letters/:id/issue", "name": "Issue Letter", "purpose": "Generate issued PDF with QR/barcode" },
+    { "path": "/verify", "name": "Verification", "purpose": "Authorized verification of QR/barcode" },
+    { "path": "/disputes", "name": "Disputes", "purpose": "Linked email disputes and response drafting" },
+    { "path": "/acknowledgements", "name": "Acknowledgements", "purpose": "Upload and view acknowledgement captures" },
+    { "path": "/audit", "name": "Audit Log", "purpose": "Append-only audit trail viewing" },
+    { "path": "/admin/tags", "name": "Tags", "purpose": "Manage master list of predefined tags" },
+    { "path": "/admin/departments", "name": "Departments", "purpose": "Manage department list" },
+    { "path": "/bcba/letters", "name": "BCBA Letters", "purpose": "BCBA context letter list and status" },
+    { "path": "/bcba/committees", "name": "BCBA Committees", "purpose": "Committee approvals and membership" }
+  ],
+  "uiNotes": [
+    "Always display creator and approver identities on letter views",
+    "Show context badges for Company vs BCBA",
+    "Verification results must show minimal metadata based on role"
+  ],
+  "dataModel": [
+    { "entity": "User", "fields": ["id", "email", "name", "roleId", "status"] },
+    { "entity": "Role", "fields": ["id", "name", "permissions"] },
+    { "entity": "Department", "fields": ["id", "name", "context"] },
+    { "entity": "Tag", "fields": ["id", "name", "context"] },
+    { "entity": "Letter", "fields": ["id", "context", "departmentId", "tagIds", "createdById", "status"] },
+    { "entity": "LetterVersion", "fields": ["id", "letterId", "version", "content", "hash", "createdById", "createdAt"] },
+    { "entity": "Approval", "fields": ["id", "letterVersionId", "approverId", "approvedAt", "context"] },
+    { "entity": "Issuance", "fields": ["id", "letterVersionId", "issuedById", "issuedAt", "channel", "qrPayload", "status"] },
+    { "entity": "PrintAudit", "fields": ["id", "issuanceId", "printedById", "printedAt", "printerId", "sourceIp"] },
+    { "entity": "VerificationLog", "fields": ["id", "issuanceId", "verifiedById", "verifiedAt", "result", "sourceIp"] },
+    { "entity": "Acknowledgement", "fields": ["id", "letterId", "jobId", "fileUrl", "capturedById", "capturedAt"] },
+    { "entity": "Dispute", "fields": ["id", "emailId", "letterId", "status", "assignedToId"] },
+    { "entity": "Committee", "fields": ["id", "name", "context"] },
+    { "entity": "CommitteeApproval", "fields": ["id", "committeeId", "letterVersionId", "approverId", "approvedAt"] },
+    { "entity": "AuditLog", "fields": ["id", "actorId", "action", "entity", "entityId", "metadata", "createdAt"] }
+  ],
+  "importFormat": {
+    "description": "Not applicable",
+    "example": {}
+  },
+  "rules": [
+    "Approved letter versions are immutable and cannot be edited",
+    "All contexts are strictly separated; no cross-context approvals or issuance",
+    "Every issuance references a specific approved version and hash",
+    "Print audits must record user, time, source IP, and printer identifier or explicit unknown",
+    "Verification is restricted to authorized roles and returns minimal metadata",
+    "Audit logs are append-only and capture all state changes",
+    "Revocations are recorded and verification reflects revoked status"
+  ],
+  "qualityGates": [
+    "npm run lint",
+    "npm run typecheck",
+    "npm test",
+    "npm run build"
+  ],
+  "stories": [
+    {
+      "id": "US-001",
+      "title": "Scaffold monorepo with web and API apps",
+      "status": "open",
+      "dependsOn": [],
+      "description": "As a developer, I want a working scaffold so the team can build features consistently.",
+      "acceptanceCriteria": [
+        "Create `apps/web` with Vite React TypeScript and `apps/api` with Express TypeScript",
+        "Install dependencies: `npm install` at root, `npm install -D typescript eslint` at root, `npm install express` in `apps/api`, `npm install react react-dom` in `apps/web`",
+        "Add root scripts for `lint`, `typecheck`, `test`, and `build` that run both apps",
+        "Add `.env.example` files for web and api with required variables",
+        "Example: running `npm run dev` starts web on 5173 and API on 3000",
+        "Negative case: missing required env var causes API startup to fail with a clear error"
+      ]
+    },
+    {
+      "id": "US-002",
+      "title": "Implement authentication and role-based access control",
+      "status": "open",
+      "dependsOn": ["US-001"],
+      "description": "As a system admin, I want role-based access so only authorized users can create, approve, or verify letters.",
+      "acceptanceCriteria": [
+        "Define roles for internal staff and approved external partners with permissions",
+        "Restrict verification endpoints to authenticated roles only",
+        "Persist login sessions with audit logging of login events",
+        "Example: an internal staff user can access `/letters/new`",
+        "Negative case: an unauthenticated user receives 401 on `/verify`"
+      ]
+    },
+    {
+      "id": "US-003",
+      "title": "Add database schema and migrations for core entities",
+      "status": "open",
+      "dependsOn": ["US-001"],
+      "description": "As a developer, I want a normalized schema so letter workflows and audits are consistent.",
+      "acceptanceCriteria": [
+        "Install ORM tooling: `npm install prisma @prisma/client` and run `npx prisma init`",
+        "Create migrations for core entities including Letter, LetterVersion, Approval, Issuance, and AuditLog",
+        "Seed master lists for departments and tags per context",
+        "Example: creating a Letter and LetterVersion in Company context persists with correct foreign keys",
+        "Negative case: inserting a Letter with a non-existent departmentId fails validation"
+      ]
+    },
+    {
+      "id": "US-004",
+      "title": "Create draft letters with departments and predefined tags",
+      "status": "open",
+      "dependsOn": ["US-002", "US-003"],
+      "description": "As a staff member, I want to create draft letters with required metadata for routing and audits.",
+      "acceptanceCriteria": [
+        "Draft creation requires context, department, tags, and creator identity",
+        "Only tags from the master list for the selected context are allowed",
+        "Letter detail view shows creator identity and context badge",
+        "Example: a Company draft with department HR and tag Verification saves successfully",
+        "Negative case: selecting a BCBA tag for a Company draft returns a validation error"
+      ]
+    },
+    {
+      "id": "US-005",
+      "title": "Approval workflow with immutable approved versions",
+      "status": "open",
+      "dependsOn": ["US-004"],
+      "description": "As an approver, I want explicit approvals so approved versions are immutable and auditable.",
+      "acceptanceCriteria": [
+        "Approval requires an explicit approver action and records approver identity and timestamp",
+        "Approved versions are locked from further edits and a new draft version must be created to change content",
+        "Letter views display created-by and approved-by at all times",
+        "Example: approving version 2 locks it and sets status to Approved",
+        "Negative case: attempting to edit an approved version returns 409 and logs an audit entry"
+      ]
+    },
+    {
+      "id": "US-006",
+      "title": "Issue letters with QR/barcode and version hash",
+      "status": "open",
+      "dependsOn": ["US-005"],
+      "description": "As a staff member, I want to issue letters with QR/barcode validation so authenticity can be verified.",
+      "acceptanceCriteria": [
+        "Generate issued PDF with system letterhead on blank paper (no pre-printed dependency)",
+        "Install QR/barcode library: `npm install qrcode`",
+        "Issuance records channel and ties to approved version hash",
+        "Example: issuing an approved letter creates a QR payload and Issuance record",
+        "Negative case: issuing a draft (unapproved) letter returns 400 and does not create issuance"
+      ]
+    },
+    {
+      "id": "US-007",
+      "title": "Capture mandatory print audit trail",
+      "status": "open",
+      "dependsOn": ["US-006"],
+      "description": "As a compliance officer, I want print audits so each print can be traced.",
+      "acceptanceCriteria": [
+        "Print audit captures user identity, timestamp, and source IP",
+        "If printer identifier is unavailable, record explicit value `unknown`",
+        "Print audit is linked to the issuance record",
+        "Example: printing an issued letter logs printerId `HP-402` and source IP",
+        "Negative case: print audit attempts without user identity are rejected"
+      ]
+    },
+    {
+      "id": "US-008",
+      "title": "Authorized verification endpoint with minimal metadata",
+      "status": "open",
+      "dependsOn": ["US-002", "US-006"],
+      "description": "As an authorized verifier, I want to validate QR/barcodes with minimal metadata exposure.",
+      "acceptanceCriteria": [
+        "Verification response includes valid/invalid/revoked, approver identity, timestamps, version hash, and issuance existence",
+        "Metadata visibility follows role-based policy",
+        "Verification attempts are logged in VerificationLog",
+        "Example: valid QR returns status `valid` with approver and issuance timestamp",
+        "Negative case: unauthorized user receives 403 and no metadata is returned"
+      ]
+    },
+    {
+      "id": "US-009",
+      "title": "Acknowledgement capture linked to letter and job",
+      "status": "open",
+      "dependsOn": ["US-004"],
+      "description": "As staff, I want to attach acknowledgement snapshots to letters and jobs for evidence.",
+      "acceptanceCriteria": [
+        "Upload or snapshot acknowledgements and link to letterId and jobId",
+        "Store file URL and captured metadata",
+        "Display acknowledgement status on letter detail",
+        "Example: uploading a signed PDF links to the letter and shows status `Captured`",
+        "Negative case: uploading without a linked letterId is rejected"
+      ]
+    },
+    {
+      "id": "US-010",
+      "title": "Dispute email linkage and response drafting",
+      "status": "open",
+      "dependsOn": ["US-004", "US-006", "US-009"],
+      "description": "As a disputes handler, I want complaint emails linked to letters to speed responses.",
+      "acceptanceCriteria": [
+        "Classifier links complaint emails to job and letter records with status display",
+        "Dispute view shows approval, issuance, and acknowledgement status",
+        "Provide a reply draft for manual sending",
+        "Example: an email with letter reference links and shows Approved + Issued + Acknowledged",
+        "Negative case: unmatched emails remain unlinked and flagged for manual review"
+      ]
+    },
+    {
+      "id": "US-011",
+      "title": "BCBA committee approvals with context separation",
+      "status": "open",
+      "dependsOn": ["US-003", "US-005"],
+      "description": "As a BCBA committee member, I want committee-based approvals while preserving audit discipline.",
+      "acceptanceCriteria": [
+        "BCBA letters require committee approval records with committee membership",
+        "BCBA context data cannot be approved or issued by Company-only roles",
+        "Committee approval records include approver identity and timestamp",
+        "Example: a BCBA letter shows two committee approvals before issuance",
+        "Negative case: Company approver attempting BCBA approval receives 403"
+      ]
+    },
+    {
+      "id": "US-012",
+      "title": "Append-only audit logging for all actions",
+      "status": "open",
+      "dependsOn": ["US-002", "US-003"],
+      "description": "As an auditor, I want append-only logs to reconstruct any action history.",
+      "acceptanceCriteria": [
+        "AuditLog captures create/update/approve/issue/verify/revoke events",
+        "Logs are append-only and never updated or deleted by the app",
+        "Audit log UI allows filtering by entity and actor",
+        "Example: approving a letter writes an audit log entry with actor and metadata",
+        "Negative case: attempts to delete an audit record are blocked and logged"
+      ]
+    }
+  ]
+}

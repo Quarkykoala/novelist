@@ -1,0 +1,38 @@
+You are using the prd skill (JSON PRD workflow). Use the provided answers and proceed to generate the JSON PRD without asking more questions.
+
+Save the JSON to: C:\users\lenovo\projects\mcc_class\.agents\tasks\prd.json
+
+Answers:
+1) Output format: JSON PRD (Ralph-compatible)
+2) New project
+3) Primary goal: mostly A (streamline compliant letter issuance) and B (auditability & governance separation), some C (reduce dispute handling time)
+4) Tech stack/hosting: Web app + API; framework does not matter for now
+5) Quality gates: choose best (pick sensible defaults)
+6) Verification access policy: internal staff only AND approved external partners (role-based access with audit logging)
+
+Feature context:
+Evidence-backed document issuance, approval, verification, and dispute-response system for company operations and BCBA association contexts; supports immutable approvals, QR/barcode validation (non-public), print audit trail (who/when/printer/IP), blank-paper letterhead PDFs, predefined tags/departments, acknowledgement capture, and email dispute linkage.
+
+Key requirements and constraints:
+- Two strictly separated contexts: Company operations and BCBA association governance.
+- Non-negotiable principles: truth over convenience, immutability after approval, evidence over memory, audit before automation, separation of authority.
+- Must support department-wise organization and predefined tags (master list).
+- Approval workflow with explicit approvers; show who created and who approved at all times; approved version is immutable.
+- Blank paper printing with system letterhead in PDF (no pre-printed letterhead dependency).
+- Mandatory print audit: user identity, timestamp, printer identifier when capturable, source IP. If printer details unavailable, record that explicitly.
+- Each issued letter includes QR/Barcode; scanning validates authenticity; validation is not public (authorized only).
+- Issuance logs channel and ties to document version/hash.
+- Acknowledgement capture: snapshot/upload and link to job file + letter.
+- Email dispute linkage: classifier links complaint emails to job/letter, shows approval/issuance/ack status, assists reply draft (manual send).
+- BCBA letters go through committee-based approvals; same issuance discipline and audit trail.
+- Append-only audit logs for creation/updates/approval/issuance/verification/revocation.
+- Verification shows valid/invalid/revoked, approver identity, timestamps, version hash, issuance existence; minimal metadata policy-controlled.
+
+Remember:
+- Include qualityGates at top-level.
+- Each story must include at least one example and one negative case in acceptance criteria.
+- For a new project, include initial setup stories (scaffold, installs, scripts, env/config).
+- Keep stories small enough for single iteration.
+- Output only JSON in the file.
+
+After saving, respond: "PRD JSON saved to <path>. Close this chat and run `ralph build`."

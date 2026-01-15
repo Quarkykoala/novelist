@@ -1,0 +1,19 @@
+{
+  "name": "mcc_class",
+  "version": "1.0.0",
+  "description": "Evidence-Backed Letter Issuance System",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm test --workspaces --if-present"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
