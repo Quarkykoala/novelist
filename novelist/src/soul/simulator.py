@@ -78,7 +78,9 @@ class Simulator:
         response = await self.client.generate_content(prompt)
         
         # Extract code block
-        code = self._extract_code(response)
+        # Handle GenerationResponse object or string
+        content = response.content if hasattr(response, "content") else str(response)
+        code = self._extract_code(content)
         
         # 2. Execute Code
         result = await self._execute_code(code, sim_id)
@@ -149,8 +151,10 @@ Visual Analysis:"""
         script_path = self.temp_dir / f"sim_script_{sim_id}.py"
         
         try:
-            with open(script_path, "w", encoding="utf-8") as f:
-                f.write(code)
+            # Use aiofiles for non-blocking I/O
+            import aiofiles
+            async with aiofiles.open(script_path, "w", encoding="utf-8") as f:
+                await f.write(code)
             
             # Run in subprocess
             proc = await asyncio.create_subprocess_exec(
