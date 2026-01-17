@@ -115,13 +115,16 @@ def _append_phase_history(
         history.append({"phase": phase_value, "detail": detail, "timestamp": ts})
 
 
-def _load_summary(session_id: str) -> dict[str, Any] | None:
+async def _load_summary(session_id: str) -> dict[str, Any] | None:
     summary_path = SESSIONS_DIR / session_id / "summary.json"
     if not summary_path.exists():
         return None
     try:
-        with open(summary_path, "r", encoding="utf-8") as f:
-            return json.load(f)
+        def read_json():
+            with open(summary_path, "r", encoding="utf-8") as f:
+                return json.load(f)
+
+        return await asyncio.to_thread(read_json)
     except Exception:
         return None
 
@@ -450,7 +453,7 @@ async def run_session(
     finally:
         session = sessions.get(session_id)
         if session:
-            summary_data = _load_summary(session_id) or {}
+            summary_data = await _load_summary(session_id) or {}
             summary_data.update(
                 {
                     "session_id": session_id,
@@ -498,7 +501,7 @@ async def get_session_status(session_id: str):
     """Get status of a running or completed session."""
     session = sessions.get(session_id)
     if not session:
-        summary = _load_summary(session_id)
+        summary = await _load_summary(session_id)
         if not summary:
             raise HTTPException(status_code=404, detail="Session not found")
 
@@ -584,7 +587,7 @@ async def stop_session(session_id: str):
 @app.post("/api/sessions/{session_id}/resume", response_model=SessionResponse)
 async def resume_session(session_id: str, background_tasks: BackgroundTasks):
     """Resume a past session using its stored configuration."""
-    summary = _load_summary(session_id)
+    summary = await _load_summary(session_id)
     if not summary:
         raise HTTPException(status_code=404, detail="Session summary not found")
 
@@ -773,7 +776,7 @@ async def export_session(session_id: str, format: str = "json"):
         }
         hypotheses = session.get("hypotheses", [])
     else:
-        summary = _load_summary(session_id)
+        summary = await _load_summary(session_id)
         if not summary:
             raise HTTPException(status_code=404, detail="Session not found")
         
@@ -922,7 +925,7 @@ async def list_sessions(limit: int = 20):
     if SESSIONS_DIR.exists():
         for session_dir in sorted(SESSIONS_DIR.iterdir(), reverse=True)[:limit]:
             if session_dir.is_dir() and session_dir.name not in sessions:
-                summary = _load_summary(session_dir.name) or {}
+                summary = await _load_summary(session_dir.name) or {}
                 all_sessions.append({
                     "id": session_dir.name,
                     "topic": summary.get("topic", "Loaded from disk"),

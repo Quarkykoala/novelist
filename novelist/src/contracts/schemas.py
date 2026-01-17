@@ -1,5 +1,7 @@
 """Core Pydantic schemas for the hypothesis synthesizer.
 
+from __future__ import annotations
+
 These schemas define the data contracts for:
 - Hypotheses and their components (evidence, scores)
 - BDI (Beliefs, Desires, Intentions) state
@@ -91,6 +93,20 @@ class ScoreBlock(BaseModel):
         """Calculate aggregate score as weighted average."""
         weights = {"novelty": 0.3, "feasibility": 0.25, "impact": 0.25, "cross_domain": 0.2}
         return sum(getattr(self, k) * v for k, v in weights.items())
+
+
+class SimulationResult(BaseModel):
+    """Result of an in-silico verification simulation."""
+
+    code: str = Field(..., description="The Python code generated for the simulation")
+    success: bool = Field(..., description="Whether the simulation ran without errors")
+    supports_hypothesis: bool = Field(..., description="Whether the simulation result supports the claim")
+    output_log: str = Field(default="", description="Stdout/Stderr from the execution")
+    plot_path: str | None = Field(default=None, description="Path to generated plot image")
+    metrics: dict[str, float] = Field(default_factory=dict, description="Key metrics from the simulation")
+    vision_commentary: str | None = Field(default=None, description="Gemini Vision analysis of the plot")
+    status: str = Field(default="complete", description="queued, running, complete, error")
+    timestamp: datetime = Field(default_factory=datetime.now)
 
 
 # =============================================================================
@@ -412,20 +428,6 @@ class SuggestedExperiment(BaseModel):
     measurements: list[str] = Field(..., description="Specific variables to measure")
     expected_timeline: str = Field(..., description="Estimated time to complete")
     required_resources: list[str] = Field(..., description="Equipment/reagents needed")
-
-
-class SimulationResult(BaseModel):
-    """Result of an in-silico verification simulation."""
-    
-    code: str = Field(..., description="The Python code generated for the simulation")
-    success: bool = Field(..., description="Whether the simulation ran without errors")
-    supports_hypothesis: bool = Field(..., description="Whether the simulation result supports the claim")
-    output_log: str = Field(default="", description="Stdout/Stderr from the execution")
-    plot_path: str | None = Field(default=None, description="Path to generated plot image")
-    metrics: dict[str, float] = Field(default_factory=dict, description="Key metrics from the simulation")
-    vision_commentary: str | None = Field(default=None, description="Gemini Vision analysis of the plot")
-    status: str = Field(default="complete", description="queued, running, complete, error")
-    timestamp: datetime = Field(default_factory=datetime.now)
 
 
 class GroundedHypothesis(BaseModel):
