@@ -176,15 +176,19 @@ app.post('/api/letters', async (req: Request, res: Response) => {
 
     if (lError) return res.status(500).json({ error: lError.message });
 
-    // 2. Assign Tags
+    // 2. Assign Tags & 3. Create initial version (Parallel)
     const normalizedTagIds = normalizeTagIds(tag_ids);
+    const promises: PromiseLike<any>[] = [];
+
     if (normalizedTagIds.length > 0) {
         const tagsToInsert = normalizedTagIds.map((tagId: string) => ({ letter_id: letter.id, tag_id: tagId }));
-        const { error: tError } = await supabase.from('letter_tags').insert(tagsToInsert);
-        if (tError) return res.status(500).json({ error: tError.message });
+        promises.push(
+            supabase.from('letter_tags').insert(tagsToInsert).then(({ error }) => {
+                if (error) throw new Error(`Tag Error: ${error.message}`);
+            })
+        );
     }
 
-    // 3. Create initial version
     const contentHash = buildContentHash({
         letterId: letter.id,
         versionNumber: 1,
@@ -194,19 +198,31 @@ app.post('/api/letters', async (req: Request, res: Response) => {
         content
     });
 
-    const { data: version, error: vError } = await supabase
-        .from('letter_versions')
-        .insert([{
-            letter_id: letter.id,
-            version_number: 1,
-            content,
-            content_hash: contentHash,
-            created_by
-        }])
-        .select()
-        .single();
+    // We rely on the promise to populate this variable before we use it
+    let version: { [key: string]: any } | null = null;
+    promises.push(
+        supabase
+            .from('letter_versions')
+            .insert([{
+                letter_id: letter.id,
+                version_number: 1,
+                content,
+                content_hash: contentHash,
+                created_by
+            }])
+            .select()
+            .single()
+            .then(({ data, error }) => {
+                if (error) throw new Error(`Version Error: ${error.message}`);
+                version = data;
+            })
+    );
 
-    if (vError) return res.status(500).json({ error: vError.message });
+    try {
+        await Promise.all(promises);
+    } catch (err: any) {
+        return res.status(500).json({ error: err.message });
+    }
 
     // Log creation
     await supabase.from('audit_logs').insert([{
