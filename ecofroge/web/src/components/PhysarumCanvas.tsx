@@ -59,6 +59,7 @@ export default function PhysarumCanvas({
     const pheromoneMapRef = useRef<Float32Array | null>(null);
     const animationFrameRef = useRef<number>(0);
     const dimensionsRef = useRef({ width: 0, height: 0 });
+    const zoneCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
     // Initialize agents
     const initializeAgents = useCallback(() => {
@@ -133,20 +134,34 @@ export default function PhysarumCanvas({
         ctx.fillRect(0, 0, width, height);
 
         // Draw plastic zones (red tint)
-        ctx.globalAlpha = 0.15;
-        for (const zone of CONFIG.PLASTIC_ZONES) {
-            const gradient = ctx.createRadialGradient(
-                currentCenterX + zone.dx, currentCenterY + zone.dy, 0,
-                currentCenterX + zone.dx, currentCenterY + zone.dy, zone.radius
-            );
-            gradient.addColorStop(0, 'rgba(255, 50, 50, 0.8)');
-            gradient.addColorStop(1, 'rgba(255, 50, 50, 0)');
-            ctx.fillStyle = gradient;
-            ctx.beginPath();
-            ctx.arc(currentCenterX + zone.dx, currentCenterY + zone.dy, zone.radius, 0, Math.PI * 2);
-            ctx.fill();
+        // Optimization: Cache the gradients to an offscreen canvas
+        if (!zoneCanvasRef.current || zoneCanvasRef.current.width !== width || zoneCanvasRef.current.height !== height) {
+            if (!zoneCanvasRef.current) {
+                zoneCanvasRef.current = document.createElement('canvas');
+            }
+            zoneCanvasRef.current.width = width;
+            zoneCanvasRef.current.height = height;
+            const zCtx = zoneCanvasRef.current.getContext('2d');
+            if (zCtx) {
+                zCtx.globalAlpha = 0.15;
+                for (const zone of CONFIG.PLASTIC_ZONES) {
+                    const gradient = zCtx.createRadialGradient(
+                        currentCenterX + zone.dx, currentCenterY + zone.dy, 0,
+                        currentCenterX + zone.dx, currentCenterY + zone.dy, zone.radius
+                    );
+                    gradient.addColorStop(0, 'rgba(255, 50, 50, 0.8)');
+                    gradient.addColorStop(1, 'rgba(255, 50, 50, 0)');
+                    zCtx.fillStyle = gradient;
+                    zCtx.beginPath();
+                    zCtx.arc(currentCenterX + zone.dx, currentCenterY + zone.dy, zone.radius, 0, Math.PI * 2);
+                    zCtx.fill();
+                }
+            }
         }
-        ctx.globalAlpha = 1;
+
+        if (zoneCanvasRef.current) {
+            ctx.drawImage(zoneCanvasRef.current, 0, 0);
+        }
 
         // Safety check - kill all agents if safety lock missing
         if (!safetyLockEnabled && isActive) {

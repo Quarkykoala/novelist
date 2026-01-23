@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradient Performance Benchmark</title>
+    <style>
+        body { font-family: system-ui, sans-serif; padding: 20px; }
+        canvas { border: 1px solid #ccc; display: block; margin-bottom: 10px; }
+        .results { margin-top: 20px; font-family: monospace; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Gradient Performance Benchmark</h1>
+    <p>This benchmark compares the performance of creating radial gradients every frame versus caching them on an offscreen canvas.</p>
+
+    <button onclick="runBenchmark()">Run Benchmark</button>
+
+    <div class="results" id="results"></div>
+
+    <canvas id="canvas" width="800" height="600"></canvas>
+
+    <script>
+        const CONFIG = {
+            PLASTIC_ZONES: [
+                { dx: -150, dy: -80, radius: 60 },
+                { dx: 200, dy: 50, radius: 80 },
+                { dx: -50, dy: 180, radius: 50 },
+                { dx: 100, dy: -150, radius: 70 },
+                { dx: -200, dy: 100, radius: 55 },
+            ],
+        };
+        const ITERATIONS = 1000;
+        const width = 800;
+        const height = 600;
+        const currentCenterX = width / 2;
+        const currentCenterY = height / 2;
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        function runBenchmark() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = 'Running...';
+
+            setTimeout(() => {
+                // Method 1: Recreating gradients
+                const start1 = performance.now();
+                for (let i = 0; i < ITERATIONS; i++) {
+                    ctx.clearRect(0, 0, width, height);
+                    ctx.globalAlpha = 0.15;
+                    for (const zone of CONFIG.PLASTIC_ZONES) {
+                        const gradient = ctx.createRadialGradient(
+                            currentCenterX + zone.dx, currentCenterY + zone.dy, 0,
+                            currentCenterX + zone.dx, currentCenterY + zone.dy, zone.radius
+                        );
+                        gradient.addColorStop(0, 'rgba(255, 50, 50, 0.8)');
+                        gradient.addColorStop(1, 'rgba(255, 50, 50, 0)');
+                        ctx.fillStyle = gradient;
+                        ctx.beginPath();
+                        ctx.arc(currentCenterX + zone.dx, currentCenterY + zone.dy, zone.radius, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    ctx.globalAlpha = 1;
+                }
+                const end1 = performance.now();
+                const time1 = end1 - start1;
+
+                // Method 2: Cached offscreen canvas
+                const startSetup = performance.now();
+                const offscreen = document.createElement('canvas');
+                offscreen.width = width;
+                offscreen.height = height;
+                const oCtx = offscreen.getContext('2d');
+                oCtx.globalAlpha = 0.15;
+                for (const zone of CONFIG.PLASTIC_ZONES) {
+                    const gradient = oCtx.createRadialGradient(
+                        currentCenterX + zone.dx, currentCenterY + zone.dy, 0,
+                        currentCenterX + zone.dx, currentCenterY + zone.dy, zone.radius
+                    );
+                    gradient.addColorStop(0, 'rgba(255, 50, 50, 0.8)');
+                    gradient.addColorStop(1, 'rgba(255, 50, 50, 0)');
+                    oCtx.fillStyle = gradient;
+                    oCtx.beginPath();
+                    oCtx.arc(currentCenterX + zone.dx, currentCenterY + zone.dy, zone.radius, 0, Math.PI * 2);
+                    oCtx.fill();
+                }
+                const endSetup = performance.now();
+                const setupTime = endSetup - startSetup;
+
+                const start2 = performance.now();
+                for (let i = 0; i < ITERATIONS; i++) {
+                    ctx.clearRect(0, 0, width, height);
+                    ctx.drawImage(offscreen, 0, 0);
+                }
+                const end2 = performance.now();
+                const time2 = end2 - start2;
+
+                resultsDiv.innerHTML = `
+                    <h3>Results (${ITERATIONS} iterations)</h3>
+                    <p><strong>Original (Recreating Gradients):</strong> ${time1.toFixed(2)} ms</p>
+                    <p><strong>Optimized (Cached Canvas):</strong> ${time2.toFixed(2)} ms</p>
+                    <p><strong>Cache Setup Time:</strong> ${setupTime.toFixed(2)} ms (paid once)</p>
+                    <p><strong>Speedup:</strong> ${(time1 / time2).toFixed(2)}x</p>
+                `;
+            }, 100);
+        }
+    </script>
+</body>
+</html>
