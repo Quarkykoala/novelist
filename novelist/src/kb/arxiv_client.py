@@ -8,6 +8,7 @@ Uses the arXiv API (https://info.arxiv.org/help/api/index.html).
 
 import asyncio
 import xml.etree.ElementTree as ET
+from collections import OrderedDict
 from datetime import datetime
 from typing import Any
 
@@ -43,6 +44,26 @@ CATEGORY_NEIGHBORS: dict[str, list[str]] = {
 # Global rate limiter state
 _LAST_REQUEST_TIME = 0.0
 _GLOBAL_LOCK = asyncio.Lock()
+
+
+class SimpleLRUCache:
+    def __init__(self, capacity: int = 128):
+        self.cache = OrderedDict()
+        self.capacity = capacity
+
+    def get(self, key: Any) -> Any | None:
+        if key not in self.cache:
+            return None
+        self.cache.move_to_end(key)
+        return self.cache[key]
+
+    def put(self, key: Any, value: Any) -> None:
+        self.cache[key] = value
+        self.cache.move_to_end(key)
+        if len(self.cache) > self.capacity:
+            self.cache.popitem(last=False)
+
+_SEARCH_CACHE = SimpleLRUCache(capacity=100)
 
 
 class ArxivClient:
@@ -139,8 +160,17 @@ class ArxivClient:
             "sortOrder": sort_order,
         }
 
+        # Check cache
+        cache_key = (params["search_query"], params["max_results"], params["sortBy"], params["sortOrder"])
+        cached = _SEARCH_CACHE.get(cache_key)
+        if cached:
+            return cached
+
         response = await self._make_request(params)
-        return self._parse_atom_response(response.text)
+        result = self._parse_atom_response(response.text)
+
+        _SEARCH_CACHE.put(cache_key, result)
+        return result
 
     async def search_by_category(
         self,
