@@ -483,9 +483,22 @@ app.get('/api/audit-logs', async (req: Request, res: Response) => {
 
 app.get('/api/letters', async (req: Request, res: Response) => {
     const { context } = req.query;
+
+    let page = parseInt(req.query.page as string) || 1;
+    let limit = parseInt(req.query.limit as string) || 50;
+
+    if (page < 1) page = 1;
+    if (limit < 1) limit = 1;
+    if (limit > 100) limit = 100;
+
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+
     const query = supabase
         .from('letters')
-        .select('*, departments(name), letter_tags(tags(name))');
+        .select('*, departments(name), letter_tags(tags(name))')
+        .range(from, to);
+
     if (context) {
         query.eq('context', String(context));
     }
@@ -499,6 +512,10 @@ app.get('/health', (req: Request, res: Response) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-app.listen(port, () => {
-    console.log(`API server running on http://localhost:${port}`);
-});
+export { app, supabase };
+
+if (require.main === module) {
+    app.listen(port, () => {
+        console.log(`API server running on http://localhost:${port}`);
+    });
+}
