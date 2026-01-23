@@ -140,7 +140,7 @@ class ArxivClient:
         }
 
         response = await self._make_request(params)
-        return self._parse_atom_response(response.text)
+        return await self._parse_atom_response(response.text)
 
     async def search_by_category(
         self,
@@ -175,7 +175,7 @@ class ArxivClient:
         }
 
         response = await self._make_request(params)
-        return self._parse_atom_response(response.text)
+        return await self._parse_atom_response(response.text)
 
     async def get_novelty_hits(
         self,
@@ -203,7 +203,11 @@ class ArxivClient:
         titles = [p.title for p in papers[:5]]
         return hit_count, titles
 
-    def _parse_atom_response(self, xml_text: str) -> list[ArxivPaper]:
+    async def _parse_atom_response(self, xml_text: str) -> list[ArxivPaper]:
+        """Parse arXiv Atom XML response into ArxivPaper objects (async)."""
+        return await asyncio.to_thread(self._parse_atom_response_sync, xml_text)
+
+    def _parse_atom_response_sync(self, xml_text: str) -> list[ArxivPaper]:
         """Parse arXiv Atom XML response into ArxivPaper objects."""
         papers: list[ArxivPaper] = []
 
