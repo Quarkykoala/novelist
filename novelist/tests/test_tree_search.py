@@ -20,17 +20,17 @@ class TestTreeSearch(unittest.IsolatedAsyncioTestCase):
         
         generator = MagicMock()
         # Mock generate_batch
-        generator.generate_batch = AsyncMock(return_value=[
+        generator.generate_batch = AsyncMock(side_effect=[
             [GroundedHypothesis(
-                id="h1", claim="Hypothesis 1", 
+                id="h1", claim="Hypothesis 1 is a valid hypothesis statement that is long enough.",
                 mechanism=[
                     MechanismStep(cause="A", effect="B", evidence_paper=""),
                     MechanismStep(cause="B", effect="C", evidence_paper=""),
                     MechanismStep(cause="C", effect="D", evidence_paper="")
                 ], 
                 prediction="Outcome D increases",
-                null_result="", source_gap_id="g1", source_soul=SoulRole.CREATIVE,
-                gap_addressed="Gap 1", supporting_papers=[], contradicting_papers=[], suggested_experiments=[], scores={}
+                null_result="The null result would show no effect.", source_soul=SoulRole.CREATIVE,
+                gap_addressed="Gap 1 description", supporting_papers=[], contradicting_papers=[], suggested_experiments=[], scores={}
             )],
             [], # 2nd gap yields nothing
             []  # 3rd gap yields nothing
@@ -43,8 +43,8 @@ class TestTreeSearch(unittest.IsolatedAsyncioTestCase):
                 claim=f"{hypothesis.claim} Refined", 
                 mechanism=hypothesis.mechanism, # Keep mechanism
                 prediction=hypothesis.prediction,
-                null_result="", 
-                source_gap_id=hypothesis.source_gap_id, source_soul=SoulRole.CREATIVE,
+                null_result="The null result would show no effect.",
+                source_soul=SoulRole.CREATIVE,
                 gap_addressed=hypothesis.gap_addressed, supporting_papers=[], contradicting_papers=[], suggested_experiments=[], scores={}
             )
         )
@@ -66,7 +66,7 @@ class TestTreeSearch(unittest.IsolatedAsyncioTestCase):
         # 3. Create Root State with Gaps
         root_state = ResearchState(
             gaps=[
-                IdentifiedGap(id="g1", description="Gap 1", type=GapType.MISSING_CONNECTION, concept_a="A", concept_b="B", potential_value=0.8),
+                IdentifiedGap(id="g1", description="Gap 1 description must be long enough too.", gap_type=GapType.MISSING_CONNECTION, concept_a="A", concept_b="B", potential_value="High Value"),
             ],
             depth=0
         )

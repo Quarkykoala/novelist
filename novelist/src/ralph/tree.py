@@ -64,7 +64,7 @@ class SearchNode:
     id: str = field(default_factory=lambda: str(uuid.uuid4())[:8])
     action_description: str = "Root"  # Description of action that led here
     
-    def uct_score(self, exploration_weight: float = 1.414) -> float:
+    def uct_score(self, exploration_weight: float = 1.414, log_parent_visits: float | None = None) -> float:
         """Calculate Upper Confidence Bound for Trees (UCT) score."""
         if self.visits == 0:
             return float('inf')
@@ -73,7 +73,13 @@ class SearchNode:
             return 0.0
             
         exploitation = self.value / self.visits
-        exploration = exploration_weight * math.sqrt(math.log(self.parent.visits) / self.visits)
+
+        if log_parent_visits is not None:
+            log_N = log_parent_visits
+        else:
+            log_N = math.log(self.parent.visits)
+
+        exploration = exploration_weight * math.sqrt(log_N / self.visits)
         
         return exploitation + exploration
     
@@ -101,7 +107,12 @@ class SearchNode:
         if not self.children:
             raise ValueError("Node has no children")
             
-        return max(self.children, key=lambda c: c.uct_score(exploration_weight))
+        # Optimization: Pre-calculate log(parent.visits) as it's constant for all children
+        log_parent_visits = 0.0
+        if self.visits > 1:
+            log_parent_visits = math.log(self.visits)
+
+        return max(self.children, key=lambda c: c.uct_score(exploration_weight, log_parent_visits=log_parent_visits))
     
     def get_path(self) -> list[SearchNode]:
         """Get path from root to this node."""
