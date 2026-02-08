@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Virtual environments
+.venv/
+.venv-win/
+
+# Node
+node_modules/
+ui/node_modules/
+ui/dist/
+
+# Runtime/session outputs
+*.log
+sessions/*/
+!sessions/graveyard.json
+sessions/*.db
+
+# Local tooling / temp
+.agents/
+.ralph/
+.tmp/
+
+# Environment files
+.env
+.env.local
+.env.*.local
