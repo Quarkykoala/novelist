@@ -1,6 +1,5 @@
 # Novelist - The Agentic Research Collective 🧠
 
-> **Winner - Gemini API Developer Competition 2024 (Project Entry)**  
 > *An autonomous scientific discovery engine that doesn't just read papers—it dreams, debates, and verifies new hypotheses.*
 
 ![Novelist Dashboard](https://github.com/user-attachments/assets/placeholder-image-url)
