@@ -11,7 +11,7 @@ Novelist is not another RAG chatbot. It is a **BDI (Beliefs, Desires, Intentions
 
 It ingests thousands of papers, builds a mental model of the field, identifies "negative space" (unexplored gaps), and then **simulates a committee of expert personas**—a Skeptic, a Visionary, a Methodologist—to propose and rigorously debate new experimental hypotheses.
 
-Crucially, it **verifies** these hypotheses by writing its own Python simulations and using **Gemini 1.5 Pro Vision** to inspect the resulting data plots, ensuring the math backs up the theory.
+Crucially, it **verifies** these hypotheses by writing its own Python simulations and using **Gemini 3 Pro Vision** to inspect the resulting data plots, ensuring the math backs up the theory.
 
 ## 🚀 Key Features
 
