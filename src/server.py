@@ -170,6 +170,14 @@ def _load_hypotheses_from_disk(session_id: str) -> list[dict[str, Any]]:
         return []
 
 
+async def _load_hypotheses_from_disk_async(session_id: str) -> list[dict[str, Any]]:
+    return await asyncio.to_thread(_load_hypotheses_from_disk, session_id)
+
+
+async def _load_summary_async(session_id: str) -> dict[str, Any] | None:
+    return await asyncio.to_thread(_load_summary, session_id)
+
+
 def _list_replay_candidates(limit: int = 20) -> list[dict[str, Any]]:
     """List completed sessions that can be used for judge replay."""
     candidates: list[dict[str, Any]] = []
@@ -776,15 +784,11 @@ async def get_session_status(session_id: str):
     """Get status of a running or completed session."""
     session = sessions.get(session_id)
     if not session:
-        summary = _load_summary(session_id)
+        summary = await _load_summary_async(session_id)
         if not summary:
             raise HTTPException(status_code=404, detail="Session not found")
 
-        hypotheses: list[dict[str, Any]] = []
-        hypotheses_file = SESSIONS_DIR / session_id / "hypotheses.json"
-        if hypotheses_file.exists():
-            with open(hypotheses_file, "r", encoding="utf-8") as f:
-                hypotheses = [_serialize_hypothesis(h) for h in json.load(f)]
+        hypotheses = await _load_hypotheses_from_disk_async(session_id)
 
         return {
             "id": session_id,
@@ -1219,14 +1223,11 @@ async def export_session(session_id: str, format: str = "json"):
         hypotheses = session.get("hypotheses", [])
         metadata = session.get("source_metadata", {}) or {}
     else:
-        summary = _load_summary(session_id)
+        summary = await _load_summary_async(session_id)
         if not summary:
             raise HTTPException(status_code=404, detail="Session not found")
         
-        hypotheses_file = SESSIONS_DIR / session_id / "hypotheses.json"
-        if hypotheses_file.exists():
-            with open(hypotheses_file, "r", encoding="utf-8") as f:
-                hypotheses = [_serialize_hypothesis(h) for h in json.load(f)]
+        hypotheses = await _load_hypotheses_from_disk_async(session_id)
 
     if format == "json":
         return {"summary": summary, "hypotheses": hypotheses}
