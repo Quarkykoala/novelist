@@ -17,6 +17,7 @@ from src.contracts.schemas import (
     ExtractedClaim,
     GapType,
     GroundedHypothesis,
+    Hypothesis,
     IdentifiedGap,
     MechanismStep,
     PredictionBounds,
@@ -26,6 +27,56 @@ from src.contracts.schemas import (
 )
 from src.soul.llm_client import LLMClient
 
+
+HYPOTHESIS_GROUNDING_PROMPT = """You are a senior research scientist. Your task is to transform a scientific hypothesis into a STRUCTURED, SIMULATION-READY format.
+
+HYPOTHESIS:
+"{hypothesis}"
+
+RATIONALE:
+"{rationale}"
+
+EVIDENCE/CONTEXT:
+{evidence}
+
+TASK:
+1. Deconstruct the hypothesis into a MECHANISM chain (Cause -> Effect steps).
+2. Define a QUANTITATIVE PREDICTION (what exactly will change and by how much, if known, or a directional change with a metric).
+3. Define a NULL RESULT (observation that falsifies the hypothesis).
+4. Identify the specific GAP addressed.
+
+OUTPUT JSON FORMAT:
+```json
+{{
+  "claim": "Refined clear statement of the hypothesis",
+  "mechanism": [
+    {{"cause": "Step 1 cause", "effect": "Step 1 effect", "evidence_paper": "paper_id or empty"}},
+    {{"cause": "Step 2 cause", "effect": "Step 2 effect", "evidence_paper": "paper_id or empty"}}
+  ],
+  "prediction": "Specific predicted outcome (e.g., 'Efficiency increases by >10%')",
+  "prediction_bounds": {{
+    "metric": "efficiency",
+    "lower_bound": 10,
+    "upper_bound": 20,
+    "unit": "%",
+    "baseline_value": 0,
+    "baseline_source": ""
+  }},
+  "null_result": "Observation indicating failure (e.g., 'Efficiency change < 1%')",
+  "gap_addressed": "Brief description of the gap",
+  "supporting_papers": ["paper_id_1"],
+  "suggested_experiments": [
+    {{
+      "description": "Experiment description",
+      "controls": ["control"],
+      "measurements": ["metric"],
+      "expected_timeline": "1 month",
+      "required_resources": ["equipment"]
+    }}
+  ]
+}}
+```
+"""
 
 
 HYPOTHESIS_GENERATION_PROMPT = """You are a senior research scientist generating BREAKTHROUGH hypotheses. Your task is to create a SPECIFIC, TECHNICAL, ACTIONABLE hypothesis that bridges disciplines.
@@ -211,6 +262,77 @@ class GroundedHypothesisGenerator:
         )
         
         return await self.generate_from_gap(synthetic_gap, claims, iteration)
+
+    async def generate_from_hypothesis(
+        self,
+        hypothesis: Hypothesis,
+    ) -> GroundedHypothesis | None:
+        """Transform a standard Hypothesis into a GroundedHypothesis for simulation."""
+
+        evidence_text = "\n".join(hypothesis.evidence_trace[:5]) if hypothesis.evidence_trace else "No specific evidence trace available."
+
+        prompt = HYPOTHESIS_GROUNDING_PROMPT.format(
+            hypothesis=hypothesis.hypothesis,
+            rationale=hypothesis.rationale,
+            evidence=evidence_text,
+        )
+
+        try:
+            response = await self.client.generate_content(prompt)
+            if not response:
+                return None
+
+            if hasattr(response, "content"):
+                response = response.content
+
+            return self._parse_grounded_response(response, hypothesis)
+
+        except Exception as e:
+            print(f"Error generating grounded hypothesis: {e}")
+            return None
+
+    def _parse_grounded_response(self, response: str, original: Hypothesis) -> GroundedHypothesis | None:
+        """Parse LLM response for hypothesis upgrading."""
+        if not response:
+            return None
+
+        json_match = re.search(r'\{[\s\S]*\}', response)
+        if not json_match:
+            return None
+
+        try:
+            raw = json.loads(json_match.group())
+        except json.JSONDecodeError:
+            return None
+
+        try:
+            mechanism = [MechanismStep(**m) for m in raw.get("mechanism", [])]
+
+            pb = raw.get("prediction_bounds")
+            prediction_bounds = PredictionBounds(**pb) if pb else None
+
+            experiments = [SuggestedExperiment(**e) for e in raw.get("suggested_experiments", [])]
+
+            return GroundedHypothesis(
+                id=original.id,  # Keep original ID
+                claim=raw.get("claim", original.hypothesis),
+                mechanism=mechanism,
+                prediction=raw.get("prediction", ""),
+                prediction_bounds=prediction_bounds,
+                null_result=raw.get("null_result", ""),
+                gap_addressed=raw.get("gap_addressed", original.cross_disciplinary_connection),
+                supporting_papers=raw.get("supporting_papers", original.supporting_papers),
+                contradicting_papers=[],
+                suggested_experiments=experiments,
+                scores=original.scores,
+                source_soul=original.source_soul,
+                iteration=original.iteration,
+                evidence_spans=original.evidence_spans,
+                source_claims=original.evidence_trace,
+            )
+        except Exception as e:
+            print(f"Parsing error: {e}")
+            return None
 
     async def refine_hypothesis(
         self,
