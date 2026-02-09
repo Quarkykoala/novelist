@@ -968,16 +968,27 @@ class RalphOrchestrator:
         # Find if we have a grounded version
         gh = next((g for g in self.grounded_hypotheses if g.id == hypothesis_id), None)
         if not gh:
-            # Fallback: create a temporary grounded hypothesis from the hypothesis object
-            from src.contracts.schemas import GroundedHypothesis, MechanismStep
-            gh = GroundedHypothesis(
-                id=target.id,
-                claim=target.hypothesis,
-                mechanism=[MechanismStep(cause="Input", effect="Effect")], # Placeholder
-                prediction="Outcome predicted by model",
-                null_result="No significant change observed",
-                gap_addressed="Direct verification request"
-            )
+            # Upgrade the standard hypothesis to a grounded one for simulation
+            gh = await self.grounded_generator.generate_from_hypothesis(target)
+
+            if not gh:
+                # Heuristic fallback if generation fails
+                from src.contracts.schemas import GroundedHypothesis, MechanismStep
+
+                print(f"[WARN] Failed to generate grounded hypothesis for {hypothesis_id}. Using heuristic fallback.")
+
+                gh = GroundedHypothesis(
+                    id=target.id,
+                    claim=target.hypothesis,
+                    mechanism=[MechanismStep(
+                        cause="Hypothesized Factor",
+                        effect="Predicted Impact"
+                    )],
+                    prediction=target.expected_impact or "Outcome predicted by model",
+                    null_result="No significant change observed",
+                    gap_addressed=target.cross_disciplinary_connection or "Direct verification request",
+                    supporting_papers=target.supporting_papers
+                )
 
         if custom_code:
             # If user provided code, we just execute it
