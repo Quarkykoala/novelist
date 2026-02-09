@@ -13,7 +13,6 @@ from typing import Any
 
 from pydantic import AnyHttpUrl, BaseModel, Field
 
-
 # =============================================================================
 # Enums
 # =============================================================================
@@ -102,6 +101,24 @@ class EvidenceSpan(BaseModel):
     confidence: float = Field(default=0.5, ge=0.0, le=1.0, description="Model confidence in this linkage")
 
 
+class SimulationResult(BaseModel):
+    """Result of an in-silico verification simulation."""
+
+    code: str = Field(..., description="The Python code generated for the simulation")
+    success: bool = Field(..., description="Whether the simulation ran without errors")
+    supports_hypothesis: bool = Field(..., description="Whether the simulation result supports the claim")
+    output_log: str = Field(default="", description="Stdout/Stderr from the execution")
+    plot_path: str | None = Field(default=None, description="Path to generated plot image")
+    metrics: dict[str, float] = Field(default_factory=dict, description="Key metrics from the simulation")
+    vision_commentary: str | None = Field(default=None, description="Gemini Vision analysis of the plot")
+    status: str = Field(default="complete", description="queued, running, complete, error")
+    timestamp: datetime = Field(default_factory=datetime.now)
+
+    # Retry tracking for simulation reliability
+    retry_count: int = Field(default=0, ge=0, description="Number of retry attempts")
+    validation_errors: list[str] = Field(default_factory=list, description="Code validation errors encountered")
+
+
 # =============================================================================
 # Hypothesis
 # =============================================================================
@@ -165,7 +182,7 @@ class Hypothesis(BaseModel):
     source_soul: SoulRole | None = Field(default=None, description="Which soul generated this")
     iteration: int = Field(default=0, ge=0, description="Which iteration this was generated in")
     created_at: datetime = Field(default_factory=datetime.now)
-    
+
     # Simulation
     simulation_result: SimulationResult | None = Field(default=None)
     simulation_history: list[SimulationResult] = Field(default_factory=list)
@@ -333,7 +350,7 @@ class PaperSummary(BaseModel):
 
 class TokenUsage(BaseModel):
     """Token usage statistics."""
-    
+
     prompt_tokens: int = Field(default=0, ge=0)
     completion_tokens: int = Field(default=0, ge=0)
     total_tokens: int = Field(default=0, ge=0)
@@ -342,7 +359,7 @@ class TokenUsage(BaseModel):
 
 class GenerationResponse(BaseModel):
     """Standardized response from LLM providers."""
-    
+
     content: str = Field(..., description="Generated text content")
     usage: TokenUsage = Field(default_factory=TokenUsage, description="Usage statistics")
     model_name: str = Field(default="", description="Model used for generation")
@@ -462,51 +479,33 @@ class SuggestedExperiment(BaseModel):
     required_resources: list[str] = Field(..., description="Equipment/reagents needed")
 
 
-class SimulationResult(BaseModel):
-    """Result of an in-silico verification simulation."""
-    
-    code: str = Field(..., description="The Python code generated for the simulation")
-    success: bool = Field(..., description="Whether the simulation ran without errors")
-    supports_hypothesis: bool = Field(..., description="Whether the simulation result supports the claim")
-    output_log: str = Field(default="", description="Stdout/Stderr from the execution")
-    plot_path: str | None = Field(default=None, description="Path to generated plot image")
-    metrics: dict[str, float] = Field(default_factory=dict, description="Key metrics from the simulation")
-    vision_commentary: str | None = Field(default=None, description="Gemini Vision analysis of the plot")
-    status: str = Field(default="complete", description="queued, running, complete, error")
-    timestamp: datetime = Field(default_factory=datetime.now)
-    
-    # Retry tracking for simulation reliability
-    retry_count: int = Field(default=0, ge=0, description="Number of retry attempts")
-    validation_errors: list[str] = Field(default_factory=list, description="Code validation errors encountered")
-
-
 class GroundedHypothesis(BaseModel):
     """A hypothesis grounded in literature with full justification."""
 
     id: str = Field(default="", description="Unique identifier")
-    
+
     # Core claim (falsifiable)
     claim: str = Field(
         ..., min_length=20,
         description="If X, then Y, because Z — one falsifiable sentence"
     )
-    
+
     # Mechanism chain (required)
     mechanism: list[MechanismStep] = Field(
         ..., min_length=1, description="Causal chain: A→B→C"
     )
-    
+
     # Quantitative prediction
     prediction: str = Field(..., description="What we expect to observe")
     prediction_bounds: PredictionBounds | None = Field(
         default=None, description="Quantitative prediction if applicable"
     )
-    
+
     # Falsification
     null_result: str = Field(
         ..., description="What observation would reject this hypothesis"
     )
-    
+
     # Grounding
     gap_addressed: str = Field(..., description="Which gap this hypothesis fills")
     supporting_papers: list[str] = Field(
@@ -523,12 +522,12 @@ class GroundedHypothesis(BaseModel):
         default_factory=list,
         description="Structured claim->citation->quote mappings for grounded verification",
     )
-    
+
     # Experiment
     suggested_experiments: list[SuggestedExperiment] = Field(
         default_factory=list, description="Concrete experiments to test the hypothesis"
     )
-    
+
     # Validation & Simulation
     simulation_result: SimulationResult | None = Field(
         default=None, description="Result of in-silico verification"
@@ -540,7 +539,7 @@ class GroundedHypothesis(BaseModel):
     source_soul: SoulRole | None = Field(default=None)
     iteration: int = Field(default=0, ge=0)
     created_at: datetime = Field(default_factory=datetime.now)
-    
+
     # Lineage tracking for hypothesis evolution
     parent_id: str = Field(default="", description="ID of parent hypothesis if refined")
     lineage: list[str] = Field(default_factory=list, description="Chain of ancestor IDs (oldest first)")
@@ -725,7 +724,7 @@ class HazardLevel(str, Enum):
 
 class Reagent(BaseModel):
     """A chemical reagent or biological material."""
-    
+
     name: str = Field(..., description="Reagent name (e.g., 'Sodium Chloride')")
     cas_number: str = Field(default="", description="CAS registry number")
     quantity: str = Field(..., description="Required quantity (e.g., '50 mL', '10 mg')")
@@ -739,7 +738,7 @@ class Reagent(BaseModel):
 
 class Equipment(BaseModel):
     """Laboratory equipment required."""
-    
+
     name: str = Field(..., description="Equipment name")
     specifications: str = Field(default="", description="Required specs")
     quantity: int = Field(default=1, ge=1)
@@ -750,7 +749,7 @@ class Equipment(BaseModel):
 
 class SafetyWarning(BaseModel):
     """Safety warning for a protocol step."""
-    
+
     hazard_type: str = Field(..., description="e.g., 'chemical', 'biological', 'radiation'")
     level: HazardLevel = Field(default=HazardLevel.MODERATE)
     description: str = Field(...)
@@ -760,7 +759,7 @@ class SafetyWarning(BaseModel):
 
 class ProtocolStep(BaseModel):
     """A single step in an experiment protocol."""
-    
+
     step_number: int = Field(..., ge=1)
     action: str = Field(..., description="What to do")
     duration: str = Field(default="", description="Expected time (e.g., '5 min', '2 hours')")
@@ -776,39 +775,39 @@ class ExperimentProtocol(BaseModel):
     
     Designed for compatibility with lab automation systems.
     """
-    
+
     id: str = Field(default="", description="Protocol identifier")
     title: str = Field(..., description="Protocol title")
     hypothesis_id: str = Field(default="", description="Associated hypothesis ID")
     version: str = Field(default="1.0")
-    
+
     # Overview
     objective: str = Field(..., description="What this protocol aims to test/demonstrate")
     background: str = Field(default="", description="Brief scientific background")
     expected_duration: str = Field(default="", description="Total time estimate")
     difficulty: str = Field(default="intermediate", description="beginner/intermediate/advanced")
-    
+
     # Materials
     reagents: list[Reagent] = Field(default_factory=list)
     equipment: list[Equipment] = Field(default_factory=list)
-    
+
     # Procedure
     steps: list[ProtocolStep] = Field(default_factory=list)
-    
+
     # Safety
     overall_hazard_level: HazardLevel = Field(default=HazardLevel.MODERATE)
     safety_summary: str = Field(default="")
     institutional_approval_required: bool = Field(default=False)
-    
+
     # Analysis
     success_criteria: list[str] = Field(default_factory=list, description="How to determine success")
     data_collection: list[str] = Field(default_factory=list, description="What data to collect")
     analysis_methods: list[str] = Field(default_factory=list)
-    
+
     # Cost
     estimated_materials_cost_usd: float = Field(default=0.0, ge=0.0)
     estimated_equipment_cost_usd: float = Field(default=0.0, ge=0.0)
-    
+
     # Metadata
     created_at: datetime = Field(default_factory=datetime.now)
     references: list[str] = Field(default_factory=list, description="Paper IDs or DOIs")
