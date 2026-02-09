@@ -203,8 +203,8 @@ class Hypothesis(BaseModel):
     created_at: datetime = Field(default_factory=datetime.now)
     
     # Simulation
-    simulation_result: SimulationResult | None = Field(default=None)
-    simulation_history: list[SimulationResult] = Field(default_factory=list)
+    simulation_result: "SimulationResult | None" = Field(default=None)
+    simulation_history: "list[SimulationResult]" = Field(default_factory=list)
 
     def meets_thresholds(
         self,
