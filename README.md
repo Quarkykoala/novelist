@@ -81,10 +81,12 @@ Novelist learns from failure. It maintains a persistent "Graveyard" of failed hy
     ```
 
 4.  **Environment Secrets**
-    Create a `.env` file in the root:
+    Create a `.env` file in the root and keep it out of version control (it is already
+    listed in `.gitignore`):
     ```env
-    GEMINI_API_KEY=your_key_here
+    GEMINI_API_KEY=<YOUR_GEMINI_API_KEY>
     ```
+    Never commit real API keys or tokens to the repository.
 
 ### Running the App
 
