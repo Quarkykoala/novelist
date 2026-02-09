@@ -107,6 +107,24 @@ class EvidenceSpan(BaseModel):
 # =============================================================================
 
 
+class SimulationResult(BaseModel):
+    """Result of an in-silico verification simulation."""
+
+    code: str = Field(..., description="The Python code generated for the simulation")
+    success: bool = Field(..., description="Whether the simulation ran without errors")
+    supports_hypothesis: bool = Field(..., description="Whether the simulation result supports the claim")
+    output_log: str = Field(default="", description="Stdout/Stderr from the execution")
+    plot_path: str | None = Field(default=None, description="Path to generated plot image")
+    metrics: dict[str, float] = Field(default_factory=dict, description="Key metrics from the simulation")
+    vision_commentary: str | None = Field(default=None, description="Gemini Vision analysis of the plot")
+    status: str = Field(default="complete", description="queued, running, complete, error")
+    timestamp: datetime = Field(default_factory=datetime.now)
+
+    # Retry tracking for simulation reliability
+    retry_count: int = Field(default=0, ge=0, description="Number of retry attempts")
+    validation_errors: list[str] = Field(default_factory=list, description="Code validation errors encountered")
+
+
 class Hypothesis(BaseModel):
     """A scientific hypothesis with full metadata."""
 
@@ -460,24 +478,6 @@ class SuggestedExperiment(BaseModel):
     measurements: list[str] = Field(..., description="Specific variables to measure")
     expected_timeline: str = Field(..., description="Estimated time to complete")
     required_resources: list[str] = Field(..., description="Equipment/reagents needed")
-
-
-class SimulationResult(BaseModel):
-    """Result of an in-silico verification simulation."""
-    
-    code: str = Field(..., description="The Python code generated for the simulation")
-    success: bool = Field(..., description="Whether the simulation ran without errors")
-    supports_hypothesis: bool = Field(..., description="Whether the simulation result supports the claim")
-    output_log: str = Field(default="", description="Stdout/Stderr from the execution")
-    plot_path: str | None = Field(default=None, description="Path to generated plot image")
-    metrics: dict[str, float] = Field(default_factory=dict, description="Key metrics from the simulation")
-    vision_commentary: str | None = Field(default=None, description="Gemini Vision analysis of the plot")
-    status: str = Field(default="complete", description="queued, running, complete, error")
-    timestamp: datetime = Field(default_factory=datetime.now)
-    
-    # Retry tracking for simulation reliability
-    retry_count: int = Field(default=0, ge=0, description="Number of retry attempts")
-    validation_errors: list[str] = Field(default_factory=list, description="Code validation errors encountered")
 
 
 class GroundedHypothesis(BaseModel):
