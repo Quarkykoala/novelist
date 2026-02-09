@@ -968,16 +968,27 @@ class RalphOrchestrator:
         # Find if we have a grounded version
         gh = next((g for g in self.grounded_hypotheses if g.id == hypothesis_id), None)
         if not gh:
-            # Fallback: create a temporary grounded hypothesis from the hypothesis object
-            from src.contracts.schemas import GroundedHypothesis, MechanismStep
-            gh = GroundedHypothesis(
-                id=target.id,
-                claim=target.hypothesis,
-                mechanism=[MechanismStep(cause="Input", effect="Effect")], # Placeholder
-                prediction="Outcome predicted by model",
-                null_result="No significant change observed",
-                gap_addressed="Direct verification request"
-            )
+            # Upgrade the standard hypothesis to a grounded one for simulation
+            gh = await self.grounded_generator.generate_from_hypothesis(target)
+
+            if not gh:
+                # Heuristic fallback if generation fails
+                from src.contracts.schemas import GroundedHypothesis, MechanismStep
+
+                print(f"[WARN] Failed to generate grounded hypothesis for {hypothesis_id}. Using heuristic fallback.")
+
+                gh = GroundedHypothesis(
+                    id=target.id,
+                    claim=target.hypothesis,
+                    mechanism=[MechanismStep(
+                        cause="Hypothesized Factor",
+                        effect="Predicted Impact"
+                    )],
+                    prediction=target.expected_impact or "Outcome predicted by model",
+                    null_result="No significant change observed",
+                    gap_addressed=target.cross_disciplinary_connection or "Direct verification request",
+                    supporting_papers=target.supporting_papers
+                )
 
         if custom_code:
             # If user provided code, we just execute it
@@ -1784,46 +1795,49 @@ class RalphOrchestrator:
         session_dir = output_dir / result.session_id
         session_dir.mkdir(parents=True, exist_ok=True)
 
-        import json
+        def _save_task():
+            import json
 
-        # Save hypotheses
-        with open(session_dir / "hypotheses.json", "w") as f:
-            data = [h.model_dump() for h in result.final_hypotheses]
-            json.dump(data, f, indent=2, default=str)
+            # Save hypotheses
+            with open(session_dir / "hypotheses.json", "w") as f:
+                data = [h.model_dump() for h in result.final_hypotheses]
+                json.dump(data, f, indent=2, default=str)
 
-        # Save traces
-        with open(session_dir / "traces.json", "w") as f:
-            data = [t.model_dump() for t in result.traces]
-            json.dump(data, f, indent=2, default=str)
+            # Save traces
+            with open(session_dir / "traces.json", "w") as f:
+                data = [t.model_dump() for t in result.traces]
+                json.dump(data, f, indent=2, default=str)
 
-        # Save concept map
-        if result.concept_map:
-            with open(session_dir / "concept_map.json", "w") as f:
-                json.dump(result.concept_map.model_dump(), f, indent=2)
+            # Save concept map
+            if result.concept_map:
+                with open(session_dir / "concept_map.json", "w") as f:
+                    json.dump(result.concept_map.model_dump(), f, indent=2)
 
-        # Save summary
-        summary = {
-            "session_id": result.session_id,
-            "topic": result.topic,
-            "status": "complete",
-            "phase": SessionPhase.COMPLETE.value,
-            "status_detail": result.stop_reason,
-            "started_at": result.started_at.isoformat() if result.started_at else None,
-            "completed_at": result.completed_at.isoformat() if result.completed_at else None,
-            "iterations": result.iterations_completed,
-            "stop_reason": result.stop_reason,
-            "hypotheses_count": len(result.final_hypotheses),
-            "papers_ingested": result.papers_ingested,
-            "constraints": result.constraints.model_dump() if result.constraints else None,
-            "personas": self.persona_roster,
-            "config": self.config.model_dump(),
-            "strict_grounding": self.config.strict_grounding,
-            "enforce_numeric_citations": self.config.enforce_numeric_citations,
-            "knowledge_sources": self.knowledge_sources,
-            "source_breakdown": dict(
-                Counter((paper.source or "unknown") for paper in self.paper_store.values())
-            ),
-        }
-        with open(session_dir / "summary.json", "w") as f:
-            json.dump(summary, f, indent=2)
+            # Save summary
+            summary = {
+                "session_id": result.session_id,
+                "topic": result.topic,
+                "status": "complete",
+                "phase": SessionPhase.COMPLETE.value,
+                "status_detail": result.stop_reason,
+                "started_at": result.started_at.isoformat() if result.started_at else None,
+                "completed_at": result.completed_at.isoformat() if result.completed_at else None,
+                "iterations": result.iterations_completed,
+                "stop_reason": result.stop_reason,
+                "hypotheses_count": len(result.final_hypotheses),
+                "papers_ingested": result.papers_ingested,
+                "constraints": result.constraints.model_dump() if result.constraints else None,
+                "personas": self.persona_roster,
+                "config": self.config.model_dump(),
+                "strict_grounding": self.config.strict_grounding,
+                "enforce_numeric_citations": self.config.enforce_numeric_citations,
+                "knowledge_sources": self.knowledge_sources,
+                "source_breakdown": dict(
+                    Counter((paper.source or "unknown") for paper in self.paper_store.values())
+                ),
+            }
+            with open(session_dir / "summary.json", "w") as f:
+                json.dump(summary, f, indent=2)
+
+        await asyncio.to_thread(_save_task)
 

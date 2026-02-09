@@ -101,6 +101,13 @@ class EvidenceSpan(BaseModel):
     confidence: float = Field(default=0.5, ge=0.0, le=1.0, description="Model confidence in this linkage")
 
 
+
+
+# =============================================================================
+# Hypothesis
+# =============================================================================
+
+
 class SimulationResult(BaseModel):
     """Result of an in-silico verification simulation."""
 
@@ -117,11 +124,6 @@ class SimulationResult(BaseModel):
     # Retry tracking for simulation reliability
     retry_count: int = Field(default=0, ge=0, description="Number of retry attempts")
     validation_errors: list[str] = Field(default_factory=list, description="Code validation errors encountered")
-
-
-# =============================================================================
-# Hypothesis
-# =============================================================================
 
 
 class Hypothesis(BaseModel):
@@ -184,8 +186,8 @@ class Hypothesis(BaseModel):
     created_at: datetime = Field(default_factory=datetime.now)
 
     # Simulation
-    simulation_result: SimulationResult | None = Field(default=None)
-    simulation_history: list[SimulationResult] = Field(default_factory=list)
+    simulation_result: "SimulationResult | None" = Field(default=None)
+    simulation_history: "list[SimulationResult]" = Field(default_factory=list)
 
     def meets_thresholds(
         self,
@@ -811,4 +813,3 @@ class ExperimentProtocol(BaseModel):
     # Metadata
     created_at: datetime = Field(default_factory=datetime.now)
     references: list[str] = Field(default_factory=list, description="Paper IDs or DOIs")
-

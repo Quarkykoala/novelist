@@ -148,23 +148,6 @@ def _append_phase_history(
         history.append({"phase": phase_value, "detail": detail, "timestamp": ts})
 
 
-async def _load_json_async(path: Path) -> Any:
-    """Load JSON from disk asynchronously to avoid blocking the event loop."""
-    if not path.exists():
-        return None
-    try:
-        def read():
-            with open(path, encoding="utf-8") as f:
-                return json.load(f)
-        return await asyncio.to_thread(read)
-    except Exception:
-        return None
-
-
-async def _load_summary_async(session_id: str) -> dict[str, Any] | None:
-    """Load session summary asynchronously."""
-    summary_path = SESSIONS_DIR / session_id / "summary.json"
-    return await _load_json_async(summary_path)
 
 
 def _load_summary(session_id: str) -> dict[str, Any] | None:
@@ -188,6 +171,14 @@ def _load_hypotheses_from_disk(session_id: str) -> list[dict[str, Any]]:
             return [_serialize_hypothesis(h) for h in json.load(f)]
     except Exception:
         return []
+
+
+async def _load_hypotheses_from_disk_async(session_id: str) -> list[dict[str, Any]]:
+    return await asyncio.to_thread(_load_hypotheses_from_disk, session_id)
+
+
+async def _load_summary_async(session_id: str) -> dict[str, Any] | None:
+    return await asyncio.to_thread(_load_summary, session_id)
 
 
 def _list_replay_candidates(limit: int = 20) -> list[dict[str, Any]]:
@@ -800,18 +791,7 @@ async def get_session_status(session_id: str):
         if not summary:
             raise HTTPException(status_code=404, detail="Session not found")
 
-        hypotheses: list[dict[str, Any]] = []
-        hypotheses_file = SESSIONS_DIR / session_id / "hypotheses.json"
-
-        if hypotheses_file.exists():
-            def load_and_serialize():
-                with open(hypotheses_file, encoding="utf-8") as f:
-                    return [_serialize_hypothesis(h) for h in json.load(f)]
-
-            try:
-                hypotheses = await asyncio.to_thread(load_and_serialize)
-            except Exception:
-                hypotheses = []
+        hypotheses = await _load_hypotheses_from_disk_async(session_id)
 
         return {
             "id": session_id,
@@ -1248,18 +1228,7 @@ async def export_session(session_id: str, format: str = "json"):
         summary = await _load_summary_async(session_id)
         if not summary:
             raise HTTPException(status_code=404, detail="Session not found")
-
-        hypotheses_file = SESSIONS_DIR / session_id / "hypotheses.json"
-
-        if hypotheses_file.exists():
-            def load_and_serialize():
-                with open(hypotheses_file, encoding="utf-8") as f:
-                    return [_serialize_hypothesis(h) for h in json.load(f)]
-
-            try:
-                hypotheses = await asyncio.to_thread(load_and_serialize)
-            except Exception:
-                hypotheses = []
+        hypotheses = await _load_hypotheses_from_disk_async(session_id)
 
     if format == "json":
         return {"summary": summary, "hypotheses": hypotheses}
