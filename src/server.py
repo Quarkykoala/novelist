@@ -9,29 +9,30 @@ import json
 import os
 import re
 import sys
+import tempfile
 import traceback
 import uuid
 from datetime import datetime
 from pathlib import Path
-import tempfile
 from typing import Any
 from urllib.parse import quote
 
 from dotenv import load_dotenv
+
 load_dotenv()
 
 from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
+
 from src.contracts.schemas import (
     Hypothesis,
     IterationTrace,
+    PersonaWeightRequest,
     RalphConfig,
     SessionConstraints,
     SessionPhase,
-    PersonaWeightRequest,
-    PersonaLockRequest,
 )
 from src.ralph.orchestrator import RalphOrchestrator
 
@@ -147,12 +148,14 @@ def _append_phase_history(
         history.append({"phase": phase_value, "detail": detail, "timestamp": ts})
 
 
+
+
 def _load_summary(session_id: str) -> dict[str, Any] | None:
     summary_path = SESSIONS_DIR / session_id / "summary.json"
     if not summary_path.exists():
         return None
     try:
-        with open(summary_path, "r", encoding="utf-8") as f:
+        with open(summary_path, encoding="utf-8") as f:
             return json.load(f)
     except Exception:
         return None
@@ -164,7 +167,7 @@ def _load_hypotheses_from_disk(session_id: str) -> list[dict[str, Any]]:
     if not hypotheses_file.exists():
         return []
     try:
-        with open(hypotheses_file, "r", encoding="utf-8") as f:
+        with open(hypotheses_file, encoding="utf-8") as f:
             return [_serialize_hypothesis(h) for h in json.load(f)]
     except Exception:
         return []
@@ -206,10 +209,10 @@ def _list_replay_candidates(limit: int = 20) -> list[dict[str, Any]]:
             break
     return candidates
 
-from src.soul.srsh_orchestrator import SRSHOrchestrator
+from src.contracts.schemas import ConceptMap, ConceptNode
 from src.kb.arxiv_client import ArxivClient
 from src.kb.claim_extractor import ClaimExtractor
-from src.contracts.schemas import ConceptMap, ConceptNode
+
 
 class SessionCreateRequest(BaseModel):
     topic: str
@@ -545,7 +548,7 @@ def _serialize_dialogue(entry: Any) -> dict[str, Any]:
 def _serialize_trace(trace: IterationTrace) -> list[dict[str, Any]]:
     """Convert iteration trace into multiple soul messages if dialogue exists."""
     messages = []
-    
+
     # Add the main BDI thought
     messages.append({
         "soul": "Synthesizer",
@@ -554,12 +557,12 @@ def _serialize_trace(trace: IterationTrace) -> list[dict[str, Any]]:
         "timestamp": trace.timestamp.isoformat(),
         "highlighted": True
     })
-    
+
     # Add detailed dialogue
     if hasattr(trace, 'dialogue') and trace.dialogue:
         for entry in trace.dialogue:
             messages.append(_serialize_dialogue(entry))
-            
+
     # Add observation
     messages.append({
         "soul": "Orchestrator",
@@ -568,7 +571,7 @@ def _serialize_trace(trace: IterationTrace) -> list[dict[str, Any]]:
         "timestamp": trace.timestamp.isoformat(),
         "highlighted": False
     })
-    
+
     return messages
 
 
@@ -602,7 +605,7 @@ async def run_session(
                 # Append all messages from this trace
                 for msg in _serialize_trace(trace):
                     sessions[session_id]["soulMessages"].append(msg)
-                
+
                 # Also update currently surviving hypotheses count if available in trace
                 sessions[session_id]["hypotheses_count"] = trace.hypotheses_surviving
                 sessions[session_id]["total_cost"] = trace.cost_usd
@@ -619,7 +622,7 @@ async def run_session(
                 sessions[session_id]["source_breakdown"] = stats.get("source_breakdown", {})
                 if "concept_map" in stats:
                     sessions[session_id]["concept_map"] = stats["concept_map"]
-                
+
                 # Update global stats
                 knowledge_stats["papers_indexed"] = max(
                     knowledge_stats.get("papers_indexed", 0), stats.get("papers_indexed", 0)
@@ -640,7 +643,7 @@ async def run_session(
                 "on_knowledge_update": on_knowledge_update,
             }
         )
-        
+
         # Store instance for interaction
         sessions[session_id]["orchestrator"] = orchestrator
 
@@ -662,13 +665,13 @@ async def run_session(
         sessions[session_id]["hypotheses"] = [
             _serialize_hypothesis(h) for h in (result.final_hypotheses if result else [])
         ]
-        
+
         # Flatten all traces into a single list of messages
         final_messages = []
         for trace in (result.traces if result else []):
             final_messages.extend(_serialize_trace(trace))
         sessions[session_id]["soulMessages"] = final_messages
-        
+
         sessions[session_id]["relevanceScore"] = (
             result.concept_map and len(result.concept_map.nodes) / 10
         ) or None
@@ -867,18 +870,18 @@ async def stop_session(session_id: str):
     if session_id in running_tasks:
         running_tasks[session_id].cancel()
         del running_tasks[session_id]
-    
+
     if session_id in sessions:
         sessions[session_id]["status"] = "stopped"
         sessions[session_id]["complete"] = True
-    
+
     return {"status": "stopped"}
 
 
 @app.post("/api/sessions/{session_id}/resume", response_model=SessionResponse)
 async def resume_session(session_id: str, background_tasks: BackgroundTasks):
     """Resume a past session using its stored configuration."""
-    summary = _load_summary(session_id)
+    summary = await _load_summary_async(session_id)
     if not summary:
         raise HTTPException(status_code=404, detail="Session summary not found")
 
@@ -908,13 +911,13 @@ async def session_chat(session_id: str, request: ChatRequest):
     """Send a message to the running orchestrator."""
     if session_id not in sessions:
         raise HTTPException(status_code=404, detail="Session not found")
-    
+
     orchestrator = sessions[session_id].get("orchestrator")
     if not orchestrator:
         raise HTTPException(status_code=400, detail="Orchestrator not active for this session")
-    
+
     await orchestrator.inject_user_message(request.message)
-    
+
     # Provide instant feedback in the Soul Feed
     sessions[session_id]["soulMessages"].append({
         "soul": "System",
@@ -923,7 +926,7 @@ async def session_chat(session_id: str, request: ChatRequest):
         "timestamp": datetime.now().isoformat(),
         "highlighted": True
     })
-    
+
     return {"status": "message_injected"}
 
 
@@ -932,11 +935,11 @@ async def pin_directive(session_id: str, request: ChatRequest):
     """Pin a directive."""
     if session_id not in sessions:
         raise HTTPException(status_code=404, detail="Session not found")
-    
+
     orchestrator = sessions[session_id].get("orchestrator")
     if not orchestrator:
         raise HTTPException(status_code=400, detail="Orchestrator not active")
-    
+
     await orchestrator.pin_directive(request.message)
     return {"status": "pinned"}
 
@@ -946,11 +949,11 @@ async def unpin_directive(session_id: str, request: ChatRequest):
     """Unpin a directive."""
     if session_id not in sessions:
         raise HTTPException(status_code=404, detail="Session not found")
-    
+
     orchestrator = sessions[session_id].get("orchestrator")
     if not orchestrator:
         raise HTTPException(status_code=400, detail="Orchestrator not active")
-    
+
     await orchestrator.unpin_directive(request.message)
     return {"status": "unpinned"}
 
@@ -960,11 +963,11 @@ async def lock_persona(session_id: str, persona_id: str):
     """Lock a persona."""
     if session_id not in sessions:
         raise HTTPException(status_code=404, detail="Session not found")
-    
+
     orchestrator = sessions[session_id].get("orchestrator")
     if not orchestrator:
         raise HTTPException(status_code=400, detail="Orchestrator not active")
-    
+
     await orchestrator.lock_persona(persona_id)
     return {"status": "locked"}
 
@@ -974,11 +977,11 @@ async def unlock_persona(session_id: str, persona_id: str):
     """Unlock a persona."""
     if session_id not in sessions:
         raise HTTPException(status_code=404, detail="Session not found")
-    
+
     orchestrator = sessions[session_id].get("orchestrator")
     if not orchestrator:
         raise HTTPException(status_code=400, detail="Orchestrator not active")
-    
+
     await orchestrator.unlock_persona(persona_id)
     return {"status": "unlocked"}
 
@@ -988,11 +991,11 @@ async def update_persona_weight(session_id: str, persona_id: str, request: Perso
     """Update persona weight."""
     if session_id not in sessions:
         raise HTTPException(status_code=404, detail="Session not found")
-    
+
     orchestrator = sessions[session_id].get("orchestrator")
     if not orchestrator:
         raise HTTPException(status_code=400, detail="Orchestrator not active")
-    
+
     await orchestrator.update_persona_weight(persona_id, request.weight)
     return {"status": "weight_updated"}
 
@@ -1002,11 +1005,11 @@ async def regenerate_persona(session_id: str, persona_id: str):
     """Regenerate a persona."""
     if session_id not in sessions:
         raise HTTPException(status_code=404, detail="Session not found")
-    
+
     orchestrator = sessions[session_id].get("orchestrator")
     if not orchestrator:
         raise HTTPException(status_code=400, detail="Orchestrator not active")
-    
+
     await orchestrator.regenerate_persona(persona_id)
     return {"status": "regenerated"}
 
@@ -1016,11 +1019,11 @@ async def vote_hypothesis(session_id: str, hypothesis_id: str, request: dict[str
     """Vote on a hypothesis (up/down)."""
     if session_id not in sessions:
         raise HTTPException(status_code=404, detail="Session not found")
-    
+
     orchestrator = sessions[session_id].get("orchestrator")
     if not orchestrator:
         raise HTTPException(status_code=400, detail="Orchestrator not active")
-    
+
     direction = request.get("direction", "up")
     await orchestrator.vote_hypothesis(hypothesis_id, direction)
     return {"status": "voted"}
@@ -1031,11 +1034,11 @@ async def investigate_hypothesis(session_id: str, hypothesis_id: str):
     """Mark a hypothesis for deeper investigation."""
     if session_id not in sessions:
         raise HTTPException(status_code=404, detail="Session not found")
-    
+
     orchestrator = sessions[session_id].get("orchestrator")
     if not orchestrator:
         raise HTTPException(status_code=400, detail="Orchestrator not active")
-    
+
     await orchestrator.investigate_hypothesis(hypothesis_id)
     return {"status": "investigation_queued"}
 
@@ -1045,11 +1048,11 @@ async def rerun_simulation(session_id: str, hypothesis_id: str, request: dict[st
     """Rerun simulation for a hypothesis."""
     if session_id not in sessions:
         raise HTTPException(status_code=404, detail="Session not found")
-    
+
     orchestrator = sessions[session_id].get("orchestrator")
     if not orchestrator:
         raise HTTPException(status_code=400, detail="Orchestrator not active")
-    
+
     custom_code = request.get("code") if request else None
     await orchestrator.rerun_simulation(hypothesis_id, custom_code)
     return {"status": "rerun_queued"}
@@ -1084,20 +1087,20 @@ async def run_srsh_experiment(request: SRSHRequest):
     """
     try:
         _require_api_keys()
-        
+
         # 1. Initialize ConceptMap with topic node
         concept_map = ConceptMap(nodes=[ConceptNode(id="topic", name=request.topic, category="topic")])
         claims = []
-        
+
         # 2. Grounding: Fetch real papers if requested
         if request.search_limit > 0:
             print(f"SRSH Grounding: Searching for {request.search_limit} papers on '{request.topic}'...")
             async with ArxivClient() as client:
                 papers = await client.search(request.topic, max_results=request.search_limit)
-            
+
             print(f"SRSH Grounding: Found {len(papers)} papers. Extracting claims...")
             extractor = ClaimExtractor()
-            
+
             # Simple parallel extraction limited by client concurrency mostly, but loop is fine for 5 papers
             for paper in papers:
                 try:
@@ -1107,7 +1110,7 @@ async def run_srsh_experiment(request: SRSHRequest):
                         abstract=paper.abstract
                     )
                     claims.extend(paper_claims)
-                    
+
                     # Populate ConceptMap nodes from entities
                     for claim in paper_claims:
                         for entity in claim.entities_mentioned:
@@ -1115,21 +1118,20 @@ async def run_srsh_experiment(request: SRSHRequest):
                             # Add if unique
                             if not any(n.id == node_id for n in concept_map.nodes):
                                 concept_map.nodes.append(ConceptNode(
-                                    id=node_id, 
-                                    name=entity, 
+                                    id=node_id,
+                                    name=entity,
                                     category=claim.claim_type.value if hasattr(claim.claim_type, 'value') else "extracted"
                                 ))
                 except Exception as e:
                     print(f"Error processing paper {paper.arxiv_id}: {e}")
-            
+
             print(f"SRSH Grounding: Extracted {len(claims)} claims and {len(concept_map.nodes)} concepts.")
-        
-        from src.soul.srsh_orchestrator import SRSHOrchestrator, SRSHConfig
+
         from src.kb.grounded_generator import GroundedHypothesisGenerator
-        from src.contracts.schemas import ConceptMap, ConceptNode, ConceptEdge
-        
+        from src.soul.srsh_orchestrator import SRSHConfig, SRSHOrchestrator
+
         # Helper classes imported
-        
+
         # Create generator and SRSH orchestrator
         generator = GroundedHypothesisGenerator()
         config = SRSHConfig(
@@ -1138,23 +1140,23 @@ async def run_srsh_experiment(request: SRSHRequest):
             iterations_per_agent=request.iterations_per_agent,
             n_collisions=request.n_collisions,
         )
-        
+
         status_updates = []
         def status_callback(msg: str):
             status_updates.append({"timestamp": datetime.now().isoformat(), "message": msg})
-        
+
         srsh = SRSHOrchestrator(
             generator=generator,
             config=config,
             status_callback=status_callback,
         )
-        
+
         result = await srsh.run(
             topic=request.topic,
             concept_map=concept_map,
             claims=[],  # No pre-existing claims
         )
-        
+
         return {
             "status": "complete",
             "topic": request.topic,
@@ -1206,7 +1208,7 @@ async def export_session(session_id: str, format: str = "json"):
     summary = None
     hypotheses = []
     metadata: dict[str, Any] = {}
-    
+
     if session:
         summary = {
             "id": session_id,
@@ -1231,7 +1233,7 @@ async def export_session(session_id: str, format: str = "json"):
 
     if format == "json":
         return {"summary": summary, "hypotheses": hypotheses}
-    
+
     if format == "markdown":
         md = f"# Research Report: {summary.get('topic')}\n\n"
         md += f"Session ID: {session_id}\n"
@@ -1245,7 +1247,7 @@ async def export_session(session_id: str, format: str = "json"):
         if summary.get("judge_replay"):
             md += f"- Replay source: {summary.get('replay_source_session_id')}\n"
         md += "\n"
-        
+
         md += "## Ranked Hypotheses\n\n"
         for i, h in enumerate(hypotheses):
             md += f"### {i+1}. {h.get('statement')}\n"
@@ -1301,7 +1303,7 @@ async def export_session(session_id: str, format: str = "json"):
                 if res.get('vision_commentary'):
                     md += f"\n*Vision Analysis:* {res['vision_commentary']}\n"
             md += "\n---\n\n"
-            
+
         return {"content": md}
 
     raise HTTPException(status_code=400, detail="Unsupported format")
@@ -1313,19 +1315,19 @@ async def bury_hypothesis(session_id: str, hypothesis_id: str, request: dict[str
     session = sessions.get(session_id)
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
-    
+
     orchestrator = sessions[session_id].get("orchestrator")
     if not orchestrator:
         raise HTTPException(status_code=400, detail="Orchestrator not active")
-    
+
     # Find the hypothesis
     target = next((h for h in orchestrator.hypotheses if h.id == hypothesis_id), None)
     if not target:
         raise HTTPException(status_code=404, detail="Hypothesis not found")
-    
+
     reason = request.get("reason", "Manual burial by researcher")
     orchestrator.memory.graveyard.bury(target.hypothesis, reason, orchestrator.topic)
-    
+
     return {"status": "buried"}
 
 
@@ -1334,9 +1336,9 @@ async def retry_phase(session_id: str, phase: str = None):
     """Retry a failed session phase."""
     if session_id not in sessions:
         raise HTTPException(status_code=404, detail="Session not found")
-    
+
     session = sessions[session_id]
-    
+
     # Only allow retry if error or complete
     if not session.get("error") and not session.get("complete"):
         raise HTTPException(status_code=400, detail="Session is still running")
@@ -1345,7 +1347,7 @@ async def retry_phase(session_id: str, phase: str = None):
     session["status"] = "running"
     session["error"] = None
     session["complete"] = False
-    
+
     orchestrator = session.get("orchestrator")
     if not orchestrator:
         # If orchestrator is gone (e.g. restart), we can't easily resume state in memory
@@ -1356,33 +1358,33 @@ async def retry_phase(session_id: str, phase: str = None):
 
     # Determine phase to retry
     target_phase = phase or session.get("phase")
-    
+
     # Logic to restart the loop from the current state
     # This is simplified: we just clear the error and let the loop continue if it was paused
     # But orchestrator.run() loop might have exited.
-    
+
     # We need to re-trigger the loop.
     # The orchestrator.run() has a while True loop. If it broke due to exception, we need to call run again?
     # BUT run() initializes everything.
-    
+
     # We will trigger a new background task that calls _run_iteration loop directly?
     # Or better, we call run() again but pass the existing state?
     # Orchestrator doesn't support re-entry easily yet.
-    
+
     # MVP approach: We'll just set status to "running" and if the loop was stuck in a retryable error,
     # we might need to manually trigger the next step.
-    
+
     # Actually, US-108 implies we should be able to retry specific failed actions.
     # Let's just restart the main loop if it stopped.
-    
+
     task = asyncio.create_task(run_session(
-        session_id, 
-        session["topic"], 
-        RalphConfig(**session["config"]), 
+        session_id,
+        session["topic"],
+        RalphConfig(**session["config"]),
         SessionConstraints(**session["constraints"]) if session.get("constraints") else None
     ))
     running_tasks[session_id] = task
-    
+
     return {"status": "retrying", "phase": target_phase}
 
 
@@ -1392,8 +1394,8 @@ async def get_session_logs(session_id: str):
     log_path = SESSIONS_DIR / session_id / "error.log"
     if not log_path.exists():
         raise HTTPException(status_code=404, detail="No logs found")
-    
-    with open(log_path, "r", encoding="utf-8") as f:
+
+    with open(log_path, encoding="utf-8") as f:
         return {"content": f.read()}
 
 
@@ -1402,7 +1404,7 @@ async def list_sessions(limit: int = 20):
     """List recent sessions."""
     # Combine in-memory and on-disk sessions
     all_sessions = []
-    
+
     # In-memory sessions
     for sid, session in sessions.items():
         all_sessions.append({
@@ -1423,12 +1425,12 @@ async def list_sessions(limit: int = 20):
             "judge_replay": session.get("judge_replay", False),
             "replay_source_session_id": session.get("replay_source_session_id"),
         })
-    
+
     # On-disk sessions
     if SESSIONS_DIR.exists():
         for session_dir in sorted(SESSIONS_DIR.iterdir(), reverse=True)[:limit]:
             if session_dir.is_dir() and session_dir.name not in sessions:
-                summary = _load_summary(session_dir.name) or {}
+                summary = await _load_summary_async(session_dir.name) or {}
                 all_sessions.append({
                     "id": session_dir.name,
                     "topic": summary.get("topic", "Loaded from disk"),
@@ -1448,7 +1450,7 @@ async def list_sessions(limit: int = 20):
                     "judge_replay": summary.get("judge_replay", False),
                     "replay_source_session_id": summary.get("replay_source_session_id"),
                 })
-    
+
     return all_sessions[:limit]
 
 
@@ -1462,7 +1464,7 @@ async def get_knowledge_stats():
 # Feedback Learning API
 # ═══════════════════════════════════════════════════════════════
 
-from src.soul.feedback import get_feedback_store, FeedbackStore
+from src.soul.feedback import get_feedback_store
 
 
 class FeedbackRequest(BaseModel):
@@ -1483,7 +1485,7 @@ async def record_feedback(session_id: str, request: FeedbackRequest):
     - edit: User modified the hypothesis
     """
     feedback_store = get_feedback_store()
-    
+
     try:
         feedback_store.record(
             hypothesis_id=request.hypothesis_id,
@@ -1525,61 +1527,61 @@ from fastapi import WebSocket, WebSocketDisconnect
 
 class ConnectionManager:
     """Manages WebSocket connections for real-time collaboration."""
-    
+
     def __init__(self):
         self.active_connections: dict[str, list[WebSocket]] = {}
         self.user_presence: dict[str, dict[str, str]] = {}  # session_id -> {ws_id: username}
-    
+
     async def connect(self, websocket: WebSocket, session_id: str, username: str = "Anonymous"):
         await websocket.accept()
         if session_id not in self.active_connections:
             self.active_connections[session_id] = []
             self.user_presence[session_id] = {}
-        
+
         self.active_connections[session_id].append(websocket)
         ws_id = str(id(websocket))
         self.user_presence[session_id][ws_id] = username
-        
+
         # Broadcast user joined
         await self.broadcast(session_id, {
             "type": "user_joined",
             "username": username,
             "users": list(self.user_presence.get(session_id, {}).values()),
         })
-    
+
     def disconnect(self, websocket: WebSocket, session_id: str):
         if session_id in self.active_connections:
             try:
                 self.active_connections[session_id].remove(websocket)
             except ValueError:
                 pass
-            
+
             ws_id = str(id(websocket))
             username = self.user_presence.get(session_id, {}).pop(ws_id, "Anonymous")
-            
+
             if not self.active_connections[session_id]:
                 del self.active_connections[session_id]
                 self.user_presence.pop(session_id, None)
-            
+
             return username
         return "Anonymous"
-    
+
     async def broadcast(self, session_id: str, message: dict[str, Any]):
         """Broadcast a message to all connections for a session."""
         if session_id not in self.active_connections:
             return
-        
+
         dead_connections = []
         for connection in self.active_connections[session_id]:
             try:
                 await connection.send_json(message)
             except Exception:
                 dead_connections.append(connection)
-        
+
         # Clean up dead connections
         for dead in dead_connections:
             self.disconnect(dead, session_id)
-    
+
     def get_users(self, session_id: str) -> list[str]:
         """Get list of users in a session."""
         return list(self.user_presence.get(session_id, {}).values())
@@ -1593,18 +1595,18 @@ ws_manager = ConnectionManager()
 async def websocket_endpoint(websocket: WebSocket, session_id: str, username: str = "Anonymous"):
     """WebSocket endpoint for real-time session updates."""
     await ws_manager.connect(websocket, session_id, username)
-    
+
     try:
         while True:
             # Receive messages from client
             data = await websocket.receive_json()
-            
+
             # Handle different message types
             msg_type = data.get("type", "")
-            
+
             if msg_type == "ping":
                 await websocket.send_json({"type": "pong"})
-            
+
             elif msg_type == "cursor":
                 # User cursor position (for collaborative editing)
                 await ws_manager.broadcast(session_id, {
@@ -1612,7 +1614,7 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str, username: st
                     "username": username,
                     "position": data.get("position"),
                 })
-            
+
             elif msg_type == "chat":
                 # Collaborative chat message
                 await ws_manager.broadcast(session_id, {
@@ -1621,11 +1623,11 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str, username: st
                     "message": data.get("message", ""),
                     "timestamp": datetime.now().isoformat(),
                 })
-            
+
             else:
                 # Echo unknown messages back for debugging
                 await websocket.send_json({"type": "echo", "data": data})
-    
+
     except WebSocketDisconnect:
         username = ws_manager.disconnect(websocket, session_id)
         await ws_manager.broadcast(session_id, {
