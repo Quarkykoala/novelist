@@ -42,7 +42,7 @@ def test_create_session_success():
             "dataset_links": ["https://example.com/dataset.csv"],
         },
     }
-    with patch.dict(os.environ, {"GEMINI_API_KEY": "fake-key", "GROQ_API_KEY": "groq"}):
+    with patch.dict(os.environ, {"GEMINI_API_KEY": "test-gemini", "GROQ_API_KEY": "test-groq"}):
         with patch("src.server.run_session", new_callable=AsyncMock) as mock_run:
             response = client.post("/api/sessions", json=payload)
             assert response.status_code == 200
@@ -76,7 +76,7 @@ def test_resume_session_uses_summary_config():
         json.dump(summary, f)
 
     try:
-        with patch.dict(os.environ, {"GEMINI_API_KEY": "fake", "GROQ_API_KEY": "groq"}):
+        with patch.dict(os.environ, {"GEMINI_API_KEY": "test-gemini", "GROQ_API_KEY": "test-groq"}):
             with patch("src.server.run_session", new_callable=AsyncMock) as mock_run:
                 response = client.post(f"/api/sessions/{session_id}/resume")
                 assert response.status_code == 200
