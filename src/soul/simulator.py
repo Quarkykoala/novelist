@@ -227,8 +227,11 @@ Visual Analysis:"""
         script_path = self.temp_dir / f"sim_script_{sim_id}.py"
         
         try:
-            with open(script_path, "w", encoding="utf-8") as f:
-                f.write(code)
+            def write_script():
+                with open(script_path, "w", encoding="utf-8") as f:
+                    f.write(code)
+
+            await asyncio.to_thread(write_script)
             
             # Run in subprocess
             proc = await asyncio.create_subprocess_exec(
