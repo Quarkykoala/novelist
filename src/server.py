@@ -1228,6 +1228,7 @@ async def export_session(session_id: str, format: str = "json"):
         summary = await _load_summary_async(session_id)
         if not summary:
             raise HTTPException(status_code=404, detail="Session not found")
+        
         hypotheses = await _load_hypotheses_from_disk_async(session_id)
 
     if format == "json":
