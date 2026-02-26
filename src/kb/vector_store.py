@@ -11,6 +11,7 @@ All stores support:
 - Delete: Remove embeddings by ID
 """
 
+import asyncio
 import json
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
@@ -130,6 +131,7 @@ class InMemoryVectorStore(VectorStore):
         self.persist_path = persist_path
         self._embeddings: dict[str, list[float]] = {}
         self._metadata: dict[str, dict[str, Any]] = {}
+        self._save_lock = asyncio.Lock()
 
         # Load from disk if exists
         if persist_path and persist_path.exists():
@@ -147,18 +149,26 @@ class InMemoryVectorStore(VectorStore):
         except Exception as e:
             print(f"[VectorStore] Load error: {e}")
 
-    def _save(self) -> None:
-        """Save store to disk."""
+    def _save_sync(self, data: dict[str, Any]) -> None:
+        """Save store to disk (synchronous worker)."""
         if self.persist_path:
             try:
                 self.persist_path.parent.mkdir(parents=True, exist_ok=True)
                 with open(self.persist_path, "w") as f:
-                    json.dump({
-                        "embeddings": self._embeddings,
-                        "metadata": self._metadata,
-                    }, f)
+                    json.dump(data, f)
             except Exception as e:
                 print(f"[VectorStore] Save error: {e}")
+
+    async def _save(self) -> None:
+        """Save store to disk (asynchronous)."""
+        if self.persist_path:
+            async with self._save_lock:
+                # Take a shallow copy to avoid RuntimeError during iteration in the thread
+                data = {
+                    "embeddings": self._embeddings.copy(),
+                    "metadata": self._metadata.copy(),
+                }
+                await asyncio.to_thread(self._save_sync, data)
 
     @staticmethod
     def _cosine_similarity(a: list[float], b: list[float]) -> float:
@@ -184,7 +194,7 @@ class InMemoryVectorStore(VectorStore):
         """Add or update an embedding."""
         self._embeddings[id] = embedding
         self._metadata[id] = metadata or {}
-        self._save()
+        await self._save()
 
     async def upsert_batch(
         self,
@@ -194,7 +204,7 @@ class InMemoryVectorStore(VectorStore):
         for id, embedding, metadata in items:
             self._embeddings[id] = embedding
             self._metadata[id] = metadata or {}
-        self._save()
+        await self._save()
 
     async def search(
         self,
@@ -236,7 +246,7 @@ class InMemoryVectorStore(VectorStore):
             return False
         del self._embeddings[id]
         self._metadata.pop(id, None)
-        self._save()
+        await self._save()
         return True
 
     async def count(self) -> int:
@@ -247,8 +257,10 @@ class InMemoryVectorStore(VectorStore):
         """Remove all embeddings from the store."""
         self._embeddings = {}
         self._metadata = {}
-        if self.persist_path and self.persist_path.exists():
-            self.persist_path.unlink()
+        if self.persist_path:
+            async with self._save_lock:
+                if await asyncio.to_thread(self.persist_path.exists):
+                    await asyncio.to_thread(self.persist_path.unlink)
 
 
 # =============================================================================
